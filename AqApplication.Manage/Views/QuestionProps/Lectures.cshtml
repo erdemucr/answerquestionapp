@@ -1,0 +1,83 @@
+﻿@using AqApplication.Manage.Models;
+@model IEnumerable<AqApplication.Entity.Question.Lecture>
+
+@{
+    ViewBag.Title = "Lectures";
+}
+
+@Html.Partial("_Breadcrumb", new AqApplication.Manage.Models.CommonBreadcrumbModel
+{
+    Pagename = "Branşlar",
+    Message = (string)TempData["message"],
+    isSuccess = (bool?)TempData["success"]
+})
+
+<p>
+    <a href="@Url.Action("AddLecuture","QuestionProps")" class="btn btn-success">
+        <span class="glyphicon glyphicon-plus"></span> Yeni Ekle
+    </a>
+</p>
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="glyphicon glyphicon-edit"></i>  Branş Listesi
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreatedDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ModifiedDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Creator)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Editor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsActive)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ModifiedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppUserCreator.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppUserEditor.UserName)
+                    </td>
+                    <td>
+                        @item.IsActive.StatusText()
+                    </td>
+                    <td>
+                        <a href="@Url.Action("EditLecture","QuestionProps",new { id=item.Id})" class="btn btn-success">
+                            <span class="glyphicon glyphicon-edit"></span> Düzenle
+                        </a>
+                        <a href="@Url.Action("DeleteLecture","QuestionProps",new { id=item.Id})" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove"></span> Sil
+                        </a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>

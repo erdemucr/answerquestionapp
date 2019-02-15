@@ -1,0 +1,100 @@
+﻿@model IEnumerable<AqApplication.Entity.Question.QuestionPdf>
+
+
+@Html.Partial("_Breadcrumb", new AqApplication.Manage.Models.CommonBreadcrumbModel
+{
+    Pagename = "Döküman Listesi",
+    Message = (string)TempData["message"],
+    isSuccess = (bool?)TempData["success"]
+})
+
+
+<p>
+    <a href="@Url.Action("AddQuestionPdf","Question")" class="btn btn-success">
+        <span class="glyphicon glyphicon-plus"></span> Yeni Ekle
+    </a>
+</p>
+
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="glyphicon glyphicon-edit"></i>  Döküman Listesi
+    </div>
+    <div class="card-body">
+
+
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    Kapak
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreatedDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ModifiedDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Creator)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Editor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsActive)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @if (item.PdfUrl != null)
+                        {
+                            if (item.PdfUrl.IndexOf(".pdf") > -1)
+                            {
+                                string add = "_0.png";
+                                <img src="/Upload/@item.PdfUrl@add" alt="" width="200" height="250" />
+
+                            }
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ModifiedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppUserCreator.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppUserEditor.UserName)
+                    </td>
+                    <td>
+                        @item.IsActive.StatusText()
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("QuestionPdfContent","Question",new { id=item.Id})" class="btn btn-info">
+                            <span class="glyphicon glyphicon-arrow-down"></span> İçerik
+                        </a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>

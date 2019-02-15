@@ -1,0 +1,35 @@
+﻿@model AqApplication.Manage.Models.SearchModel
+@{
+    Layout = null;
+}
+
+<div class="col-md-3  col-xs-12">
+    <div class="card" style="min-height:1000px;">
+        <div class="card-header">
+            <i class="glyphicon glyphicon-search"></i> Filtrele
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm(Model.Action, Model.Controller, FormMethod.Get))
+            {
+                <div class="form-horizontal">
+
+                    @foreach (var item in Model.SearchInput)
+                    {
+                        <div class="form-group">
+                            <label>@item.DisplayName</label>
+
+                            @Html.TextBox(item.Name, "", new { @class = item.CssClass, @id = item.Id })
+                        </div>
+                    }
+                </div>
+
+                <div class="fc-button-group text-right">
+                    <input style="float:right" type="submit" value="Ara" class="btn btn-success" />
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+

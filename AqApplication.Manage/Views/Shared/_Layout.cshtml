@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<!-- begin::Head -->
+<head>
+    <meta charset="utf-8" />
+    <title>
+        A&Q Portal | Dashboard
+    </title>
+    <meta name="description" content="Latest updates and statistic charts">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--begin::Web font -->
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script>
+        WebFont.load({
+            google: { "families": ["Poppins:300,400,500,600,700", "Roboto:300,400,500,600,700", "Asap+Condensed:500"] },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+    <!--end::Web font -->
+    <!--begin::Base Styles -->
+    <!--begin::Page Vendors -->
+    <link href="/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/demo/demo8/base/style.bundle.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="/assets/demo8/demo/media/img/logo/favicon.ico" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="/assets/plugins/bootstrap-select-1.12.4/dist/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="/assets/plugins/Stepper-master/jquery.fs.stepper.css" rel="stylesheet" />
+    <link href="/content/PagedList.css" rel="stylesheet" />
+    @RenderSection("_styles", false)
+</head>
+<!-- end::Head -->
+<!-- end::Body -->
+<body style="background-image: url(/assets/app/media/img/bg/bg-7.jpg)" class="m-page--fluid m-page--loading-enabled m-page--loading m-header--fixed m-header--fixed-mobile m-footer--push m-aside--offcanvas-default">
+    <!-- begin::Page loader -->
+    <div class="m-page-loader m-page-loader--base">
+        <div class="m-blockui">
+            <span>
+                Lütfen Bekleyiniz...
+            </span>
+            <span>
+                <div class="m-loader m-loader--brand"></div>
+            </span>
+        </div>
+    </div>
+    <div class="m-grid m-grid--hor m-grid--root m-page">
+        @Html.RenderAction("Header", "Home")
+        <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop m-page__container m-body">
+            <div class="m-grid__item m-grid__item--fluid m-wrapper">
+                @RenderBody()
+            </div>
+        </div>
+        @Html.Partial("_Footer")
+    </div>
+    @Html.Partial("_QuickSideBar")
+    <div id="m_scroll_top" class="m-scroll-top">
+        <i class="la la-arrow-up"></i>
+    </div>
+    <ul class="m-nav-sticky" style="margin-top: 30px;">
+        <li class="m-nav-sticky__item" data-toggle="m-tooltip" title="Purchase" data-placement="left">
+            <a href="https://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes" target="_blank">
+                <i class="la la-cart-arrow-down"></i>
+            </a>
+        </li>
+        <li class="m-nav-sticky__item" data-toggle="m-tooltip" title="Documentation" data-placement="left">
+            <a href="https://keenthemes.com/metronic/documentation.html" target="_blank">
+                <i class="la la-code-fork"></i>
+            </a>
+        </li>
+        <li class="m-nav-sticky__item" data-toggle="m-tooltip" title="Support" data-placement="left">
+            <a href="https://keenthemes.com/forums/forum/support/metronic5/" target="_blank">
+                <i class="la la-life-ring"></i>
+            </a>
+        </li>
+    </ul>
+    <!-- begin::Quick Nav -->
+    <!--begin::Base Scripts -->
+    <script src="/assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
+    <script src="/assets/demo/demo8/base/scripts.bundle.js" type="text/javascript"></script>
+    <script src="/assets/app/js/dashboard.js" type="text/javascript"></script>
+    <script src="/assets/plugins/bootstrap-select-1.12.4/js/bootstrap-select.js" type="text/javascript"></script>
+    <script src="/assets/plugins/bootstrap3-dialog-master/dist/js/bootstrap-dialog.min.js" type="text/javascript"></script>
+    <script src="/assets/plugins/Stepper-master/jquery.fs.stepper.min.js" type="text/javascript"></script>
+
+    @RenderSection("_scripts", false)
+
+    <script>
+
+    </script>
+    <script>
+
+        jQuery(function ($) {
+            $.datepicker.regional['tr'] = {
+                closeText: 'kapat',
+                prevText: '&#x3C;geri',
+                nextText: 'ileri&#x3e',
+                currentText: 'bugün',
+                monthNames: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+                    'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+                monthNamesShort: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz',
+                    'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
+                dayNames: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+                dayNamesShort: ['Pz', 'Pt', 'Sa', 'Ça', 'Pe', 'Cu', 'Ct'],
+                dayNamesMin: ['Pz', 'Pt', 'Sa', 'Ça', 'Pe', 'Cu', 'Ct'],
+                weekHeader: 'Hf',
+                dateFormat: 'dd.mm.yy',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''
+            };
+            $.datepicker.setDefaults($.datepicker.regional['tr']);
+
+        });
+        $(window).on('load', function () {
+            $('body').removeClass('m-page--loading');
+
+        });
+
+        $(document).ready(function () {
+            $('.selectpicker').attr('data-live-search', 'true');
+            $('.selectpicker').selectpicker();
+
+            $('.dpicker').datepicker({ defaultDate: new Date(), format: 'dd/mm/yyyy' });
+
+            var url = window.location.href;
+
+            if (url.indexOf('Question') > -1) {
+                $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active');
+                $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active-tab');
+                $(".m-menu__nav li:eq(2)").addClass('m-menu__item--active  m-menu__item--active-tab');
+            }
+            if (url.indexOf('Session') > -1) {
+                console.log("exsdsd");
+                $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active');
+                $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active-tab');
+                $(".m-menu__nav li:eq(2)").next().addClass('m-menu__item--active  m-menu__item--active-tab');
+            }
+        });
+
+    </script>
+    <!-- end::Page Loader -->
+</body>
+<!-- end::Body -->
+</html>

@@ -1,0 +1,58 @@
+﻿@model IEnumerable<AqApplication.Manage.Models.AnswerListModel>
+
+@Html.Partial("_Breadcrumb", new AqApplication.Manage.Models.CommonBreadcrumbModel
+{
+    Pagename = "Cevaplar",
+    Message = (string)TempData["message"],
+    isSuccess = (bool?)TempData["success"]
+})
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="glyphicon glyphicon-edit"></i>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Seo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ImageUrl)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsTrue)
+                </th>
+
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Seo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="" width="200" height="200" />
+                        }
+                    </td>
+                    <td>
+                        @item.IsTrue.TrueText()
+                    </td>
+
+                    <td></td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>

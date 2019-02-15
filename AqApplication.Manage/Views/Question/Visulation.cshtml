@@ -1,0 +1,83 @@
+﻿@model AqApplication.Manage.Models.QuestionAddModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Visulation</title>
+    <link href="/assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/demo/demo8/base/style.bundle.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="col-xs-12" id="question_wr" style="background-color:white;">
+
+
+                <div class="text-center">
+                    <div class="row">
+                        <div class="col-md-12" style="padding:15px">
+                            <img src="@(string.IsNullOrEmpty(Model.MainImage)?"/Assets/images/noimage.png":Model.MainImage)"  style="cursor:pointer; height:150px; width:100%;" class="questionimage" />
+                            @Html.HiddenFor(model => model.MainImage)
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.MainTitle)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="has-feedback">
+                            <label>A)</label>
+                            <img src="@(string.IsNullOrEmpty(Model.QuestionAnswer[0].ImageUrl)?"/Assets/images/noimage.png":Model.QuestionAnswer[0].ImageUrl)" width="100" height="100" style="margin-bottom:10px; cursor:pointer;" (click)="setQuestionImage(1)" class="questionimage" />
+                            @Html.LabelFor(model => model.QuestionAnswer[0].Title)
+                        </div>
+
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="has-feedback">
+                            <label>B)</label>
+                            <img src="@(string.IsNullOrEmpty(Model.QuestionAnswer[1].ImageUrl)?"/Assets/images/noimage.png":Model.QuestionAnswer[1].ImageUrl)" width="100" height="100" style="margin-bottom:10px; cursor:pointer;" (click)="setQuestionImage(2)" class="questionimage" />
+                            @Html.LabelFor(model => model.QuestionAnswer[1].Title)
+
+                        </div>
+                    </div>
+
+                    </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="has-feedback">
+                            <label>C)</label>
+                            <img src="@(string.IsNullOrEmpty(Model.QuestionAnswer[2].ImageUrl)?"/Assets/images/noimage.png":Model.QuestionAnswer[2].ImageUrl)" width="100" height="100" style="margin-bottom:10px; cursor:pointer;" (click)="setQuestionImage(3)" class="questionimage" />
+                            @Html.LabelFor(model => model.QuestionAnswer[2].Title)
+
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="has-feedback">
+                            <label>D)</label>
+                            <img src="@(string.IsNullOrEmpty(Model.QuestionAnswer[3].ImageUrl)?"/Assets/images/noimage.png":Model.QuestionAnswer[3].ImageUrl)" width="100" height="100" style="margin-bottom:10px; cursor:pointer;" (click)="setQuestionImage(4)" class="questionimage" />
+                            @Html.LabelFor(model => model.QuestionAnswer[3].Title)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="has-feedback">
+                            <label>E)</label>
+                            <img src="@(string.IsNullOrEmpty(Model.QuestionAnswer[4].ImageUrl)?"/Assets/images/noimage.png":Model.QuestionAnswer[4].ImageUrl)" width="100" height="100" style="margin-bottom:10px; cursor:pointer;" (click)="setQuestionImage(5)" class="questionimage" />
+                            @Html.LabelFor(model => model.QuestionAnswer[4].Title)
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+</body>
+</html>

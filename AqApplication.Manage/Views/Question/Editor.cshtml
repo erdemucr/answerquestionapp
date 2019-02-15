@@ -1,0 +1,538 @@
+﻿@model AqApplication.Manage.Models.QuestionAddModel
+
+@Html.Partial("_Breadcrumb", new AqApplication.Manage.Models.CommonBreadcrumbModel
+{
+    Pagename = "Soru Girişi",
+    Message = (string)TempData["message"],
+    isSuccess = (bool?)TempData["success"]
+})
+
+
+@section _styles{
+    <link href="/Assets/plugins/cropperjs-master/dist/cropper.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .w120 {
+            width: 120px;
+        }
+
+        .w55 {
+            width: 55px;
+        }
+
+        .fleft {
+            float: left;
+        }
+    </style>
+}
+
+
+<div class="col-md-6" id="editor_wr" style="float:left; min-height:1200px">
+    <div class="m-portlet m-portlet--full-height ">
+        <div class="m-portlet__head">
+            <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                    <h3 class="m-portlet__head-text">
+                        Pdf Content
+                    </h3>
+                </div>
+            </div>
+            <div class="m-portlet__head-tools">
+                <ul class="nav nav-pills nav-pills--brand m-nav-pills--align-right m-nav-pills--btn-pill m-nav-pills--btn-sm" role="tablist">
+
+                    <li class="nav-item ">
+                        <a class="nav-link m-tabs__link" id="hideEditor">
+                            <input type="button" value="Döküman Seç" class="btn btn-info" onclick="GetDocuments();" />
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="m-portlet__body">
+            <div class="row" style="padding:10px; margin:0px;">
+                <div class="col-md-4 text-left">
+                    <input type="button" value="<" class="btn btn-default" onclick="NextImage(false);" />
+                </div>
+                <div class="col-md-4 text-center">
+                    <input type="number" value="" onchange="GotoPage()" style="width:90px;" class="form-control input-group-sm fleft" id="currentPageTxt" />  <h3 class="w55 fleft">/ <span id="totalPage"></span></h3>
+                </div>
+                <div class="col-md-4 text-right">
+                    <input type="button" value=">" class="btn btn-default" onclick="NextImage(true);" />
+                </div>
+
+            </div>
+
+            <div class="col-md-12" style="padding:0px; margin:0px;">
+                <img src="/Assets/images/noimage.png" alt="" id="image" style="width:100%;" />
+            </div>
+
+            <h3>Result</h3>
+            <div id="result"></div>
+        </div>
+    </div>
+
+</div>
+
+
+
+@using (Html.BeginForm("SaveQuestion", "Question", FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.QuestionPdfId)
+    @Html.HiddenFor(x => x.CurrentPage)
+    <div class="col-md-6" id="question_wr" style="float:left">
+        <div class="m-portlet m-portlet--full-height ">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            Question Content
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="m-portlet__head-tools">
+                    <ul class="nav nav-pills nav-pills--brand m-nav-pills--align-right m-nav-pills--btn-pill m-nav-pills--btn-sm" role="tablist">
+
+                        <li class="nav-item ">
+                            <a class="nav-link m-tabs__link" id="hideEditor">
+                                Gizle
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="m-portlet__body">
+                <label>x)</label>
+
+                <div class="well text-center">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <img src="@(string.IsNullOrEmpty(Model.MainImage)|| Model.MainImage==" "?"/Assets/images/noimage.png":Model.MainImage)" height="250" width="350" style="margin-bottom:15px; cursor:pointer" class="questionimage" id="questionimage" />
+                            @Html.HiddenFor(model => model.MainImage)
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.TextAreaFor(model => model.MainTitle, new { @cols = "40", @rows = "5", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="padding:20px">
+                    <div class="col-md-1">
+                        <div class="form-group has-feedback">
+                            <label>A)</label>
+                            @Html.RadioButtonFor(model => model.TrueOption, "0", new { @class = "form-control input-sm", @style = "background-color:#b9d6b9" })
+                        </div>
+
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group has-feedback">
+                            <label>B)</label>
+                            @Html.RadioButtonFor(model => model.TrueOption, "1", new { @class = "form-control input-sm" })
+
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group has-feedback">
+                            <label>C)</label>
+                            @Html.RadioButtonFor(model => model.TrueOption, "2", new { @class = "form-control input-sm" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <div class="form-group has-feedback">
+                            <label>D)</label>
+                            @Html.RadioButtonFor(model => model.TrueOption, "3", new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-md-1" id="5optionField">
+                        <div class="form-group has-feedback">
+                            <label>E)</label>
+                            @Html.RadioButtonFor(model => model.TrueOption, "4", new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label>4</label>
+                        @Html.RadioButton("Option4", false)
+                        <label>5</label>
+                        @Html.RadioButton("Option4", true, true)
+                    </div>
+                </div>
+                <small style="color:#b9d6b9">Lütfen doğru cevabı seçiniz</small>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-6" style="float:left;">
+        <div class="m-portlet m-portlet--full-height ">
+            <div class="m-portlet__body">
+                <div class="form-group">
+                    <label>Branş</label>
+                    @Html.DropDownListFor(model => model.LectureId, (IEnumerable<SelectListItem>)ViewBag.lectureSelectList, "Seçiniz", new { @class = "form-control " })
+                    @Html.ValidationMessageFor(model => model.LectureId, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>Konu</label>
+                    @Html.DropDownListFor(model => model.SubjectId, (IEnumerable<SelectListItem>)ViewBag.subsubjectSelectList, "Seçiniz", new { @class = "form-control " })
+                    @Html.ValidationMessageFor(model => model.SubjectId, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>Alt Konu</label>
+                    @Html.DropDownListFor(model => model.SubSubjectId, (IEnumerable<SelectListItem>)ViewBag.subsubjectSelectList, "Seçiniz", new { @class = "form-control " })
+                    @Html.ValidationMessageFor(model => model.SubSubjectId, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>Sınav</label>
+                    @Html.ListBoxFor(model => model.Exams, (IEnumerable<SelectListItem>)ViewBag.examSelectList, new { @class = "form-control" })
+
+                </div>
+                <div class="form-group">
+                    <label>Zorluk</label>
+                    @Html.DropDownListFor(model => model.Difficulty, (IEnumerable<SelectListItem>)ViewBag.difficultySelectList, "Seçiniz", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Difficulty, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>Lisans Derecesi</label>
+                    @Html.DropDownListFor(model => model.Licence, (IEnumerable<SelectListItem>)ViewBag.licenceSelectList, "Seçiniz", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Licence, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="m-portlet__foot m-portlet__foot--fit">
+                <div class="m-form__actions text-right">
+                    <button type="button" class="btn btn-info" style="float:left" id="img_editor">
+                        Image Editor
+                    </button>
+                    <button type="submit" class="btn btn-brand">
+                        Kaydet
+                    </button>
+                    <button type="reset" class="btn btn-secondary">
+                        İptal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+<div id="pdfModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Döküman Seç</h4>
+
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="searchDocInput" onkeyup="DocumentData()" placeholder="Search for names..">
+                <table class="table table-condensed" id="pdftable">
+                    <thead>
+                        <tr>
+
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Total Page</th>
+                            <th></th>
+                        </tr>
+
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+Try it Yourself »
+
+
+@section _scripts{
+    <script src="/Assets/plugins/cropperjs-master/dist/cropper.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.rframe.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var cropper;
+        var width = 0, height = 0;
+        var questionPdfId = '@Model.QuestionPdfId';
+        var currentPg = '@Model.CurrentPage';
+        var subjectId = '@Model.SubjectId';
+        var subsubjectId = '@Model.SubSubjectId';
+        var onLoadP = true;
+        $(document).on("click", ".questionimage", function () {
+            var ind = $(this).attr('id');
+            var imageContent = $("#result img").attr('src');
+            $(this).attr('src', imageContent);
+            $(this).next().val(imageContent);
+
+            $.ajax({
+                type: "POST",
+                url: "/Question/SetImageSession",
+                data: { id: ind, type: "0", content: imageContent },
+                success: function (data) {
+
+                }
+
+
+            });
+
+            //$(this).css({ "width": width + "px", "height": height + "px" });
+        });
+
+        $(document).on("change", "input[name=Option4]", function () {
+            var vl = $("input[name=Option4]:checked").val();
+            if (vl =='False') {
+                $("#5optionField").hide();
+            }
+            else {
+                $("#5optionField").show();
+            }
+        });
+
+        $(document).ready(function () {
+            var lectureId = $("#LectureId").val();
+            LoadSubjects(lectureId,true);
+            LoadSubSubjects(subjectId, true);
+            if (questionPdfId !== "" && questionPdfId !== null) {
+                SetDocuments(questionPdfId);
+            }
+
+        });
+
+        $(document).on("change", "#LectureId", function () {
+            var ids = $(this).val();
+            LoadSubjects(ids,false);
+            $("#SubSubjectId").html("");
+        });
+        $(document).on("change", "#SubjectId", function () {
+            var ids = $(this).val();
+            LoadSubSubjects(ids,false);
+        });
+        function LoadSubjects(lectureId, onLoad) {
+            if (lectureId !== "" && lectureId !== null) {
+                $.ajax({
+                    type: "GET",
+                    url: "/Question/GetSubjects",
+                    data: {
+                        "lectureId": lectureId
+                    },
+                    success: function (data) {
+                        var $el = $("#SubjectId");
+                        $el.html("");
+                        $el.append("<option value='null'>Seçiniz</option>");
+                        $.each(data.data, function (i, v) {
+                            $el.append("<option value='" + v.Key + "'>" + v.Value + "</option>");
+                        });
+                        if (subjectId !== null && subjectId !== "" && onLoad) {
+                            $el.val(subjectId);
+                        }
+                         else {
+                            $el.val(null);
+                        }
+                    }
+                });
+            }
+        }
+
+        function LoadSubSubjects(subjectId, onLoad) {
+            if (subjectId !== "" && subjectId !== null) {
+                $.ajax({
+                    type: "GET",
+                    url: "/Question/GetSubSubjects",
+                    data: { "lectureId": subjectId },
+                    success: function (data) {
+                        var $el = $("#SubSubjectId");
+                        $el.html("");
+                        $el.append("<option value='null'>Seçiniz</option>");
+                        $.each(data.data, function (i, v) {
+                            $el.append("<option value='" + v.Key + "'>" + v.Value + "</option>");
+                        });
+                        if (subsubjectId !== null && subsubjectId !== "" && onLoad) {
+                            $el.val(subsubjectId);
+                        }
+                        else {
+                            $el.val("");
+                        }
+                    },
+                    data: {
+                        "subjectId": subjectId
+                    }
+                });
+
+
+            }
+        }
+
+            $(document).on("click", "#img_editor", function () {
+                var currentDisplay = $("#editor_wr").css("display");
+                var newdisplay = "", newdisplayTxt = "";
+                if (currentDisplay === "none") {
+                    if ($("#image").hasClass('cropper-hidden')) {
+                        $("#image").removeClass('cropper-hidden')
+                    }
+
+                    newdisplay = "block";
+                    newdisplayTxt = "Editörü Gizle";
+                }
+                else {
+                    newdisplay = "none";
+                    newdisplayTxt = "Editörü Göster";
+                }
+                $("#editor_wr").css("display", newdisplay);
+                $(this).html(newdisplayTxt);
+            });
+            function GetDocuments() {
+                $('#pdfModal').modal('show');
+                DocumentData();
+            }
+            function DocumentData() {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/Question/GetPdfDocuments",
+                    data: { name: "" },
+                    success: function (data) {
+                        var $el = $("#pdftable");
+                        $el.find("tbody").html("");
+                        $.each(data.data, function (i, item) {
+                            $el.find("tbody")
+                                .append("<tr><td>" + item.Id + "</td><td>" + item.Name + "</td><td>" + item.TotalPage + "</td><td><input type='button' value='Seç' class='btn btn-info'  onclick='SetDocuments(" + item.Id + ");'  /></td></tr>");
+
+                        });
+                    }
+                });
+            }
+            var currentPage = 0, totalPage = 0, currentPdf = '';
+            function SetDocuments(value) {
+                $.ajax({
+                    type: "GET",
+                    url: "/Question/SetPdfDocument",
+                    data: { id: value },
+                    success: function (data) {
+                        currentPdf = data.data.PdfUrl;
+
+                        totalPage = data.data.TotalPage;
+                        $("#totalPage").html(totalPage);
+
+                        SetEditorImage(0);
+                        $("#QuestionPdfId").val(value);
+
+                        if (onLoadP && currentPg !== "" && currentPg !== null) {
+                             SetEditorImage(parseInt(currentPg));
+                             onLoadP = false;
+                        }
+                         else {
+                             currentPage = 0;
+                             $("#currentPageTxt").val(currentPage + 1);
+                         }
+
+                    }
+                });
+            }
+            function SetEditorImage(ind) {
+                if (ind < 0 || ind > (totalPage - 1)) {
+                    return;
+                }
+                var nCurrentPdf = '/Upload/' + currentPdf + '_' + ind + '.png';
+                $('#image').attr('src', nCurrentPdf);
+                currentPage = ind;
+                $("#CurrentPage").val(ind);
+                $("#currentPageTxt").val(currentPage + 1);
+                setTimeout(
+                    function () {
+                        EditorInitializer();
+                    }, 100
+                );
+
+            }
+            var cropper = null;
+            function EditorInitializer() {
+
+                var image = document.getElementById('image');
+                //image.cropper('destroy');
+                cropper = new Cropper(image, {
+
+
+                    dragCrop: false,
+                    zoomable: false,
+                    scalable: false,
+                    rotatable: true,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    responsive: true,
+                    viewMode: 3,
+                    built: function () {
+                        $toCrop.cropper("setCropBoxData", { width: "100", height: "50" });
+                    },
+                    crop: function (e) {
+                        var data = e.detail;
+                        var cropper = this.cropper;
+                        var imageData = cropper.getImageData();
+                        width = data.width;
+                        height = data.height;
+
+                        var image = new Image();
+                        $('#result').html("");
+                        image.src = cropper.getCroppedCanvas().toDataURL('image/jpeg');
+                        result.appendChild(image);
+
+                        console.log(e.detail.x);
+                        console.log(e.detail.y);
+                        console.log(e.detail.width);
+                        console.log(e.detail.height);
+                        console.log(e.detail.rotate);
+                        console.log(e.detail.scaleX);
+                        console.log(e.detail.scaleY);
+                    }
+                });
+
+            }
+
+            function NextImage(onNext) {
+
+                cropper.destroy();
+                if (onNext) {
+                    SetEditorImage(currentPage + 1);
+                }
+                else {
+                    SetEditorImage(currentPage - 1);
+
+                }
+
+
+            }
+            function GotoPage() {
+                var cvl = $("#currentPageTxt").val();
+                var indVl = parseInt(cvl);
+                if (indVl < 1) {
+                    $("#currentPageTxt").val(1);
+                    return;
+                }
+                else if (indVl > totalPage) {
+                    $("#currentPageTxt").val(totalPage);
+                    return;
+                }
+                SetEditorImage(indVl - 1);
+
+            }
+
+            $(document).on("click", "#m_quick_sidebar_toggle", function () {
+                $("#rFrame").remove();
+                jQuery(function ($) {
+                    $.rFrame();
+                });
+
+            });
+
+    </script>
+}
