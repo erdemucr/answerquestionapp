@@ -4,6 +4,7 @@ using AqApplication.Repository.Challenge;
 using AqApplication.Repository.File;
 using AqApplication.Repository.Question;
 using AqApplication.Repository.Session;
+using AqApplication.Service.Hubs;
 using AqApplication.Service.Models;
 using AqApplication.Service.Utilities;
 using DotNetify;
@@ -19,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -32,6 +34,7 @@ namespace AqApplication.Service
         }
 
         public IConfiguration Configuration { get; }
+        private readonly AqApplication.Repository.Session.IUser _iUser;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -61,9 +64,8 @@ namespace AqApplication.Service
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 0;
+                options.SignIn.RequireConfirmedEmail = false;
             });
-
-
 
             services.AddSwaggerGen(c =>
             {
@@ -112,6 +114,19 @@ namespace AqApplication.Service
                });
 
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                    });
+            });
+
             services.AddSignalR(); 
             services.AddDotNetify(); 
 
@@ -139,10 +154,30 @@ namespace AqApplication.Service
             });
 
             app.UseWebSockets(); //-> UseDotNetify socket development
-            app.UseSignalR(routes => routes.MapDotNetifyHub()); 
-            app.UseDotNetify();
+            app.Use(async (ctx, nextMsg) =>
+            {
+                Console.WriteLine("Web Socket is listening");
+                if (ctx.Request.Path == "/challenge")
+                {
+                    if (ctx.WebSockets.IsWebSocketRequest)
+                    {
+                        var wSocket = await ctx.WebSockets.AcceptWebSocketAsync();
+                        await new WebSockets().Talk(ctx, wSocket);
+                    }
+                    else
+                    {
+                        ctx.Response.StatusCode = 400;
+                    }
+                }
+                else
+                {
+                    await nextMsg();
+                }
+            });
 
             loggerFactory.AddProvider(new LoggingDbProvider());
+
+            app.UseCors("AllowAll");
 
             app.UseHttpsRedirection();
             app.UseMvc();

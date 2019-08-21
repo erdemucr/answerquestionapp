@@ -1,0 +1,108 @@
+﻿<div class="container h-100 h-sm-auto align-items-center">
+    <div class="row align-items-center h-100 h-sm-auto">
+        <form id="registerForm" novalidate>
+            <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4 mx-auto text-center">
+                <h2 class="font-weight-light mb-3 text-white mt-3">A&Q&nbsp;<span class="font-weight-normal">Portal</span></h2>
+                <h5 class="font-weight-light mb-5 text-white text-center">Kayı Ol,<br>Lütfen üye kaydı için gerekli bilgileri giriniz</h5>
+                <div class="card mb-4">
+                    <div class="card-body p-0">
+                        <label for="name" class="sr-only">Adınız</label>
+                        <input type="text" id="name" class="form-control text-center form-control-lg border-0"
+                               data-required="true" data-required-message="Lütfen adınızı giriniz"
+                               placeholder="Adınız" required="" autofocus="">
+                        <hr class="my-0">
+                        <label for="name" class="sr-only">Soyadınız</label>
+                        <input type="text" id="surname" class="form-control text-center form-control-lg border-0"
+                               data-required="true" data-required-message="Lütfen soyadınızı giriniz"
+                               placeholder="Soyadınız" required="" autofocus="">
+                        <hr class="my-0">
+                        <label for="inputEmail" class="sr-only">E-Posta</label>
+                        <input type="text" id="inputEmail" class="form-control text-center form-control-lg border-0"
+                               data-required="true" data-required-message="Lütfen e-posta adresinizi giriniz"
+                               placeholder="E-Posta" required="">
+                        <hr class="my-0">
+                        <label for="inputPassword" class="sr-only">Şifreniz</label>
+                        <input type="password" id="inputPassword" class="form-control text-center form-control-lg border-0"
+                               data-required="true" data-required-message="Lütfen şifrenizi giriniz"
+                               placeholder="Şifreniz" required="">
+                        <hr class="my-0">
+                        <label for="inputPassword2" class="sr-only">Tekrar Şifreniz</label>
+                        <input type="password" id="inputPassword2" class="form-control text-center form-control-lg border-0"
+                               data-required="true" data-required-message="Lütfen tekrar şifrenizi giriniz"
+                               data-repeat-password="true" data-repeat="inputPassword"
+                               placeholder="Tekrar Şifreniz" required="">
+                    </div>
+                </div>
+                <div class="my-4 row">
+                    <div class="col-12  text-center">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck111" checked>
+                            <label class="custom-control-label text-white" for="customCheck111"> <a href="">Gizlilik sözleşmesini</a> okudum onaylıyorum.</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a href="javascript:void(0);" class=" btn btn-primary pink-gradient" id="registerBtn">Kayıt Ol</a>
+                    <a href="javascript:void(0);" onclick="aqfw().Navigation().Redirect(aqfw().Navigation().Routes.SingIn);" class="btn btn-outline-primary">Giriş Yap</a>
+                </div>
+                <br>
+
+            </div>
+            </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#registerBtn").click(function () {
+            var name = $("#name").val();
+            var surname = $("#surname").val();
+            var pass = $("#inputPassword").val();
+            var email = $("#inputEmail").val();
+
+            var isValid = aqfw().Validation('registerForm').CheckAllFields();
+            if (isValid !== '') {
+                alert(isValid);
+            }
+            else {
+                registerUser(name, surname, email, pass);
+            }
+        });
+    });
+
+    var registerUser = function (name, surname, email, password) {
+
+        var obj = {
+            'FirstName': name,
+            'LastName': surname,
+            'Email': email,
+            'Password': password
+        };
+        $.ajax({
+            type: 'POST',
+            url: aqfw().ServiceUrl + '/Account/Register',
+            data: JSON.stringify(obj),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data, textStatus, xhr) {
+                console.log(data);
+                if (xhr.status === 200) {
+                    if (data.success) {
+                        aqfw().MessageBox().ShowSucess('İşlem tamamladı', 'Kayıt işleminiz tamamlanmıştır. Lütfen bilgileriniz ile gitiş yapınız.');
+                        aqfw().Navigation().Redirect(aqfw().Navigation().Routes.SingIn);
+                    }
+                    else {
+                        aqfw().MessageBox().ShowWarning('Uyarı',data.message);
+                    }
+                }
+                else {
+                    aqfw().MessageBox().ShowWarning('Uyarı', 'Bilgileriniz Hatalı Lütfen Bilgilerinizi Kontrol Ediniz');
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+
+        });
+        return 1;
+    }
+</script>

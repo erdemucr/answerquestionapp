@@ -17,8 +17,6 @@ namespace AqApplication.Repository.Session
         {
             context = _context;
         }
-
-
         public Result<IEnumerable<ApplicationUser>> GetUsers(UserFilterModel filterModel)
         {
             try

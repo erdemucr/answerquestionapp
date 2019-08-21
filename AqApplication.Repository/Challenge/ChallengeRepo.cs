@@ -21,6 +21,7 @@ namespace AqApplication.Repository.Challenge
         {
             context = _context;
         }
+   
         public Result<List<ChallengeQuestionViewModel>> RandomQuestion(string userId)
         {
             try

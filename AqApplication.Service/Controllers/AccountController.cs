@@ -14,10 +14,14 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Cors;
+using System.Net.Mail;
 
 namespace AqApplication.Service.Controllers
 {
     [Route("api/Account")]
+    [EnableCors("AllowAll")]
+    [Produces("application/json")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -88,12 +92,13 @@ namespace AqApplication.Service.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Post([FromBody] LoginDTO credentials)
+        [Route("Login")]
+        public IActionResult Login([FromBody] LoginDTO credentials)
         {
             var user = _userManager.FindByNameAsync(credentials.Username);
 
             // return null if user not found
-            if (user == null || user.Result==null)
+            if (user == null || user.Result == null)
                 return NotFound();
 
             var checkPassword = _userManager.CheckPasswordAsync(user.Result, credentials.Password);
@@ -123,7 +128,78 @@ namespace AqApplication.Service.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
             //So see token info also please check token	       
-                return Ok(tokenString);
+            return Ok(new LoginResultModel { Token = tokenString,
+                UserName = user.Result.UserName, FullName = user.Result.FirstName + " " + user.Result.LastName,
+                UserId= user.Result.Id
+            });
         }
-     }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Register")]
+        public IActionResult Register([FromBody] RegisterDto credentials)
+        {
+            var user = _userManager.FindByEmailAsync(credentials.Email);
+
+            if (user.Result != null)
+                return Ok(new { success = false, message = "Bu e-posta adresi kullanımdadır" });
+
+            var applicationUser = new ApplicationUser
+            {
+                FirstName = credentials.FirstName,
+                LastName = credentials.LastName,
+                PhoneNumber = "+905432102644",
+                UserName = credentials.Email,
+                RegisterDate = DateTime.Now,
+                MemberType = Entity.Constants.MemberType.WebUser
+            };
+            var result = _userManager.CreateAsync(applicationUser, credentials.Password).Result;
+
+            #region EmailConfrimation
+            if (result.Succeeded)
+            {
+                //if (!roleManager.RoleExistsAsync("NormalUser").Result)
+                //{
+                //    MyIdentityRole role = new MyIdentityRole();
+                //    role.Name = "NormalUser";
+                //    role.Description = "Perform normal operations.";
+                //    IdentityResult roleResult =
+                //            roleManager.CreateAsync(role).Result;
+                //    if (!roleResult.Succeeded)
+                //    {
+                //        ModelState.AddModelError("",
+                //        "Error while creating role!");
+                //        return View(obj);
+                //    }
+                //}
+                //userManager.AddToRoleAsync(user, "NormalUser").Wait();
+
+                //send confirmation email
+
+                //string confirmationToken = _userManager.
+                //     GenerateEmailConfirmationTokenAsync(applicationUser).Result;
+
+                //string confirmationLink = Url.Action("ConfirmEmail",
+                //  "Account", new
+                //  {
+                //      userid = user.Id,
+                //      token = confirmationToken
+                //  },
+                //   protocol: HttpContext.Request.Scheme);
+
+                //SmtpClient client = new SmtpClient();
+                //client.DeliveryMethod = SmtpDeliveryMethod.
+                // SpecifiedPickupDirectory;
+                //client.PickupDirectoryLocation = @"C:\Test";
+
+                //client.Send("test@localhost", credentials.Email,
+                //       "Confirm your email",
+                //   confirmationLink);
+
+                //return RedirectToAction("Login", "Account");
+            }
+            #endregion
+            return Ok(new { success = true });
+        }
+    }
 }

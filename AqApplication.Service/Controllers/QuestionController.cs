@@ -6,12 +6,14 @@ using AqApplication.Core.Type;
 using AqApplication.Repository.Challenge;
 using AqApplication.Repository.ViewModels;
 using AqApplication.Service.Utilities;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace AqApplication.Service.Controllers
 {
     [Route("api/Question")]
+    [EnableCors("AllowAll")]
     [ApiController]
     public class QuestionController : ControllerBase
     {
