@@ -30,7 +30,6 @@ namespace AqApplication.Manage.Controllers
         private readonly IFile _ifile;
         private readonly IHostingEnvironment _hostingEnvironment;
         private const string LastSessionQuestionAddModel = "QuestionAddModel";
-
         public QuestionController(IQuestion iQuestion, IFile iFile, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
         {
             _iquestion = iQuestion;
@@ -152,7 +151,7 @@ namespace AqApplication.Manage.Controllers
             {
                 MainImage = model.MainImage,
                 MainTitle = model.MainTitle,
-                SubSubjectId = model.SubSubjectId,
+                //SubSubjectId = model.SubSubjectId,
                 IsActive = false,
                 ModifiedDate = DateTime.Now,
                 CreatedDate = DateTime.Now,
@@ -277,14 +276,19 @@ namespace AqApplication.Manage.Controllers
         public JsonResult GetPdfDocuments(string name)
         {
             var list = _ifile.GetQuestionPdf(new Repository.FilterModels.DocumentFilterModel { Name = name });
-            var viewList = list.Data.Select(x => new QuestionPdfViewModel { Id = x.Id, Name = x.Name, TotalPage = x.TotalPage }).AsEnumerable();
+            var viewList = list.Data.Select(x => new QuestionPdfViewModel { Id = x.Id, Name = x.Name, TotalPage = x.TotalPage }).ToList();
             return Json(new { data = viewList });
         }
         public JsonResult SetPdfDocument(int id)
         {
             var model = _ifile.GetQuestionPdf(id);
-            var viewList = new QuestionPdfViewModel { Name = model.Data.Name, TotalPage = model.Data.TotalPage, Id = model.Data.Id, PdfUrl = model.Data.PdfUrl };
-            return Json(new { data = viewList });
+            if (model.Success)
+            {
+                var viewList = new QuestionPdfViewModel { Name = model.Data.Name, TotalPage = model.Data.TotalPage, Id = model.Data.Id, PdfUrl = model.Data.PdfUrl };
+                return Json(new { data = viewList });
+            }
+            return Json(false);
+       
         }
 
 
@@ -426,9 +430,9 @@ namespace AqApplication.Manage.Controllers
                     //zoomImg.Save(dir +"\\"+ pdfName + "_" + i.ToString() + ".png", ImageFormat.Png);
 
                     string outputFileName = dir + "\\" + pdfName + "_" + i.ToString() + ".png";
-                    using (MemoryStream memory = new MemoryStream())
+                    using (MemoryStream memory = new MemoryStream()) // anti virusu kapatmayı unutma!!!!
                     {
-                        using (FileStream fs = new FileStream(outputFileName, FileMode.Create, FileAccess.ReadWrite))
+                        using (FileStream fs = new FileStream(outputFileName, FileMode.Create, FileAccess.Write))
                         {
                             bmp.Save(memory, ImageFormat.Jpeg);
                             byte[] bytes = memory.ToArray();
@@ -447,7 +451,7 @@ namespace AqApplication.Manage.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception ex)
             {
                 throw;
             }

@@ -1,102 +1,151 @@
 ﻿
-        <div class="container mt-4 main-container">
-           
-            <div class="row">
-                <div class="col-sm-12 col-md-12">
-                    <div class="card rounded-0 border-0 mb-3">
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-8">
-                                    <h5 class="card-title mb-0" id="timeClock">
-                                    </h5>
-                                </div>
-                                <div class="col text-right">
-                                    <div class="dropdown">
-                                        <button class="btn btn-link btn-sm text-secondary rounded-0 dropdown-toggle float-right icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" type="button">
-                                            <i class="fa fa-ellipsis-v"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right">
+<div class="container mt-4 main-container">
 
-                                            <a class="dropdown-item" href="#">
-                                                <i class="fa fa-exclamation-circle text-secondary"></i> Report
-                                            </a>
-                                            <a class="dropdown-item" href="#">
-                                                <i class="fa fa-cog text-secondary"></i> Settings
-                                            </a>
-                                            <a class="dropdown-item" href="#">
-                                                <i class="fa fa-trash text-secondary"></i> Remove
-                                            </a>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="card rounded-0 border-0 mb-3">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <label class="card-title mb-0" id="timeClock">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table" id="participantTable">
+
+                        <tbody></tbody>
+                    </table>
+                    <input type="hidden" value="" id="challengeIdHdn" />
+                    <input type="hidden" value="" id="questionLenHdn" />
+                    <div class="row" id="question_wrapper" style="display:none;">
+                        <div class="col-md-12 text-center">
+                            <div class="card-body pb-0">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col">
+                                        <div class="carosel swiper-location-carousel" id="caruselSlider">
+                                            <div data-pagination='{"el": ".swiper-pagination"}' data-space-between="0" data-slides-per-view="1" class="swiper-container swiper-init swiper-product">
+                                                <div class="swiper-pagination"></div>
+                                                <div class="swiper-wrapper" id="sliderWrapper">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h6 class="card-subtitle mb-2 header-color-secondary text-center" id="page-boxes"></h6>
+                                <br>
+                                <div class="row bg-light-secondary text-center">
+                                    <div class="col py-3">
+                                        <h5 class="content-color-primary mb-0" id="totalQuestion"></h5>
+                                        <p class="content-color-secondary small mb-0">Toplam Soru</p>
+                                    </div>
+                                    <div class="col py-3">
+                                        <h5 class="content-color-primary mb-0" id="answeredQuestionCount"></h5>
+                                        <p class="content-color-secondary small mb-0">Cevaplanan</p>
+                                    </div>
+                                    <div class="col py-3">
+                                        <h5 class="content-color-primary mb-0" id="notAnsweredQuesitonCount"></h5>
+                                        <p class="content-color-secondary small mb-0">Cevaplanmayan</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md-12">
+                            <div class="row" style="padding:12%;">
+                                <div class="col-12 col-md-6">
+                                    <div class="card mb-4 success-gradient questionBtn optionA" id="option0">
+                                        <div class="card-body" style="padding:0.5em 1.95em">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <h4 class="text-white mb fleft">A</h4>
+                                                </div>
+                                                <div class="icon-circle icon-30 bg-light-white" style="display:none;">
+                                                    <i class="material-icons">assignment_turned_in</i>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="card mb-4 danger-gradient questionBtn optionB" id="option1">
+                                        <div class="card-body" style="padding:0.5em 1.95em">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <h4 class="text-white mb fleft">B</h4>
+
+                                                </div>
+                                                <div class="icon-circle icon-30 bg-light-white" style="display:none;">
+                                                    <i class="material-icons">assignment_turned_in</i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="card mb-4 warning-gradient questionBtn optionC" id="option2">
+                                        <div class="card-body" style="padding:0.5em 1.95em">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <h4 class="text-white mb fleft">C</h4>
+                                                    <div class="icon-circle icon-30 bg-light-white" style="display:none;">
+                                                        <i class="material-icons">assignment_turned_in</i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="card mb-4 primary-gradient questionBtn optionD" id="option3">
+                                        <div class="card-body" style="padding:0.5em 1.95em">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <h4 class="text-white mb fleft">D</h4>
+                                                    <div class="icon-circle icon-30 bg-light-white" style="display:none;">
+                                                        <i class="material-icons">assignment_turned_in</i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6" id="fiveOption">
+                                    <div class="card mb-4 secondary-gradient questionBtn optionE" id="option4">
+                                        <div class="card-body" style="padding:0.5em 1.95em">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <h4 class="text-white mb fleft">D</h4>
+                                                    <h4 class="text-white mb ">E</h4>
+                                                    <div class="icon-circle icon-30 bg-light-white" style="display:none;">
+                                                        <i class="material-icons">assignment_turned_in</i>
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <table class="table">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">First</th>
-                                        <th scope="col">Last</th>
-                                        <th scope="col">Handle</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <table class="table">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">First</th>
-                                        <th scope="col">Last</th>
-                                        <th scope="col">Handle</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
+
+                    <table class="table" id="challenge_result" style="display:none;">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col" colspan="2">Kullanıcı</th>
+                                <th scope="col">Puan</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
-
         </div>
-        <!-- content page ends -->
+    </div>
+
+</div>
+<!-- content page ends -->

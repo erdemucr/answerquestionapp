@@ -1,4 +1,5 @@
 ﻿using AqApplication.Core.Type;
+using AqApplication.Entity.Constants;
 using AqApplication.Repository.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,12 @@ namespace AqApplication.Repository.Challenge
 
         Result SetChallengeAnswer(ChallengeQuestionAnswerViewModel model);
 
-        Result<List<ChallengeChallengeUserViewModel>> GetResultChallenge(int challengeId, string userId);
+        Result<ChallengeChallengeUserViewModel> GetResultChallenge(int challengeId, string userId);
 
         Result<AqApplication.Entity.Challenge.Challenge> AddChallenge(string userId, int challengeType);
 
         Result<List<ChallengeQuestionViewModel>> ChallengeQuestions(int challengeId);
+
+        Result<Entity.Challenge.Challenge> GetLastChallengeByType(ChallengeTypeEnum type);
     }
 }

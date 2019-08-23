@@ -21,7 +21,7 @@ namespace AqApplication.Repository.Challenge
         {
             context = _context;
         }
-   
+
         public Result<List<ChallengeQuestionViewModel>> RandomQuestion(string userId)
         {
             try
@@ -159,7 +159,7 @@ namespace AqApplication.Repository.Challenge
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(challengeExpDay),
                     CreatedDate = DateTime.Now,
-                    ChallengeTypeId = (int)ChallengeTypeEnum.QuizMode,
+                    ChallengeTypeId = (int)ChallengeTypeEnum.RandomMode,
                     ChallengeQuestions = list,
                     ChallengeSessions = new List<ChallengeSession>
                     {
@@ -278,15 +278,26 @@ namespace AqApplication.Repository.Challenge
         {
             try
             {
-                context.ChallengeQuestionAnswers.Add(new ChallengeQuestionAnswers
-                {
-                    CreatedDate = DateTime.Now,
-                    ChallengeId = model.ChallengeId,
-                    QuestionId = model.QuestionId,
-                    UserId = model.UserId,
-                    AnswerIndex = model.AnswerIndex,
+                var currentAnswer = context.ChallengeQuestionAnswers.FirstOrDefault(x => x.QuestionId == model.QuestionId && x.ChallengeId == model.ChallengeId && x.UserId == model.UserId);
 
-                });
+                if (currentAnswer != null)
+                {
+                    currentAnswer.AnswerIndex = model.AnswerIndex;
+                    context.Entry(currentAnswer).State = EntityState.Modified;
+                }
+                else
+                {
+                    context.ChallengeQuestionAnswers.Add(new ChallengeQuestionAnswers
+                    {
+                        CreatedDate = DateTime.Now,
+                        ChallengeId = model.ChallengeId,
+                        QuestionId = model.QuestionId,
+                        UserId = model.UserId,
+                        AnswerIndex = model.AnswerIndex,
+
+                    });
+                }
+             
                 context.SaveChanges();
                 return new Result
                 {
@@ -300,7 +311,7 @@ namespace AqApplication.Repository.Challenge
         }
 
 
-        public Result<List<ChallengeChallengeUserViewModel>> GetResultChallenge(int challengeId, string userId)
+        public Result<ChallengeChallengeUserViewModel> GetResultChallenge(int challengeId, string userId)
         {
             try
             {
@@ -311,15 +322,15 @@ namespace AqApplication.Repository.Challenge
                     .Where(x => x.ChallengeId
                 == challengeId).ToList();
 
-                List<string> challengeUser = challengeAnswer.Select(x => x.UserId).Distinct().ToList();
+                //List<string> challengeUser = challengeAnswer.Select(x => x.UserId).Distinct().ToList();
 
                 var resultList = new List<ChallengeChallengeUserViewModel>();
 
                 int totalQuestion = challangeQuestion.Count();
 
-                foreach (var user in challengeUser)
-                {
-                    var answers = challengeAnswer.Where(x => x.UserId == user && x.ChallengeId
+                //foreach (var user in challengeUser)
+                //{
+                    var answers = challengeAnswer.Where(x => x.UserId == userId && x.ChallengeId
                   == challengeId).ToList();
                     int correct = 0, wrong = 0;
                     foreach (var item in answers)
@@ -335,10 +346,10 @@ namespace AqApplication.Repository.Challenge
                     resultList.Add(new ChallengeChallengeUserViewModel
                     {
                         correct = correct,
-                        UserName = challengeAnswer.FirstOrDefault(x => x.UserId == user).ApplicationUser.UserName
+                        UserName = challengeAnswer.FirstOrDefault(x => x.UserId == userId).ApplicationUser.UserName
                     });
 
-                }
+                //}
                 var resultordered = new List<ChallengeChallengeUserViewModel>();
                 foreach (var item in resultList)
                 {
@@ -351,7 +362,7 @@ namespace AqApplication.Repository.Challenge
                     });
                 }
 
-                var resultseqList = new List<ChallengeChallengeUserViewModel>();
+                var resultseqList = new ChallengeChallengeUserViewModel();
 
                 resultordered = resultordered.OrderByDescending(x => x.Mark).ToList();
 
@@ -360,17 +371,17 @@ namespace AqApplication.Repository.Challenge
                 foreach (var item in resultordered)
                 {
 
-                    resultseqList.Add(new ChallengeChallengeUserViewModel
+                    resultseqList=new ChallengeChallengeUserViewModel
                     {
 
                         Mark = item.Mark,
                         Seq = i,
                         UserName = item.UserName
-                    });
+                    };
                     i++;
                 }
 
-                return new Result<List<ChallengeChallengeUserViewModel>>
+                return new Result<ChallengeChallengeUserViewModel>
                 {
                     Data = resultseqList,
                     Success = true
@@ -378,9 +389,36 @@ namespace AqApplication.Repository.Challenge
             }
             catch (Exception ex)
             {
-                return new Result<List<ChallengeChallengeUserViewModel>>(ex);
+                return new Result<ChallengeChallengeUserViewModel>(ex);
             }
         }
+
+        public Result<Entity.Challenge.Challenge> GetLastChallengeByType(ChallengeTypeEnum type)
+        {
+            try
+            {
+                var challenge = context.Challenge.Where(x => x.ChallengeTypeId == (int)type).OrderByDescending(x => x.Id).FirstOrDefault();
+                if (challenge != null)
+                {
+                    return new Result<Entity.Challenge.Challenge>
+                    {
+                        Data = challenge,
+                        Success = true,
+                    };
+                }
+                return new Result<Entity.Challenge.Challenge>
+                {
+                    Message = "Kayıt bulunamadı",
+                    Success = false,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Result<Entity.Challenge.Challenge>(ex);
+
+            }
+        }
+
 
         public void SetCompletedChallenge()
         {

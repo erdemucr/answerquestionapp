@@ -19,6 +19,10 @@ namespace AqApplication.Manage
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+              .UseKestrel()
+            .UseContentRoot(Directory.GetCurrentDirectory())
+            .UseSetting(WebHostDefaults.DetailedErrorsKey, "true")
+            .UseIISIntegration()
                 .UseStartup<Startup>();
     }
 }

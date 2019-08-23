@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Cors;
 using System.Net.Mail;
+using AqApplication.Repository.Challenge;
 
 namespace AqApplication.Service.Controllers
 {
@@ -29,13 +30,15 @@ namespace AqApplication.Service.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AqApplication.Repository.Session.IUser _iUser;
         private readonly AppSettings _appSettings;
-
+        private readonly IChallenge _iChallenge;
 
         public AccountController(UserManager<ApplicationUser> userManager,
                                 AqApplication.Repository.Session.IUser iUser,
-                                IOptions<AppSettings> appSettings
+                                IOptions<AppSettings> appSettings,
+                                IChallenge iChallenge
             )
         {
+            _iChallenge = iChallenge;
             _userManager = userManager;
             _iUser = iUser;
             _appSettings = appSettings.Value;
@@ -128,9 +131,12 @@ namespace AqApplication.Service.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
             //So see token info also please check token	       
-            return Ok(new LoginResultModel { Token = tokenString,
-                UserName = user.Result.UserName, FullName = user.Result.FirstName + " " + user.Result.LastName,
-                UserId= user.Result.Id
+            return Ok(new LoginResultModel
+            {
+                Token = tokenString,
+                UserName = user.Result.UserName,
+                FullName = user.Result.FirstName + " " + user.Result.LastName,
+                UserId = user.Result.Id
             });
         }
 
@@ -201,5 +207,14 @@ namespace AqApplication.Service.Controllers
             #endregion
             return Ok(new { success = true });
         }
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Test")]
+        public IActionResult Test()
+        {
+            _iChallenge.RandomChallenge("11efabde-f29e-4240-aa5b-995d07169ced");
+            return Ok();
+        }
+
     }
 }

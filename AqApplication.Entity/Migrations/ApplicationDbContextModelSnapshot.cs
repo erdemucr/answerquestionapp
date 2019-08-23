@@ -503,7 +503,7 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<int?>("Seo");
 
-                    b.Property<int>("SubSubjectId");
+                    b.Property<int?>("SubSubjectId");
 
                     b.HasKey("Id");
 
@@ -935,8 +935,7 @@ namespace AqApplication.Entity.Migrations
 
                     b.HasOne("AqApplication.Entity.Question.SubSubject", "SubSubject")
                         .WithMany()
-                        .HasForeignKey("SubSubjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SubSubjectId");
                 });
 
             modelBuilder.Entity("AqApplication.Entity.Question.QuestionPdf", b =>

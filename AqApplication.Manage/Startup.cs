@@ -19,6 +19,11 @@ using AqApplication.Repository.Session;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using AqApplication.Manage.Utilities;
 using Microsoft.AspNetCore.Hosting.Internal;
+using Hangfire;
+using Hangfire.SqlServer;
+using AnswerQuestionApp.Manage.HangFire;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Server.IISIntegration;
 
 namespace AqApplication.Manage
 {
@@ -37,7 +42,7 @@ namespace AqApplication.Manage
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
@@ -57,7 +62,22 @@ namespace AqApplication.Manage
             services.AddScoped<IChallenge, ChallengeRepo>();
             services.AddScoped<IFile, FileRepo>();
             services.AddScoped<IUser, UserRepo>();
+            services.AddScoped<ChallengeCron>();
             //services.AddSingleton<IHostingEnvironment>(new HostingEnvironment());// File I/0 enviroment etc.
+
+            services.AddHangfire(configuration => configuration
+         .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+         .UseSimpleAssemblyNameTypeSerializer()
+         .UseRecommendedSerializerSettings()
+         .UseSqlServerStorage(Configuration.GetConnectionString("HangfireDbConn"), new SqlServerStorageOptions
+         {
+             CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+             SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+             QueuePollInterval = TimeSpan.Zero,
+             UseRecommendedIsolationLevel = true,
+             UsePageLocksOnDequeue = true,
+             DisableGlobalLocks = true
+         }));
 
 
             services.Configure<IdentityOptions>(options =>
@@ -80,10 +100,13 @@ namespace AqApplication.Manage
                 //options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
+            services.AddSession(opt =>
+            {
+                opt.Cookie.IsEssential = true;
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddSessionStateTempDataProvider();
 
-            services.AddSession(); 
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -92,10 +115,19 @@ namespace AqApplication.Manage
             });
             services.AddSingleton<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
+
+            services.Configure<IISOptions>(iis =>
+            {
+                iis.AuthenticationDisplayName = "Windows";
+                iis.AutomaticAuthentication = true;
+            });
+
+            services.AddAuthentication(IISDefaults.AuthenticationScheme);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+    IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -114,6 +146,15 @@ namespace AqApplication.Manage
 
             app.UseAuthentication();
             app.UseSession();
+
+            GlobalConfiguration.Configuration
+        .UseActivator(new HangfireActivator(serviceProvider));
+
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
+
+            RecurringJob.AddOrUpdate(() => serviceProvider.GetRequiredService<IChallenge>().RandomChallenge("11efabde-f29e-4240-aa5b-995d07169ced"), "*/5 * * * *");
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

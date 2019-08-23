@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AnswerQuestionApp.Service.Models;
 using AqApplication.Core.Type;
 using AqApplication.Repository.Challenge;
 using AqApplication.Repository.ViewModels;
@@ -14,6 +15,7 @@ namespace AqApplication.Service.Controllers
 {
     [Route("api/Question")]
     [EnableCors("AllowAll")]
+    [Produces("application/json")]
     [ApiController]
     public class QuestionController : ControllerBase
     {
@@ -46,16 +48,18 @@ namespace AqApplication.Service.Controllers
         }
         [Route("SetChallengeAnswer")]
         [HttpPost]
-        public Result SetChallengeAnswer(int ChallengeId, int AnswerIndex, int QuestionId, string userId
-                )
+        public ActionResult<Result> SetChallengeAnswer([FromBody]QuestionAnswerDto model)
         {
-            return _iChallenge.SetChallengeAnswer(new ChallengeQuestionAnswerViewModel
+            var result = _iChallenge.SetChallengeAnswer(new ChallengeQuestionAnswerViewModel
             {
-                AnswerIndex = AnswerIndex,
-                ChallengeId = ChallengeId,
-                QuestionId = QuestionId,
-                UserId = HttpContextUserInfo.GetUserId(HttpContext.User.Identity)
+                AnswerIndex = model.AnswerIndex,
+                ChallengeId = model.ChallengeId,
+                QuestionId = model.QuestionId,
+                UserId = model.userId
             });
+            if (!result.Success)
+                return BadRequest();
+            return Ok(result);
         }
         [Route("GetResultChallenge")]
         [HttpGet]

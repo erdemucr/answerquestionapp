@@ -11,7 +11,7 @@
                             <p class="content-color-secondary mb-0">
                                 Hoşgeldin
                             </p>
-                            <h4 class="content-color-primary mb-0"> Erdem Uçar</h4>
+                            <h4 class="content-color-primary mb-0" id="fullNameTitleMenu"> </h4>
                         </div>
                     </div>
                 </div>
@@ -48,3 +48,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#fullNameTitleMenu").html(aqfw().Auth().GetfullName());
+    });
+</script>

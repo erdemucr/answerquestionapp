@@ -15,8 +15,7 @@ namespace AqApplication.Entity.Question
         [Display(Name = "Image Url")]
         public string MainImage { get; set; }
         [Display(Name = "Konu")]
-        [Required(ErrorMessage = "Bu alan boş geçilmez")]
-        public int SubSubjectId { get; set; }
+        public int? SubSubjectId { get; set; }
         [Display(Name = "Zorluk")]
         public int? Difficulty { get; set; }
         [Display(Name = "Teklif")]

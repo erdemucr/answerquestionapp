@@ -1,4 +1,5 @@
-﻿using AqApplication.Entity.Identity.Data;
+﻿using AnswerQuestionApp.Manage.HangFire;
+using AqApplication.Entity.Identity.Data;
 using AqApplication.Logging.Providers;
 using AqApplication.Repository.Challenge;
 using AqApplication.Repository.File;
@@ -54,6 +55,7 @@ namespace AqApplication.Service
             services.AddScoped<IChallenge, ChallengeRepo>();
             services.AddScoped<IFile, FileRepo>();
             services.AddScoped<IUser, UserRepo>();
+
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -162,7 +164,19 @@ namespace AqApplication.Service
                     if (ctx.WebSockets.IsWebSocketRequest)
                     {
                         var wSocket = await ctx.WebSockets.AcceptWebSocketAsync();
-                        await new WebSockets().Talk(ctx, wSocket);
+                        await new WebSockets().ChallengeStart(ctx, wSocket);
+                    }
+                    else
+                    {
+                        ctx.Response.StatusCode = 400;
+                    }
+                }
+               else if (ctx.Request.Path == "/result")
+                {
+                    if (ctx.WebSockets.IsWebSocketRequest)
+                    {
+                        var wSocket = await ctx.WebSockets.AcceptWebSocketAsync();
+                        await new WebSockets().ChallengeEnd(ctx, wSocket);
                     }
                     else
                     {
@@ -180,6 +194,7 @@ namespace AqApplication.Service
             app.UseCors("AllowAll");
 
             app.UseHttpsRedirection();
+
             app.UseMvc();
         }
     }

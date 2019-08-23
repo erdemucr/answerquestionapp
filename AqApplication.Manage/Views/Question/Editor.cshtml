@@ -23,6 +23,9 @@
         .fleft {
             float: left;
         }
+        .btn{
+            cursor:pointer;
+        }
     </style>
 }
 
@@ -57,7 +60,10 @@
                 <div class="col-md-4 text-center">
                     <input type="number" value="" onchange="GotoPage()" style="width:90px;" class="form-control input-group-sm fleft" id="currentPageTxt" />  <h3 class="w55 fleft">/ <span id="totalPage"></span></h3>
                 </div>
-                <div class="col-md-4 text-right">
+                <div class="col-md-2 text-right">
+                    <input type="button" value="X" class="btn btn-default" id="removeCropBox" />
+                </div>
+                <div class="col-md-2 text-right">
                     <input type="button" value=">" class="btn btn-default" onclick="NextImage(true);" />
                 </div>
 
@@ -260,7 +266,6 @@ Try it Yourself »
 @section _scripts{
     <script src="/Assets/plugins/cropperjs-master/dist/cropper.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
-    <script src="~/Scripts/jquery.rframe.js" type="text/javascript"></script>
     <script type="text/javascript">
         var cropper;
         var width = 0, height = 0;
@@ -331,7 +336,7 @@ Try it Yourself »
                         $el.html("");
                         $el.append("<option value='null'>Seçiniz</option>");
                         $.each(data.data, function (i, v) {
-                            $el.append("<option value='" + v.Key + "'>" + v.Value + "</option>");
+                            $el.append("<option value='" + v.key + "'>" + v.value + "</option>");
                         });
                         if (subjectId !== null && subjectId !== "" && onLoad) {
                             $el.val(subjectId);
@@ -355,7 +360,7 @@ Try it Yourself »
                         $el.html("");
                         $el.append("<option value='null'>Seçiniz</option>");
                         $.each(data.data, function (i, v) {
-                            $el.append("<option value='" + v.Key + "'>" + v.Value + "</option>");
+                            $el.append("<option value='" + v.key + "'>" + v.value + "</option>");
                         });
                         if (subsubjectId !== null && subsubjectId !== "" && onLoad) {
                             $el.val(subsubjectId);
@@ -406,7 +411,7 @@ Try it Yourself »
                         $el.find("tbody").html("");
                         $.each(data.data, function (i, item) {
                             $el.find("tbody")
-                                .append("<tr><td>" + item.Id + "</td><td>" + item.Name + "</td><td>" + item.TotalPage + "</td><td><input type='button' value='Seç' class='btn btn-info'  onclick='SetDocuments(" + item.Id + ");'  /></td></tr>");
+                                .append("<tr><td>" + item.id + "</td><td>" + item.name + "</td><td>" + item.totalPage + "</td><td><input type='button' value='Seç' class='btn btn-info'  onclick='SetDocuments(" + item.id + ");'  /></td></tr>");
 
                         });
                     }
@@ -419,9 +424,9 @@ Try it Yourself »
                     url: "/Question/SetPdfDocument",
                     data: { id: value },
                     success: function (data) {
-                        currentPdf = data.data.PdfUrl;
+                        currentPdf = data.data.pdfUrl;
 
-                        totalPage = data.data.TotalPage;
+                        totalPage = data.data.totalPage;
                         $("#totalPage").html(totalPage);
 
                         SetEditorImage(0);
@@ -459,7 +464,9 @@ Try it Yourself »
             function EditorInitializer() {
 
                 var image = document.getElementById('image');
-                //image.cropper('destroy');
+                if (cropper != null) {
+                    cropper.destroy();
+                }
                 cropper = new Cropper(image, {
 
 
@@ -495,6 +502,9 @@ Try it Yourself »
                         console.log(e.detail.scaleY);
                     }
                 });
+                  $(document).on("click", "#removeCropBox", function () {
+            cropper.clear();
+        });
 
             }
 
@@ -511,6 +521,7 @@ Try it Yourself »
 
 
             }
+
             function GotoPage() {
                 var cvl = $("#currentPageTxt").val();
                 var indVl = parseInt(cvl);
@@ -531,8 +542,9 @@ Try it Yourself »
                 jQuery(function ($) {
                     $.rFrame();
                 });
-
             });
+      
+
 
     </script>
 }
