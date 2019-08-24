@@ -153,7 +153,7 @@ namespace AqApplication.Manage
             app.UseHangfireDashboard();
             app.UseHangfireServer();
 
-            RecurringJob.AddOrUpdate(() => serviceProvider.GetRequiredService<IChallenge>().RandomChallenge("11efabde-f29e-4240-aa5b-995d07169ced"), "*/5 * * * *");
+            RecurringJob.AddOrUpdate(() => serviceProvider.GetRequiredService<IChallenge>().RandomChallenge("11efabde-f29e-4240-aa5b-995d07169ced"), "*/1 * * * *");
 
             app.UseMvc(routes =>
             {

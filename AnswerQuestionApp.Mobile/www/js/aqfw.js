@@ -27,21 +27,23 @@
                 $(".main-header").hide();
                 SetCssClass('wrapper', 'pink-gradient', true);
                 SetCssClass('wrapper', 'align-items-center', true);
+                SetCssClass('content-color-secondary', 'content-color-secondary-white', true);
+
             }
             else if (route === routes.SingUp) {
                 $(".main-header").hide();
                 SetCssClass('wrapper', 'pink-gradient', true);
                 SetCssClass('wrapper', 'align-items-center', true);
+                SetCssClass('content-color-secondary', 'content-color-secondary-white', true);
             }
 
             else {
                 SetCssClass('wrapper', 'pink-gradient', false);
                 SetCssClass('wrapper', 'align-items-center', false);
+                SetCssClass('content-color-secondary', 'content-color-secondary-white', false);
                 $(".main-header").show();
                 $("#fullNameTitle").html(aqfw().Auth().GetfullName());
-
             }
-
         }
 
         function SetCssClass(containerClass, cssClass, add) {
@@ -321,9 +323,7 @@ var socketConnection = function (challengeId) {
                     $(answerDiv).find(".icon-circle").show();
                 }
             });
-        }, 100);
-
-        $(this).show("slide", { direction: "left" }, 1000);
+        }, 100); 
 
         $(document).on("click", ".pagedBox", function () {
             var ind = $(this).html().trim();
@@ -343,6 +343,7 @@ var socketConnection = function (challengeId) {
 
         $("#participantTable").hide();
         $("#question_wrapper").show();
+        $("#timeClock").hide();
         if (questionData[currentQuestion] === 5) {
             $("#fiveOption").show();
         }

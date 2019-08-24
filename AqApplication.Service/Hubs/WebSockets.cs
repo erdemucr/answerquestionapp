@@ -22,6 +22,7 @@ namespace AqApplication.Service.Hubs
 
         private AqApplication.Repository.Session.IUser _iUser;
         private AqApplication.Repository.Challenge.IChallenge _iChallenge;
+        private  const int ChallengePeriodMinutes= 1;
 
         private static IList<SocketClientModel> _clientsChallengeStart = new List<SocketClientModel>();
         private static IList<SocketClientModel> _clientsChallengeEnd = new List<SocketClientModel>();
@@ -68,7 +69,7 @@ namespace AqApplication.Service.Hubs
                                     });
                                 }
                             }
-                            int leftSecond = (int)(lastRandomChallenge.Data.CreatedDate.AddMinutes(5) - DateTime.Now).TotalSeconds;
+                            int leftSecond = (int)(lastRandomChallenge.Data.CreatedDate.AddMinutes(ChallengePeriodMinutes) - DateTime.Now).TotalSeconds;
 
                             await SendClientListByChallengeId(lastRandomChallenge.Data.Id, leftSecond <= 0 ? -1 : leftSecond);
                             result = await socket.ReceiveAsync(new ArraySegment<byte>(bag), CancellationToken.None);
