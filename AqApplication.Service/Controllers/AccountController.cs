@@ -157,7 +157,8 @@ namespace AqApplication.Service.Controllers
                 PhoneNumber = "+905432102644",
                 UserName = credentials.Email,
                 RegisterDate = DateTime.Now,
-                MemberType = Entity.Constants.MemberType.WebUser
+                MemberType = Entity.Constants.MemberType.WebUser,
+                Email= credentials.Email
             };
             var result = _userManager.CreateAsync(applicationUser, credentials.Password).Result;
 

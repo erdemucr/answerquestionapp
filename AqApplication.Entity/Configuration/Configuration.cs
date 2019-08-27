@@ -14,6 +14,14 @@ namespace AnswerQuestionApp.Entity.Configuration
 
     }
 
+    public class RandomUser
+    {
+        [Key]
+        public int Id { get; set; }
+
+        public int Count { get; set; }
+    }
+
     public enum ConfigKey
     {
         ChallengeNextSecond=0,

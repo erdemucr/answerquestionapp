@@ -101,4 +101,54 @@ namespace AqApplication.Entity.Challenge
         public virtual ApplicationUser ApplicationUser { get; set; }
 
     }
+
+    public class ChallengeTemplate : BaseEntity
+    {
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        [Display(Name = "Başlangıç Tarihi")]
+        public DateTime? StartDate { get; set; }
+
+        [Display(Name = "Bitiş Tarihi")]
+        public DateTime? EndDate { get; set; }
+
+       public  ICollection<ChallengeTemplateItems> ChallengeTemplateItems { get; set; }
+    }
+
+    public class ChallengeTemplateItems : BaseEntity
+    {
+        public int ExamId { get; set; }
+
+        [ForeignKey("ExamId")]
+        public Exam Exam { get; set; }
+
+        [Display(Name = "Zorluk")]
+        public int? Difficulty { get; set; }
+
+        [Display(Name = "Alt Konu")]
+        public int? SubSubjectId { get; set; }
+
+        [Display(Name = "Konu")]
+        public int? SubjectId { get; set; }
+
+        public int? QuestionPdfId { get; set; }
+
+        public int ChallengeTemplateId { get; set; }
+        [Display(Name = "Sayı")]
+        public int Count { get; set; }
+
+        [ForeignKey("ChallengeTemplateId")]
+        public ChallengeTemplate ChallengeTemplate { get; set; }
+
+        [ForeignKey("SubSubjectId")]
+        public SubSubject SubSubject { get; set; }
+
+        [ForeignKey("SubjectId")]
+        public Subject Subject { get; set; }
+
+        [ForeignKey("QuestionPdfId")]
+        public QuestionPdf QuestionPdf { get; set; }
+    }
 }

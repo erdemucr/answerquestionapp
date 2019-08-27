@@ -164,8 +164,11 @@
             $form.find('input').each(function (i) {
                 var $el = $(this);
                 if ($el.attr('data-email') === 'true' && !validateEmail($el.val().trim()) && message === '') {
-                    alert($el.attr('data-email-message'));
-                    message = $el.attr('data-required-message');
+                    message = $el.attr('data-email-message');
+                    return message;
+                }
+                if ($el.attr('data-password') === 'true' && !validateEmail($el.val().trim()) && message === '') {
+                    message = $el.attr('data-password-message');
                     return message;
                 }
             });
@@ -242,9 +245,7 @@ var socketConnection = function (challengeId) {
                     $('#timeClock').text(getElapsedTimeString(elapsed_seconds));
                     if (elapsed_seconds === 0) {
                         clearInterval(intervalInstance);
-
-              
-                        SliderInit();
+                        SliderInit(socketResponse.QuizDuration, socketResponse.ChallengeId);
                         setTimeout(function () {
                             $("#timeClock").hide();
                         }, 1500);
@@ -320,7 +321,8 @@ var socketConnection = function (challengeId) {
         $("#notAnsweredQuesitonCount").text(questionData.length);
 
     }
-    function SliderInit() {
+    var quizintervalInstance = null;
+    function SliderInit(duration, challengeId) {
         $("#participantTable").hide();
         $("#question_wrapper").show();
         $("#page-boxes").parent().show();
@@ -348,6 +350,19 @@ var socketConnection = function (challengeId) {
                     $(answerDiv).find(".icon-circle").show();
                 }
             });
+
+            quizintervalInstance = setInterval(function () {
+                elapsed_seconds = elapsed_seconds - 1;
+                $("#timeClock").show();
+                $('#timeClock').text(getElapsedTimeString(duration));
+                if (elapsed_seconds === 0) {
+                    ResultPage(challengeId);
+                    clearInterval(quizintervalInstance);
+                    setTimeout(function () {
+                        $("#timeClock").hide();
+                    }, 1500);
+                }
+            }, 1000);
         }, 100);
 
         $(document).on("click", ".pagedBox", function () {

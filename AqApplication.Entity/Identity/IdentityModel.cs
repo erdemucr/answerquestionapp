@@ -59,6 +59,11 @@ namespace AqApplication.Entity.Identity.Data
         public DbSet<HostCallLoggingModel> HostCallLogging { get; set; }
 
         public DbSet<ConfigurationValues> ConfigurationValues { get; set; }
+        public DbSet<RandomUser> RandomUsers { get; set; }
+
+        public DbSet<ChallengeTemplate> ChallengeTemplates { get; set; }
+
+        public DbSet<ChallengeTemplateItems> ChallengeTemplateItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

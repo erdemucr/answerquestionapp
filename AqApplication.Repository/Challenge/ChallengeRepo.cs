@@ -9,6 +9,7 @@ using AqApplication.Entity.Challenge;
 using AqApplication.Entity.Constants;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AnswerQuestionApp.Repository.Configuration;
 
 namespace AqApplication.Repository.Challenge
 {
@@ -77,6 +78,9 @@ namespace AqApplication.Repository.Challenge
                         Success = false,
                         Message = "Bir hata oluştu"
                     };
+
+                var quizDuration = new ConfigurationValuesRepo(context).GetByKey(AnswerQuestionApp.Entity.Configuration.ConfigKey.ChallengeTimeSecond);
+
                 var questionList = addChallenge.Data.ChallengeQuestions.Select(x => new ChallengeQuestionViewModel
                 {
                     ImageExits = true,
@@ -84,7 +88,7 @@ namespace AqApplication.Repository.Challenge
                     Image = x.QuestionMain.MainImage,
                     QuestionId = x.QuestionMain.Id,
                     AnswerCount = x.QuestionMain.AnswerCount,
-                    //ChallengeId = x.ChallengeSessionId
+                    QuizDuration = Convert.ToInt32(quizDuration.Data.Values)
 
                 }).ToList();
 
@@ -272,8 +276,6 @@ namespace AqApplication.Repository.Challenge
                 Message = "İşlem başarı ile tamamlandı"
             };
         }
-
-
         public Result SetChallengeAnswer(ChallengeQuestionAnswerViewModel model)
         {
             try
@@ -309,7 +311,6 @@ namespace AqApplication.Repository.Challenge
                 return new Result(ex);
             }
         }
-
 
         public Result<ChallengeChallengeUserViewModel> GetResultChallenge(int challengeId, string userId)
         {
@@ -419,7 +420,6 @@ namespace AqApplication.Repository.Challenge
             }
         }
 
-
         public void SetCompletedChallenge()
         {
             try
@@ -432,7 +432,6 @@ namespace AqApplication.Repository.Challenge
                 throw new Exception();
             }
         }
-
 
         protected virtual void Dispose(bool disposing)
         {

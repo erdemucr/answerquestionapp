@@ -4,14 +4,16 @@ using AqApplication.Entity.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AqApplication.Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190827114854_rnuser")]
+    partial class rnuser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,92 +192,6 @@ namespace AqApplication.Entity.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ChallengeSessions");
-                });
-
-            modelBuilder.Entity("AqApplication.Entity.Challenge.ChallengeTemplate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Creator");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Editor");
-
-                    b.Property<DateTime?>("EndDate");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int?>("Seo");
-
-                    b.Property<DateTime?>("StartDate");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Creator");
-
-                    b.HasIndex("Editor");
-
-                    b.ToTable("ChallengeTemplates");
-                });
-
-            modelBuilder.Entity("AqApplication.Entity.Challenge.ChallengeTemplateItems", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ChallengeTemplateId");
-
-                    b.Property<int>("Count");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Creator");
-
-                    b.Property<int?>("Difficulty");
-
-                    b.Property<string>("Editor");
-
-                    b.Property<int>("ExamId");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int?>("QuestionPdfId");
-
-                    b.Property<int?>("Seo");
-
-                    b.Property<int?>("SubSubjectId");
-
-                    b.Property<int?>("SubjectId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChallengeTemplateId");
-
-                    b.HasIndex("Creator");
-
-                    b.HasIndex("Editor");
-
-                    b.HasIndex("ExamId");
-
-                    b.HasIndex("QuestionPdfId");
-
-                    b.HasIndex("SubSubjectId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("ChallengeTemplateItems");
                 });
 
             modelBuilder.Entity("AqApplication.Entity.Challenge.ChallengeType", b =>
@@ -956,50 +872,6 @@ namespace AqApplication.Entity.Migrations
                     b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("AqApplication.Entity.Challenge.ChallengeTemplate", b =>
-                {
-                    b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "AppUserCreator")
-                        .WithMany()
-                        .HasForeignKey("Creator");
-
-                    b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "AppUserEditor")
-                        .WithMany()
-                        .HasForeignKey("Editor");
-                });
-
-            modelBuilder.Entity("AqApplication.Entity.Challenge.ChallengeTemplateItems", b =>
-                {
-                    b.HasOne("AqApplication.Entity.Challenge.ChallengeTemplate", "ChallengeTemplate")
-                        .WithMany("ChallengeTemplateItems")
-                        .HasForeignKey("ChallengeTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "AppUserCreator")
-                        .WithMany()
-                        .HasForeignKey("Creator");
-
-                    b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "AppUserEditor")
-                        .WithMany()
-                        .HasForeignKey("Editor");
-
-                    b.HasOne("AqApplication.Entity.Question.Exam", "Exam")
-                        .WithMany()
-                        .HasForeignKey("ExamId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("AqApplication.Entity.Question.QuestionPdf", "QuestionPdf")
-                        .WithMany()
-                        .HasForeignKey("QuestionPdfId");
-
-                    b.HasOne("AqApplication.Entity.Question.SubSubject", "SubSubject")
-                        .WithMany()
-                        .HasForeignKey("SubSubjectId");
-
-                    b.HasOne("AqApplication.Entity.Question.Subject", "Subject")
-                        .WithMany()
-                        .HasForeignKey("SubjectId");
                 });
 
             modelBuilder.Entity("AqApplication.Entity.Challenge.ChallengeType", b =>

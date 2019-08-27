@@ -6,6 +6,11 @@
                 <h5 class="font-weight-light mb-5 text-white text-center">Kayı Ol,<br>Lütfen üye kaydı için gerekli bilgileri giriniz</h5>
                 <div class="card mb-4">
                     <div class="card-body p-0">
+                        <label for="name" class="sr-only">Kullanıcı Adı</label>
+                        <input type="text" id="userName" class="form-control text-center form-control-lg border-0"
+                               data-required="true" data-required-message="Lütfen kullanıcı adınızı giriniz"
+                               placeholder="Kullanıcı aDI" required="" autofocus="">
+                        <hr class="my-0">
                         <label for="name" class="sr-only">Adınız</label>
                         <input type="text" id="name" class="form-control text-center form-control-lg border-0"
                                data-required="true" data-required-message="Lütfen adınızı giriniz"
@@ -19,11 +24,13 @@
                         <label for="inputEmail" class="sr-only">E-Posta</label>
                         <input type="text" id="inputEmail" class="form-control text-center form-control-lg border-0"
                                data-required="true" data-required-message="Lütfen e-posta adresinizi giriniz"
+                               data-email="true" data-email-message="Lütfen geçerli bir e-posta adresi giriniz"
                                placeholder="E-Posta" required="">
                         <hr class="my-0">
                         <label for="inputPassword" class="sr-only">Şifreniz</label>
                         <input type="password" id="inputPassword" class="form-control text-center form-control-lg border-0"
                                data-required="true" data-required-message="Lütfen şifrenizi giriniz"
+                                data-password="true" data-password-message="Şifreniz en az 6 karakter olmalıdır"
                                placeholder="Şifreniz" required="">
                         <hr class="my-0">
                         <label for="inputPassword2" class="sr-only">Tekrar Şifreniz</label>
@@ -48,12 +55,13 @@
                 <br>
 
             </div>
-            </form>
+        </form>
     </div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
         $("#registerBtn").click(function () {
+            var userName = $("#userName").val();
             var name = $("#name").val();
             var surname = $("#surname").val();
             var pass = $("#inputPassword").val();
@@ -64,14 +72,15 @@
                 alert(isValid);
             }
             else {
-                registerUser(name, surname, email, pass);
+                registerUser(userName, name, surname, email, pass);
             }
         });
     });
 
-    var registerUser = function (name, surname, email, password) {
+    var registerUser = function (userName, name, surname, email, password) {
 
         var obj = {
+            'UserName': userName,
             'FirstName': name,
             'LastName': surname,
             'Email': email,
@@ -91,7 +100,7 @@
                         aqfw().Navigation().Redirect(aqfw().Navigation().Routes.SingIn);
                     }
                     else {
-                        aqfw().MessageBox().ShowWarning('Uyarı',data.message);
+                        aqfw().MessageBox().ShowWarning('Uyarı', data.message);
                     }
                 }
                 else {

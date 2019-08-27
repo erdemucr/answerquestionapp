@@ -20,6 +20,8 @@ namespace AqApplication.Repository.ViewModels
         public int ChallengeId { get; set; }
 
         public int CorrectAnswer { get; set; }
+
+        public int QuizDuration { get; set; }
     }
 
 
