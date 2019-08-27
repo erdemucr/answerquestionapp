@@ -50,7 +50,7 @@
     <Content Update="Views\Configuration\Values.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Quiz\_ViewStart.cshtml">
+    <Content Update="Views\Quiz\ChallengeList.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>
