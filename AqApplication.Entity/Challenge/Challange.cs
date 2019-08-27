@@ -104,8 +104,11 @@ namespace AqApplication.Entity.Challenge
 
     public class ChallengeTemplate : BaseEntity
     {
+        [Display(Name = "Template Adı")]
+        [Required(ErrorMessage ="Bu alan boş geçilmez")]
         public string Name { get; set; }
 
+        [Display(Name = "Açıklama")]
         public string Description { get; set; }
 
         [Display(Name = "Başlangıç Tarihi")]
@@ -114,7 +117,12 @@ namespace AqApplication.Entity.Challenge
         [Display(Name = "Bitiş Tarihi")]
         public DateTime? EndDate { get; set; }
 
-       public  ICollection<ChallengeTemplateItems> ChallengeTemplateItems { get; set; }
+        [NotMapped]
+        public string StartDateTime { get; set; }
+        [NotMapped]
+        public string EndDateTime { get; set; }
+
+        public  ICollection<ChallengeTemplateItems> ChallengeTemplateItems { get; set; }
     }
 
     public class ChallengeTemplateItems : BaseEntity

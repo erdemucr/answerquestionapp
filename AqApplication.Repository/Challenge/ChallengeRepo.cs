@@ -10,6 +10,7 @@ using AqApplication.Entity.Constants;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AnswerQuestionApp.Repository.Configuration;
+using AnswerQuestionApp.Repository.FilterModels;
 
 namespace AqApplication.Repository.Challenge
 {
@@ -17,6 +18,7 @@ namespace AqApplication.Repository.Challenge
     {
         private ApplicationDbContext context;
         private bool disposedValue = false;
+        private readonly int PageSize = 20;
         private const int challengeExpDay = 12, challengeQuestionLimit = 8;
         public ChallengeRepo(ApplicationDbContext _context)
         {
@@ -299,7 +301,7 @@ namespace AqApplication.Repository.Challenge
 
                     });
                 }
-             
+
                 context.SaveChanges();
                 return new Result
                 {
@@ -331,24 +333,24 @@ namespace AqApplication.Repository.Challenge
 
                 //foreach (var user in challengeUser)
                 //{
-                    var answers = challengeAnswer.Where(x => x.UserId == userId && x.ChallengeId
-                  == challengeId).ToList();
-                    int correct = 0, wrong = 0;
-                    foreach (var item in answers)
-                    {
-                        var question = challangeQuestion.FirstOrDefault(x => x.QuestionId == item.QuestionId);
-                        if (question == null)
-                            throw new Exception();
-                        if (item.AnswerIndex == question.QuestionMain.CorrectAnswer)
-                            correct++;
-                        else
-                            wrong++;
-                    }
-                    resultList.Add(new ChallengeChallengeUserViewModel
-                    {
-                        correct = correct,
-                        UserName = challengeAnswer.FirstOrDefault(x => x.UserId == userId).ApplicationUser.UserName
-                    });
+                var answers = challengeAnswer.Where(x => x.UserId == userId && x.ChallengeId
+              == challengeId).ToList();
+                int correct = 0, wrong = 0;
+                foreach (var item in answers)
+                {
+                    var question = challangeQuestion.FirstOrDefault(x => x.QuestionId == item.QuestionId);
+                    if (question == null)
+                        throw new Exception();
+                    if (item.AnswerIndex == question.QuestionMain.CorrectAnswer)
+                        correct++;
+                    else
+                        wrong++;
+                }
+                resultList.Add(new ChallengeChallengeUserViewModel
+                {
+                    correct = correct,
+                    UserName = challengeAnswer.FirstOrDefault(x => x.UserId == userId).ApplicationUser.UserName
+                });
 
                 //}
                 var resultordered = new List<ChallengeChallengeUserViewModel>();
@@ -372,7 +374,7 @@ namespace AqApplication.Repository.Challenge
                 foreach (var item in resultordered)
                 {
 
-                    resultseqList=new ChallengeChallengeUserViewModel
+                    resultseqList = new ChallengeChallengeUserViewModel
                     {
 
                         Mark = item.Mark,
@@ -431,6 +433,39 @@ namespace AqApplication.Repository.Challenge
             {
                 throw new Exception();
             }
+        }
+
+
+        public Result<IEnumerable<Entity.Challenge.Challenge>> GetChallengesPaginated(ChallengeFilterModel model)
+        {
+            try
+            {
+                var list = context.Challenge
+                   .AsQueryable();
+                if (model.StartDate.ToDate().HasValue)
+                    list = list.Where(x => x.CreatedDate >= model.StartDate.ToDate().Value);
+                if ( model.EndDate.ToDate().HasValue)
+                    list = list.Where(x => x.CreatedDate < model.EndDate.ToDate().Value);
+
+                return new Result<IEnumerable<Entity.Challenge.Challenge>>
+                {
+                    Data = list.OrderByDescending(x => x.Id).Skip(model.CurrentPage.HasValue ? ((model.CurrentPage.Value - 1) * PageSize) : 0).Take(PageSize).AsEnumerable(),
+                    Success = true,
+                    Message = "Challenge listesini görüntülemektesiniz",
+                    Paginition = new Paginition(list.Count(), PageSize, model.CurrentPage.HasValue ? model.CurrentPage.Value : 1, model.Name,
+                    model.StartDate,
+                model.EndDate)
+                };
+            }
+            catch (Exception ex)
+            {
+                new Result<IEnumerable<Entity.Challenge.Challenge>>(ex);
+            }
+            return new Result<IEnumerable<Entity.Challenge.Challenge>>
+            {
+                Success = false,
+                Message = "Bir hata oluştu"
+            };
         }
 
         protected virtual void Dispose(bool disposing)

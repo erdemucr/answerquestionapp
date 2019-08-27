@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace AqApplication.Core.Type
 {
 
-    public class Paginition: FilterModel
+    public class Paginition : FilterModel
     {
         private int totalCount { get; set; }
         private int pageSize { get; set; }
         private int currentPage { get; set; }
         private int pageCount { get; set; }
-        public Paginition(int totalCount, int pageSize, int currentPage,string name,DateTime? dateStart, DateTime? dateEnd)
+        public Paginition(int totalCount, int pageSize, int currentPage, string name, string dateStart, string dateEnd)
         {
             this.totalCount = totalCount;
             this.pageSize = pageSize;
@@ -23,8 +23,10 @@ namespace AqApplication.Core.Type
             this.StartDate = dateStart;
             this.EndDate = dateEnd;
         }
-        public int TotalCount{
-            get{
+        public int TotalCount
+        {
+            get
+            {
                 return totalCount;
             }
         }
@@ -52,9 +54,9 @@ namespace AqApplication.Core.Type
 
     }
 
-    public abstract class BaseFilterModel: FilterModel
+    public abstract class BaseFilterModel : FilterModel
     {
- 
+
         public int? TotalPage { get; set; }
         public int? CurrentPage { get; set; }
 
@@ -63,7 +65,20 @@ namespace AqApplication.Core.Type
     public abstract class FilterModel
     {
         public string Name { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public string StartDate { get; set; }
+
+        public string EndDate { get; set; }
+    }
+    public static class FilterModelExt
+    {
+        public static DateTime? ToDate(this string date)
+        {
+            DateTime a;
+            if (DateTime.TryParse(date,out a))
+            {
+                return Convert.ToDateTime(date);
+            }
+            return null;
+        }
     }
 }

@@ -7,6 +7,14 @@ namespace AqApplication.Manage.Utilities
 {
     public static class Formats
     {
+        public static string RegularDatetime(this DateTime? date)
+        {
+            if (!date.HasValue)
+                return "-";
+            if (date.Value == default(DateTime))
+                return "-";
+            return date.Value.ToString("dd/MM/yyyy");
+        }
         public static string RegularDatetime(this DateTime date)
         {
             if (date == default(DateTime))

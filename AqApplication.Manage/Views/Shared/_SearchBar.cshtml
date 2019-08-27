@@ -15,11 +15,21 @@
 
                     @foreach (var item in Model.SearchInput)
                     {
-                        <div class="form-group">
-                            <label>@item.DisplayName</label>
 
-                            @Html.TextBox(item.Name, "", new { @class = item.CssClass, @id = item.Id })
-                        </div>
+                        if (item.InputType == AqApplication.Repository.Enums.InputType.SelectList)
+                        {
+                            <div class="form-group">
+                                <label>@item.DisplayName</label>
+                                @Html.DropDownList(item.Name, item.selectList, string.Empty, new { @class = item.CssClass, @id = item.Id })
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                <label>@item.DisplayName</label>
+                                @Html.TextBox(item.Name, string.Empty, new { @class = item.CssClass, @id = item.Id })
+                            </div>
+                        }
                     }
                 </div>
 

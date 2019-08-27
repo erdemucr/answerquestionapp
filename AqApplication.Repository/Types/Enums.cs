@@ -10,7 +10,8 @@ namespace AqApplication.Repository.Enums
         Text,
         Number,
         Date,
-        DateTime
+        DateTime,
+        SelectList
 
     }
 }

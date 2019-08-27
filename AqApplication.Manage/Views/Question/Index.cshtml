@@ -19,7 +19,7 @@
                 <table class="table table-responsive table-striped">
                     <tr>
                         <td colspan="10">
-                            @*   @Html.Paginate(HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString(), HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString(),(AqApplication.Core.Type.Paginition)ViewBag.pagination)*@
+                            @Html.Raw(PaginationHelper.Paginate(this.ViewContext, (AqApplication.Core.Type.Paginition)ViewBag.pagination))
                         </td>
                     </tr>
                     <tr>

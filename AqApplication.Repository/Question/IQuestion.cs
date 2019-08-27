@@ -1,4 +1,6 @@
-﻿using AqApplication.Core.Type;
+﻿using AnswerQuestionApp.Repository.FilterModels;
+using AqApplication.Core.Type;
+using AqApplication.Entity.Challenge;
 using AqApplication.Entity.Question;
 using AqApplication.Repository.FilterModels;
 using System;
@@ -85,6 +87,17 @@ namespace AqApplication.Repository.Question
 
 
 
+        #endregion
+        #region QuizTemplate
+        Result<IEnumerable<ChallengeTemplate>> GetChallengeTemplates(ChallengeFilterModel model);
+
+        Result AddChallengeTemplate(ChallengeTemplate model, string userId);
+
+        Result<Entity.Challenge.ChallengeTemplate> GetChallengeTemplateByKey(int id);
+
+        Result EditChallengeTemplateItem(ChallengeTemplate model, string userId);
+
+        Result<IEnumerable<ChallengeTemplateItems>> GetChallengeTemplateItems(int id);
         #endregion
     }
 }

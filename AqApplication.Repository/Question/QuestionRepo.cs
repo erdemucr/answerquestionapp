@@ -1,4 +1,6 @@
-﻿using AqApplication.Core.Type;
+﻿using AnswerQuestionApp.Repository.FilterModels;
+using AqApplication.Core.Type;
+using AqApplication.Entity.Challenge;
 using AqApplication.Entity.Identity.Data;
 using AqApplication.Entity.Question;
 using AqApplication.Repository.FilterModels;
@@ -48,17 +50,19 @@ namespace AqApplication.Repository.Question
                     .Include(x => x.AppUserEditor).AsQueryable();
                 if (!string.IsNullOrEmpty(model.Name))
                     list = list.Where(x => x.MainTitle.ToLower().Contains(model.Name));
-                if (model.StartDate.HasValue)
-                    list = list.Where(x => x.CreatedDate >= model.StartDate.Value);
-                if (model.EndDate.HasValue)
-                    list = list.Where(x => x.CreatedDate < model.EndDate.Value);
+                if (model.StartDate.ToDate().HasValue)
+                    list = list.Where(x => x.CreatedDate >= model.StartDate.ToDate().Value);
+                if (model.EndDate.ToDate().HasValue)
+                    list = list.Where(x => x.CreatedDate < model.EndDate.ToDate().Value);
 
                 return new Result<IEnumerable<QuestionMain>>
                 {
-                    Data = list.OrderByDescending(x => x.Id).Skip(model.CurrentPage.HasValue ? ((model.CurrentPage.Value - 1) * PageSize)  : 0).Take(PageSize).AsEnumerable(),
+                    Data = list.OrderByDescending(x => x.Id).Skip(model.CurrentPage.HasValue ? ((model.CurrentPage.Value - 1) * PageSize) : 0).Take(PageSize).AsEnumerable(),
                     Success = true,
                     Message = "Soru listesini görüntülemektesiniz",
-                    Paginition = new Paginition(list.Count(), PageSize, model.CurrentPage.HasValue ? model.CurrentPage.Value : 1, model.Name,model.StartDate,model.EndDate)
+                    Paginition = new Paginition(list.Count(), PageSize, model.CurrentPage.HasValue ? model.CurrentPage.Value : 1, model.Name,
+                    model.StartDate,
+                   model.EndDate)
                 };
             }
             catch (Exception ex)
@@ -105,7 +109,7 @@ namespace AqApplication.Repository.Question
                 {
                     var model = context.QuestionMain.FirstOrDefault(x => x.Id == questionId);
                     var questionAnswers = context.QuestionAnswers.Where(x => x.QuestionId == questionId);
-                    foreach(var item in questionAnswers)
+                    foreach (var item in questionAnswers)
                     {
                         context.Entry(item).State = EntityState.Deleted;
                     }
@@ -144,7 +148,7 @@ namespace AqApplication.Repository.Question
             {
                 return new Result(ex);
             }
-         
+
         }
 
 
@@ -796,6 +800,171 @@ namespace AqApplication.Repository.Question
             }
             return new Result { Success = false, Message = "Bir hata oluştu" };
         }
+
+        #endregion
+
+
+        #region QuizTemplate
+
+        public Result<IEnumerable<ChallengeTemplate>> GetChallengeTemplates(ChallengeFilterModel model)
+        {
+            try
+            {
+                var list = context.ChallengeTemplates
+                     .Include(x => x.AppUserCreator)
+                     .Include(x => x.AppUserEditor).AsQueryable();
+                if (!string.IsNullOrEmpty(model.Name))
+                    list = list.Where(x => x.Name.ToLower().Contains(model.Name));
+                if (model.StartDate.ToDate().HasValue)
+                    list = list.Where(x => x.CreatedDate >= model.StartDate.ToDate().Value);
+                if (model.EndDate.ToDate().HasValue)
+                    list = list.Where(x => x.CreatedDate < model.EndDate.ToDate().Value);
+
+                return new Result<IEnumerable<ChallengeTemplate>>
+                {
+                    Data = list.OrderByDescending(x => x.Id).Skip(model.CurrentPage.HasValue ? ((model.CurrentPage.Value - 1) * PageSize) : 0).Take(PageSize).AsEnumerable(),
+                    Success = true,
+                    Message = "Soru listesini görüntülemektesiniz",
+                    Paginition = new Paginition(list.Count(), PageSize, model.CurrentPage.HasValue ? model.CurrentPage.Value : 1, model.Name,
+                    model.StartDate,
+                   model.EndDate)
+                };
+            }
+            catch (Exception ex)
+            {
+                new Result<IEnumerable<ChallengeTemplate>>(ex);
+            }
+
+            return new Result<IEnumerable<ChallengeTemplate>>
+            {
+                Success = false,
+                Message = "Bir hata oluştu"
+            };
+        }
+
+        public Result AddChallengeTemplate(ChallengeTemplate model, string userId)
+        {
+            try
+            {
+                model.Creator = userId;
+                context.ChallengeTemplates.Add(model);
+                context.SaveChanges();
+                return new Result { Success = true, Message = "Yeni template başarı ile eklenişmiştir" };
+            }
+            catch (Exception ex)
+            {
+                new Result(ex);
+            }
+            return new Result { Success = false, Message = "Bir hata oluştu" };
+        }
+
+        public Result<Entity.Challenge.ChallengeTemplate> GetChallengeTemplateByKey(int id)
+        {
+
+            var model = context.ChallengeTemplates.FirstOrDefault(x => x.Id == id);
+            if (model == null)
+                return new Result<ChallengeTemplate> { Success = false, Message = "Template bulunamadı" };
+            return new Result<ChallengeTemplate> { Success = true, Message = "İşlem başarılı", Data = model };
+        }
+        public Result EditChallengeTemplateItem(ChallengeTemplate model, string userId)
+        {
+            try
+            {
+                var editmodel = context.ChallengeTemplates.FirstOrDefault(x => x.Id == model.Id);
+                if (model == null)
+                    return new Result { Success = false, Message = "Branş bulunamadı" };
+                bool currentStatus = model.IsActive;
+                editmodel.Name = model.Name;
+                editmodel.Description = model.Description;
+                editmodel.IsActive = model.IsActive;
+                editmodel.Editor = userId;
+                editmodel.StartDate = model.StartDate;
+                editmodel.EndDate = model.EndDate;
+                context.Entry(editmodel).State = EntityState.Modified;
+                context.SaveChanges();
+                return new Result { Success = true, Message = string.Format("Yeni {0} ile {1}", "template", "güncellenmiştir") };
+            }
+            catch (Exception ex)
+            {
+                new Result(ex);
+            }
+            return new Result { Success = false, Message = "Bir hata oluştu" };
+        }
+
+
+
+        public Result<IEnumerable<ChallengeTemplateItems>> GetChallengeTemplateItems(int id)
+        {
+
+            try
+            {
+                var list = context.ChallengeTemplateItems.Where(x => x.ChallengeTemplateId == id)
+                      .Include(x => x.AppUserCreator)
+                    .Include(x => x.AppUserEditor)
+                    .AsEnumerable();
+
+                return new Result<IEnumerable<ChallengeTemplateItems>>
+                {
+                    Data = list,
+                    Success = true,
+                    Message = "Challenge listesini görüntülemektesiniz"
+                };
+            }
+            catch (Exception ex)
+            {
+                new Result<IEnumerable<QuestionMain>>(ex);
+            }
+
+            return new Result<IEnumerable<ChallengeTemplateItems>>
+            {
+                Success = false,
+                Message = "Bir hata oluştu"
+            };
+           
+        }
+
+
+        //public Result SetQuizTemplateItem(int id, string userId)
+        //{
+        //    try
+        //    {
+        //        var model = context.Lectures.FirstOrDefault(x => x.Id == id);
+        //        if (model == null)
+        //            return new Result { Success = false, Message = "Branş bulunamadı" };
+        //        bool currentStatus = model.IsActive;
+        //        model.IsActive = !model.IsActive;
+        //        model.Editor = userId;
+        //        context.Entry(model).State = EntityState.Modified;
+        //        context.SaveChanges();
+        //        return new Result { Success = true, Message = string.Format("Yeni {0} ile {1} edilmiştir", "branş", currentStatus ? "pasif" : "aktif") };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        new Result(ex);
+        //    }
+        //    return new Result { Success = false, Message = "Bir hata oluştu" };
+        //}
+
+
+        //public Result DeleteQuizTemplateItem(int id)
+        //{
+        //    try
+        //    {
+        //        var deletemodel = context.Lectures.FirstOrDefault(x => x.Id == id);
+        //        if (deletemodel == null)
+        //            return new Result { Success = false, Message = "Branş bulunamadı" };
+
+
+        //        context.Entry(deletemodel).State = EntityState.Deleted;
+        //        context.SaveChanges();
+        //        return new Result { Success = true, Message = string.Format("Branş başarı ile silinmiştir") };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        new Result(ex);
+        //    }
+        //    return new Result { Success = false, Message = "Bir hata oluştu" };
+        //}
 
         #endregion
 

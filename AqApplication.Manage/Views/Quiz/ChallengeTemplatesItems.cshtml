@@ -1,6 +1,6 @@
 ﻿@using AqApplication.Manage.Models;
 @using AqApplication.Manage.Utilities;
-@model IEnumerable<AnswerQuestionApp.Manage.Models.ChallengeListModel>
+@model IEnumerable<AqApplication.Entity.Challenge.ChallengeTemplateItems>
 
 @{
     ViewBag.Title = "Challenge List";
@@ -8,25 +8,27 @@
 
 @Html.Partial("_Breadcrumb", new AqApplication.Manage.Models.CommonBreadcrumbModel
 {
-    Pagename = "Challenge Listesi",
+    Pagename = ViewBag.templateName +" Template Kuralları",
     Message = (string)TempData["message"],
-    isSuccess = (bool?)TempData["success"]
-})
+    isSuccess = (bool?)TempData["success"],
+    Backurl = @Url.Action("ChallengeTemplates", "Quiz", new { id = (int)ViewBag.templateId }),
+    Backpagename = "Challenge Templetes"
 
+})
+<p>
+    <a href="@Url.Action("AddChallengeTemplate","Quiz")" class="btn btn-success">
+        <span class="glyphicon glyphicon-plus"></span> Yeni Kural
+    </a>
+</p>
 <div class="row">
-    @Html.Partial("_SearchBar", (SearchModel)ViewBag.searchModel)
-    <div class="col-md-9 col-xs-12">
+    <div class="col-md-12 col-xs-12">
         <div class="card">
             <div class="card-header">
-                <i class="glyphicon glyphicon-edit"></i>  Sınav Listesi
+                <i class="glyphicon glyphicon-edit"></i> @ViewBag.templateName Template Kuralları
             </div>
             <div class="card-body">
                 <table class="table table-responsive table-striped table-dar">
-                    <tr>
-                        <td colspan="10">
-                            @Html.Raw(PaginationHelper.Paginate(this.ViewContext, (AqApplication.Core.Type.Paginition)ViewBag.pagination))
-                        </td>
-                    </tr>
+               
                     <tr>
                         <th>
                             @Html.DisplayNameFor(model => model.Id)
@@ -34,11 +36,15 @@
                         <th>
                             @Html.DisplayNameFor(model => model.CreatedDate)
                         </th>
-
+                        <th>
+                            @Html.DisplayNameFor(model => model.Creator)
+                        </th>
                         <th>
                             @Html.DisplayNameFor(model => model.ModifiedDate)
                         </th>
-                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Editor)
+                        </th>
                     </tr>
 
                     @if (Model.Any())
@@ -51,14 +57,20 @@
                                 </td>
 
                                 <td>
-                                    @item.CreatedDate.ToString()
+                                    @item.CreatedDate.RegularDatetime()
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Creator)
                                 </td>
                                 <td>
                                     @item.ModifiedDate.RegularDatetime()
                                 </td>
                                 <td>
-                                    <a href="#" class="btn btn-info">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> Katılımcılar
+                                    @Html.DisplayFor(modelItem => item.Editor)
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("DeleteQuestion", "Question", new { id = item.Id })" class="btn btn-info">
+                                        <span class="glyphicon glyphicon-arrow-down"></span> Düzenle
                                     </a>
                                 </td>
                             </tr>
@@ -67,7 +79,7 @@
                     else
                     {
                         <tr>
-                            <td colspan="8">Kayıt bulunmadı</td>
+                            <td colspan="4">Kayıt bulunmadı</td>
                         </tr>
                     }
 

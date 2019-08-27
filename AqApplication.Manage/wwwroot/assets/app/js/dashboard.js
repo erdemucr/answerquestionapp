@@ -1497,24 +1497,7 @@ var Dashboard = function () {
                     }
                 }
                     (),
-                a = $(".owl-carousel"),
-                r = $("#m_widget_body_owlcarousel_items"),
-                a.children().each(function (e) {
-                    $(this).attr("data-position", e)
-                }
-                ),
-                r.owlCarousel({
-                    items: 1, animateIn: "fadeIn(100)", loop: !0
-                }
-                ),
-                a.owlCarousel({
-                    center: !0, loop: !0, items: 2
-                }
-                ),
-                $(document).on("click", ".carousel", function () {
-                    a.trigger("to.owl.carousel", $(this).data("position"))
-                }
-                )
+               
         }
     }
 }

@@ -16,9 +16,17 @@
 
   <ItemGroup>
     <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="wwwroot\assets\plugins\timepicker\AUTHORS" />
+    <None Include="wwwroot\assets\plugins\timepicker\CHANGELOG" />
+    <None Include="wwwroot\assets\plugins\timepicker\jquery.timepicker.js" />
+    <None Include="wwwroot\assets\plugins\timepicker\jquery.timepicker.min.js" />
+    <None Include="wwwroot\assets\plugins\timepicker\LICENSE-GPL" />
+    <None Include="wwwroot\assets\plugins\timepicker\LICENSE-MIT" />
+    <None Include="wwwroot\assets\plugins\timepicker\README.md" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bootstrap.v3.Datetimepicker.CSS" Version="4.17.45" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.6" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.6" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.7" />
@@ -37,6 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="scripts\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
 
@@ -50,7 +59,25 @@
     <Content Update="Views\Configuration\Values.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Quiz\AddChallengeTemplate.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Quiz\AddChallengeTemplatesItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Quiz\EditChallengeTemplatesItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Quiz\ChallengeTemplatesItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Quiz\ChallengeTemplates.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Quiz\ChallengeList.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Quiz\EditChallengeTemplate.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

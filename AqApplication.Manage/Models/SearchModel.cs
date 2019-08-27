@@ -1,5 +1,6 @@
 ﻿
 using AqApplication.Repository.Enums;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace AqApplication.Manage.Models
@@ -25,7 +26,9 @@ namespace AqApplication.Manage.Models
 
         public string CssClass { get; set; }
 
-        public SearchInput(InputType inputType, string name, string id, string displayName)
+        public IEnumerable<SelectListItem> selectList { get; set; }
+
+        public SearchInput(InputType inputType, string name, string id, string displayName, IEnumerable<SelectListItem> selectList=null)
         {
             InputType = inputType;
             Name = name;

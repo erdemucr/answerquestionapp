@@ -1,4 +1,5 @@
-﻿using AqApplication.Core.Type;
+﻿using AnswerQuestionApp.Repository.FilterModels;
+using AqApplication.Core.Type;
 using AqApplication.Entity.Constants;
 using AqApplication.Repository.ViewModels;
 using System;
@@ -23,5 +24,7 @@ namespace AqApplication.Repository.Challenge
         Result<List<ChallengeQuestionViewModel>> ChallengeQuestions(int challengeId);
 
         Result<Entity.Challenge.Challenge> GetLastChallengeByType(ChallengeTypeEnum type);
+
+        Result<IEnumerable<Entity.Challenge.Challenge>> GetChallengesPaginated(ChallengeFilterModel model);
     }
 }

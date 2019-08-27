@@ -1,3 +1,87 @@
-﻿@{
-    Layout = "_Layout";
+﻿@using AqApplication.Manage.Models;
+@model IEnumerable<AnswerQuestionApp.Entity.Configuration.ConfigurationValues>
+
+@{
+    ViewBag.Title = "Lectures";
+}
+
+@Html.Partial("_Breadcrumb", new AqApplication.Manage.Models.CommonBreadcrumbModel
+{
+    Pagename = "Genel Parametreler",
+    Message = (string)TempData["message"],
+    isSuccess = (bool?)TempData["success"]
+})
+
+@using (Html.BeginForm("Values", "Configuration", FormMethod.Post))
+{
+    <p>
+        <button type="submit" class="btn btn-success">
+            <span class="glyphicon glyphicon-plus"></span> Kaydet
+        </button>
+    </p>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="glyphicon glyphicon-edit"></i> Parametre Listesi
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <tr>
+                    <th>
+                        Anahtar
+                    </th>
+                    <th>
+                        Değer
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreatedDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModifiedDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Creator)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Editor)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsActive)
+                    </th>
+                </tr>
+
+                @{
+                    var list = Model.ToList();
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => list[i].Key)
+                            </td>
+                            <td>
+                                <input type="hidden" value="@list[i].Id" name="keyIds[@i]" />
+                                <input type="text" value="@list[i].Values" name="values[@i]" class="form-control" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => list[i].CreatedDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => list[i].ModifiedDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => list[i].AppUserCreator.UserName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => list[i].AppUserEditor.UserName)
+                            </td>
+                            <td>
+                                @list[i].IsActive.StatusText()
+                            </td>
+
+                        </tr>
+                    }
+                }
+
+            </table>
+        </div>
+    </div>
 }
