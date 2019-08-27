@@ -24,6 +24,7 @@ using Hangfire.SqlServer;
 using AnswerQuestionApp.Manage.HangFire;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Server.IISIntegration;
+using AnswerQuestionApp.Repository.Configuration;
 
 namespace AqApplication.Manage
 {
@@ -63,6 +64,7 @@ namespace AqApplication.Manage
             services.AddScoped<IFile, FileRepo>();
             services.AddScoped<IUser, UserRepo>();
             services.AddScoped<ChallengeCron>();
+            services.AddScoped<IConfigurationValues, ConfigurationValuesRepo>();
             //services.AddSingleton<IHostingEnvironment>(new HostingEnvironment());// File I/0 enviroment etc.
 
             services.AddHangfire(configuration => configuration

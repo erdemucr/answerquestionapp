@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using AqApplication.Entity.Logging;
+using AnswerQuestionApp.Entity.Configuration;
 
 namespace AqApplication.Entity.Identity.Data
 {
@@ -56,6 +57,8 @@ namespace AqApplication.Entity.Identity.Data
         public DbSet<ChallengeQuestionAnswers> ChallengeQuestionAnswers { get; set; }
 
         public DbSet<HostCallLoggingModel> HostCallLogging { get; set; }
+
+        public DbSet<ConfigurationValues> ConfigurationValues { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -17,61 +17,57 @@
 
 .questionBtn {
     cursor: pointer;
+    max-width: 300px;
+    margin: 0px auto;
 }
+
 .pagedBox {
     cursor: pointer;
 }
+
 .swiper-product {
     padding-bottom: 0px;
 }
 
-.optionA {
-    background-image: -webkit-linear-gradient(45deg, #07ba7d 0%, #0fd793 100%) !important
+.fleft {
+    float: left;
 }
 
-    .optionA:hover {
-        background-image: -webkit-linear-gradient(45deg, #51f1ba 0%, #0fd793 100%) !important
+.icon-circle {
+    float: right;
+}
+
+.content-color-secondary-white {
+    color: white;
+}
+
+.page-boxes-wrapper {
+    display: inherit;
+    padding-top: 15px;
+    padding-bottom: 1px;
+    width: 100%;
+}
+
+.pagedBox {
+}
+
+#page-boxes {
+    overflow: auto;
+    display: flex;
+}
+
+.answer-option-item {
+    margin-top:20px;
+}
+
+    .answer-option-item:hover {
+        -webkit-box-shadow: 1px 3px 11px 8px rgba(166,115,255,1);
+        -moz-box-shadow: 1px 3px 11px 8px rgba(166,115,255,1);
+        box-shadow: 1px 3px 11px 8px rgba(166,115,255,1);
     }
 
-.optionB {
-    background-image: -webkit-linear-gradient(45deg, #cf0723 0%, #f63b55 100%) !important
-}
-
-    .optionB:hover {
-        background-image: -webkit-linear-gradient(45deg, #e68795 0%, #e85e71 100%) !important
-    }
-
-.optionC {
-    background-image: -webkit-linear-gradient(45deg, #ff7800 0%, #f5a811 100%) !important
-}
-
-    .optionC:hover {
-        background-image: -webkit-linear-gradient(45deg, #ffc694 0%, #f5a811 100%) !important
-    }
-
-.optionD {
-    background-image: -webkit-linear-gradient(45deg, #4a19c8 0%, #7979ff 100%) !important
-}
-
-    .optionD:hover {
-        background-image: -webkit-linear-gradient(45deg, #ab91f0 0%, #7979ff 100%) !important
-    }
-
-.optionE {
-    background-image: -webkit-linear-gradient(45deg, #07ba7d 0%, #0fd793 100%) !important
-}
-
-    .optionE:hover {
-        background-image: -webkit-linear-gradient(45deg, #07ba7d 0%, #0fd793 100%) !important
-    }
-
-.fleft{
-    float:left;
-}
-.icon-circle{
-    float:right;
-}
-
-.content-color-secondary-white{
-      color:white;
+.answer-option-item-choiced {
+    -webkit-box-shadow: 1px 3px 11px 8px rgba(166,115,255,1);
+    -moz-box-shadow: 1px 3px 11px 8px rgba(166,115,255,1);
+    box-shadow: 1px 3px 11px 8px rgba(166,115,255,1);
 }

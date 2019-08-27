@@ -3,7 +3,9 @@
 
     <div class="row">
         <div class="col-sm-12 col-md-12">
-            <div class="card rounded-0 border-0 mb-3">
+            <input type="hidden" value="" id="challengeIdHdn" />
+            <input type="hidden" value="" id="questionLenHdn" />
+            <div class="card rounded-0 border-0 mb-3" id="participantTable">
                 <div class="card-header">
                     <div class="row">
                         <div class="col-12 text-center">
@@ -13,126 +15,142 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="table" id="participantTable">
-
+                    <table class="table">
                         <tbody></tbody>
                     </table>
-                    <input type="hidden" value="" id="challengeIdHdn" />
-                    <input type="hidden" value="" id="questionLenHdn" />
-                    <div class="row" id="question_wrapper" style="display:none;">
-                        <div class="col-md-12 text-center">
-                            <div class="card-body pb-0">
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col">
-                                        <div class="carosel swiper-location-carousel" id="caruselSlider">
-                                            <div data-pagination='{"el": ".swiper-pagination"}' data-space-between="0" data-slides-per-view="1" class="swiper-container swiper-init swiper-product">
-                                                <div class="swiper-pagination"></div>
-                                                <div class="swiper-wrapper" id="sliderWrapper">
+
+                </div>
+            </div>
+
+            <div id="question_wrapper" style="display:none;">
+                <div class="card rounded-0 border-0 mb-3">
+                    <div class="row text-center">
+                        <div class="col py-3">
+                            <h5 class="content-color-primary mb-0" id="totalQuestion"></h5>
+                            <p class="content-color-secondary small mb-0">Toplam Soru</p>
+                        </div>
+                        <div class="col py-3">
+                            <h5 class="content-color-primary mb-0" id="answeredQuestionCount"></h5>
+                            <p class="content-color-secondary small mb-0">Cevaplanan</p>
+                        </div>
+                        <div class="col py-3">
+                            <h5 class="content-color-primary mb-0" id="notAnsweredQuesitonCount"></h5>
+                            <p class="content-color-secondary small mb-0">Cevaplanmayan</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card rounded-0 border-0 mb-3">
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div class="card-body pb-0">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col">
+                                            <div class="carosel swiper-location-carousel" id="caruselSlider">
+                                                <div data-pagination='{"el": ".swiper-pagination"}' data-space-between="0" data-slides-per-view="1" class="swiper-container swiper-init swiper-product">
+                                                    <div class="swiper-pagination"></div>
+                                                    <div class="swiper-wrapper" id="sliderWrapper">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <h6 class="card-subtitle mb-2 header-color-secondary text-center" id="page-boxes"></h6>
-                                <br>
-                                <div class="row bg-light-secondary text-center">
-                                    <div class="col py-3">
-                                        <h5 class="content-color-primary mb-0" id="totalQuestion"></h5>
-                                        <p class="content-color-secondary small mb-0">Toplam Soru</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card rounded-0 border-0 page-boxes-wrapper">
+                    <h6 class="card-subtitle mb-2 header-color-secondary text-center" id="page-boxes"></h6>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="answer-option-item questionBtn optionA" id="option0">
+                            <div class="card" style="padding:0.5em 1.95em">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4 class="mb fleft">A</h4>
                                     </div>
-                                    <div class="col py-3">
-                                        <h5 class="content-color-primary mb-0" id="answeredQuestionCount"></h5>
-                                        <p class="content-color-secondary small mb-0">Cevaplanan</p>
+                                    <div class="icon-circle icon-30" style="display:none;">
+                                        <i class="material-icons">assignment_turned_in</i>
                                     </div>
-                                    <div class="col py-3">
-                                        <h5 class="content-color-primary mb-0" id="notAnsweredQuesitonCount"></h5>
-                                        <p class="content-color-secondary small mb-0">Cevaplanmayan</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12">
+                        <div class="answer-option-item questionBtn optionB" id="option1">
+                            <div class="card" style="padding:0.5em 1.95em">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4 class="mb fleft">B</h4>
+
+                                    </div>
+                                    <div class="icon-circle icon-30" style="display:none;">
+                                        <i class="material-icons">assignment_turned_in</i>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="md-12">
-                            <div class="row" style="padding:12%;">
-                                <div class="col-12 col-md-6">
-                                    <div class="card mb-4 success-gradient questionBtn optionA" id="option0">
-                                        <div class="card-body" style="padding:0.5em 1.95em">
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <h4 class="text-white mb fleft">A</h4>
-                                                </div>
-                                                <div class="icon-circle icon-30 bg-light-white" style="display:none;">
-                                                    <i class="material-icons">assignment_turned_in</i>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="card mb-4 danger-gradient questionBtn optionB" id="option1">
-                                        <div class="card-body" style="padding:0.5em 1.95em">
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <h4 class="text-white mb fleft">B</h4>
-
-                                                </div>
-                                                <div class="icon-circle icon-30 bg-light-white" style="display:none;">
-                                                    <i class="material-icons">assignment_turned_in</i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="card mb-4 warning-gradient questionBtn optionC" id="option2">
-                                        <div class="card-body" style="padding:0.5em 1.95em">
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <h4 class="text-white mb fleft">C</h4>
-                                                    <div class="icon-circle icon-30 bg-light-white" style="display:none;">
-                                                        <i class="material-icons">assignment_turned_in</i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="card mb-4 primary-gradient questionBtn optionD" id="option3">
-                                        <div class="card-body" style="padding:0.5em 1.95em">
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <h4 class="text-white mb fleft">D</h4>
-                                                    <div class="icon-circle icon-30 bg-light-white" style="display:none;">
-                                                        <i class="material-icons">assignment_turned_in</i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6" id="fiveOption">
-                                    <div class="card mb-4 secondary-gradient questionBtn optionE" id="option4">
-                                        <div class="card-body" style="padding:0.5em 1.95em">
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <h4 class="text-white mb fleft">D</h4>
-                                                    <h4 class="text-white mb ">E</h4>
-                                                    <div class="icon-circle icon-30 bg-light-white" style="display:none;">
-                                                        <i class="material-icons">assignment_turned_in</i>
-                                                    </div>
-                                                </div>
-
-                                            </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12">
+                        <div class="answer-option-item questionBtn optionC" id="option2">
+                            <div class="card" style="padding:0.5em 1.95em">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4 class="mb fleft">C</h4>
+                                        <div class="icon-circle icon-30" style="display:none;">
+                                            <i class="material-icons">assignment_turned_in</i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-xs-12 col-md-12">
+                        <div class="answer-option-item questionBtn optionD" id="option3">
+                            <div class="card" style="padding:0.5em 1.95em">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4 class="mb fleft">D</h4>
+                                        <div class="icon-circle icon-30" style="display:none;">
+                                            <i class="material-icons">assignment_turned_in</i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12" id="fiveOption">
+                        <div class="answer-option-item questionBtn optionE" id="option4">
+                            <div class="card" style="padding:0.5em 1.95em">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4 class="mb fleft">D</h4>
+                                        <h4 class="mb ">E</h4>
+                                        <div class="icon-circle icon-30" style="display:none;">
+                                            <i class="material-icons">assignment_turned_in</i>
+                                        </div>
+                                    </div>
 
-                    <table class="table" id="challenge_result" style="display:none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card rounded-0 border-0 mb-3" id="challenge_result" style="display:none;">
+                <div class="card-body">
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>

@@ -28,21 +28,30 @@
                 SetCssClass('wrapper', 'pink-gradient', true);
                 SetCssClass('wrapper', 'align-items-center', true);
                 SetCssClass('content-color-secondary', 'content-color-secondary-white', true);
-
+                $("#footer").show();
+                $("#page-boxes").parent().hide();
             }
             else if (route === routes.SingUp) {
                 $(".main-header").hide();
                 SetCssClass('wrapper', 'pink-gradient', true);
                 SetCssClass('wrapper', 'align-items-center', true);
                 SetCssClass('content-color-secondary', 'content-color-secondary-white', true);
+                $("#footer").show();
+                $("#page-boxes").parent().hide();
             }
-
+            else if (route === routes.Challenge) {
+                $("#footer").hide();
+                SetCssClass('content-color-secondary', 'content-color-secondary-white', false);
+                $("#page-boxes").parent().hide();
+            }
             else {
                 SetCssClass('wrapper', 'pink-gradient', false);
                 SetCssClass('wrapper', 'align-items-center', false);
                 SetCssClass('content-color-secondary', 'content-color-secondary-white', false);
                 $(".main-header").show();
                 $("#fullNameTitle").html(aqfw().Auth().GetfullName());
+                $("#footer").show();
+                $("#page-boxes").parent().hide();
             }
         }
 
@@ -229,9 +238,16 @@ var socketConnection = function (challengeId) {
                 var elapsed_seconds = socketResponse.LeftSecond;
                 intervalInstance = setInterval(function () {
                     elapsed_seconds = elapsed_seconds - 1;
+                    $("#timeClock").show();
                     $('#timeClock').text(getElapsedTimeString(elapsed_seconds));
                     if (elapsed_seconds === 0) {
                         clearInterval(intervalInstance);
+
+              
+                        SliderInit();
+                        setTimeout(function () {
+                            $("#timeClock").hide();
+                        }, 1500);
                     }
                 }, 1000);
                 $("#challengeIdHdn").val(socketResponse.ChallengeId);
@@ -288,17 +304,26 @@ var socketConnection = function (challengeId) {
             var $questionDiv = $(questionDiv);
             $questionDiv.appendTo('#caruselSlider #sliderWrapper');
 
-            var $pageBtn = $('<button type="button" class="btn btn-sm btn-outline-primary mr-1 pagedBox">' + (i + 1) + '</button>');
+            var $pageBtn = $('<button type="button" class="btn btn-sm btn-outline-dark mr-1 pagedBox">' + (i + 1) + '</button>');
+            var $pageBtn1 = $('<button type="button" class="btn btn-sm btn-outline-dark mr-1 pagedBox">' + (i + 1) + '</button>');
+            var $pageBtn2 = $('<button type="button" class="btn btn-sm btn-outline-dark mr-1 pagedBox">' + (i + 1) + '</button>');
             if (i === 0) {
                 $pageBtn.addClass('active');
             }
             $pageBtn.appendTo('#page-boxes');
+            $pageBtn1.appendTo('#page-boxes');
+            $pageBtn2.appendTo('#page-boxes');
         });
         $("#totalQuestion").text(questionData.length);
         $("#questionLenHdn").val(questionData.length);
         $("#answeredQuestionCount").text('0');
         $("#notAnsweredQuesitonCount").text(questionData.length);
 
+    }
+    function SliderInit() {
+        $("#participantTable").hide();
+        $("#question_wrapper").show();
+        $("#page-boxes").parent().show();
         // question slider initializer
         setTimeout(function () {
 
@@ -315,7 +340,7 @@ var socketConnection = function (challengeId) {
                 console.log('slide changed ' + mySwiper.activeIndex);
                 $(".pagedBox").removeClass('active');
                 $('#page-boxes .pagedBox:eq(' + mySwiper.activeIndex + ')').addClass('active');
-
+                $(".questionBtn").removeClass('answer-option-item-choiced');
                 var answerIndex = $('#caruselSlider #sliderWrapper .swiper-slide:eq(' + mySwiper.activeIndex + ')').find('.selectedAnswer').val();
                 if (answerIndex !== '') {
                     var answerDiv = '#option' + answerIndex;
@@ -323,7 +348,7 @@ var socketConnection = function (challengeId) {
                     $(answerDiv).find(".icon-circle").show();
                 }
             });
-        }, 100); 
+        }, 100);
 
         $(document).on("click", ".pagedBox", function () {
             var ind = $(this).html().trim();
@@ -341,9 +366,7 @@ var socketConnection = function (challengeId) {
 
         $('.swiper-pagination').css("display", "none");
 
-        $("#participantTable").hide();
-        $("#question_wrapper").show();
-        $("#timeClock").hide();
+
         if (questionData[currentQuestion] === 5) {
             $("#fiveOption").show();
         }
@@ -379,7 +402,9 @@ var socketConnection = function (challengeId) {
                     }
                     var answerDiv = '#option' + answerIndex;
                     $(".icon-circle").hide();
+                    $(".questionBtn").removeClass('answer-option-item-choiced');
                     $(answerDiv).find(".icon-circle").show();
+                    $(answerDiv).addClass('answer-option-item-choiced');
                     var questionLen = $("#questionLenHdn").val();
                     setTimeout(function () {
                         if ((sliderIndex + 1) !== parseInt(questionLen)) {
@@ -395,7 +420,6 @@ var socketConnection = function (challengeId) {
                 }
             });
         }
-
     }
     function GetQuestion(challengeId) {
         $.ajax({
@@ -416,6 +440,7 @@ var socketConnection = function (challengeId) {
         $("#participantTable").hide();
         $("#question_wrapper").hide();
         $("#challenge_result").show();
+        $("#page-boxes").parent().hide();
     }
 };
 

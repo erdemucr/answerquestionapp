@@ -1,4 +1,5 @@
 ﻿using AnswerQuestionApp.Manage.HangFire;
+using AnswerQuestionApp.Repository.Configuration;
 using AqApplication.Entity.Identity.Data;
 using AqApplication.Logging.Providers;
 using AqApplication.Repository.Challenge;
@@ -42,7 +43,8 @@ namespace AqApplication.Service
         {
             services.AddEntityFrameworkSqlServer()
             .AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("IndentityContext")));
+            options.UseSqlServer(Configuration.GetConnectionString("Indenti" +
+            "tyContext")));
 
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -55,7 +57,7 @@ namespace AqApplication.Service
             services.AddScoped<IChallenge, ChallengeRepo>();
             services.AddScoped<IFile, FileRepo>();
             services.AddScoped<IUser, UserRepo>();
-
+            services.AddScoped<IConfigurationValues, ConfigurationValuesRepo>();
 
             services.Configure<IdentityOptions>(options =>
             {

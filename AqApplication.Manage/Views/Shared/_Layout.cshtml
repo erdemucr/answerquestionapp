@@ -132,10 +132,14 @@
                 $(".m-menu__nav li:eq(2)").addClass('m-menu__item--active  m-menu__item--active-tab');
             }
             if (url.indexOf('Session') > -1) {
-                console.log("exsdsd");
                 $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active');
                 $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active-tab');
                 $(".m-menu__nav li:eq(2)").next().addClass('m-menu__item--active  m-menu__item--active-tab');
+            }
+            if (url.indexOf('Configuration') > -1) {
+                $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active');
+                $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active-tab');
+                $(".m-menu__nav li:eq(2)").next().next().addClass('m-menu__item--active  m-menu__item--active-tab');
             }
         });
 
