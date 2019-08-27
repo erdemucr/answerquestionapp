@@ -12,5 +12,10 @@ namespace AnswerQuestionApp.Manage.Controllers
         {
             return View();
         }
+
+        public IActionResult ChallengeList()
+        {
+            return View();
+        }
     }
 }

@@ -46,4 +46,13 @@
     <ProjectReference Include="..\AqApplication.Repository\AnswerQuestionApp.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Configuration\Values.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Quiz\_ViewStart.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>
