@@ -47,7 +47,7 @@
                             @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-9">
                                 @Html.TextBoxFor(model => model.StartDate, new { @class = "dpicker form-control", Style = "width:70%; float:left;" })
-                                @Html.TextBox("StartDateTime", string.Empty, new { @class = "timepicker form-control", Style = "width:30%; float:left;" })
+                                @Html.DropDownListFor(model => model.StartDateTime, Utilities.SelectLists.TimeDropDown(), new { @class = "timepicker form-control", Style = "width:30%; float:left;" })
                                 @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                             @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-9">
                                 @Html.TextBoxFor(model => model.EndDate, new { @class = "dpicker form-control", Style = "width:70%; float:left;" })
-                                @Html.TextBox("EndDateTime", string.Empty, new { @class = "timepicker form-control" , Style = "width:30%; float:left;" })
+                                @Html.DropDownListFor(model => model.EndDateTime, Utilities.SelectLists.TimeDropDown(), new { @class = "timepicker form-control", Style = "width:30%; float:left;" })
                                 @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -94,24 +94,3 @@
 </div>
 
 
-
-@section _scripts{
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.timepicker').timepicker({
-                timeFormat: 'hh:mm',
-                interval: 30,
-                minTime: '0',
-                maxTime: '11:30pm',
-                defaultTime: '8',
-                startTime: '00:00',
-                dynamic: false,
-                dropdown: true,
-                scrollbar: true
-            });
-            
-        });
-     
-    </script>
-}

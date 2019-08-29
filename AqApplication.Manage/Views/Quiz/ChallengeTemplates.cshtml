@@ -63,55 +63,57 @@
                         <td>
                             @Html.DisplayNameFor(model => model.IsActive)
                         </td>
-                        <th>
+                        <th colspan="2">
                         </th>
                     </tr>
 
-                    @if (Model.Any())
+                    @if (Model!=null)
                     {
                         foreach (var item in Model)
                         {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Id)
-                        </td>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Id)
+                                </td>
 
-                        <td>
-                            @item.Name
-                        </td>
-                        <td>
-                            @item.StartDate
-                        </td>
-                        <td>
-                            @item.EndDate
-                        </td>
-                        <td style="width:300px;">
-                            @item.Description
-                        </td>
-                        <td>
-                            @item.CreatedDate.RegularDatetime()
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Creator)
-                        </td>
-                        <td>
-                            @item.ModifiedDate.RegularDatetime()
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Editor)
-                        </td>
-                        <td>
-                            @item.IsActive.StatusText()
-                        </td>
-                        <td>
-                            <a href="@Url.Action("EditChallengeTemplate", "Quiz", new { id = item.Id })" class="btn btn-info">
-                                <span class="glyphicon glyphicon-arrow-down"></span> Düzenle
-                            </a>
-                            <a href="@Url.Action("ChallengeTemplatesItems", "Quiz", new { id = item.Id })" class="btn btn-info">
-                                <span class="glyphicon glyphicon-arrow-down"></span> Kurallar
-                            </a>
-                        </td>
-                    </tr>
+                                <td>
+                                    @item.Name
+                                </td>
+                                <td>
+                                    @item.StartDate
+                                </td>
+                                <td>
+                                    @item.EndDate
+                                </td>
+                                <td style="width:300px;">
+                                    @item.Description
+                                </td>
+                                <td>
+                                    @item.CreatedDate.RegularDatetime()
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Creator)
+                                </td>
+                                <td>
+                                    @item.ModifiedDate.RegularDatetime()
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Editor)
+                                </td>
+                                <td>
+                                    @item.IsActive.StatusText()
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("EditChallengeTemplate", "Quiz", new { id = item.Id })" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-arrow-down"></span> Düzenle
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("ChallengeTemplatesItems", "Quiz", new { id = item.Id })" class="btn btn-info">
+                                        <span class="glyphicon glyphicon-arrow-down"></span> Kurallar
+                                    </a>
+                                </td>
+                            </tr>
                         }
                     }
                     else

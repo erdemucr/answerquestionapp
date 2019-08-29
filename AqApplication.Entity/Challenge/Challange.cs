@@ -127,7 +127,10 @@ namespace AqApplication.Entity.Challenge
 
     public class ChallengeTemplateItems : BaseEntity
     {
-        public int ExamId { get; set; }
+        public int? ExamId { get; set; }
+
+        [NotMapped]
+        public bool ExamIdCheck { get; set; }
 
         [ForeignKey("ExamId")]
         public Exam Exam { get; set; }
@@ -135,28 +138,41 @@ namespace AqApplication.Entity.Challenge
         [Display(Name = "Zorluk")]
         public int? Difficulty { get; set; }
 
+        [NotMapped]
+        public bool DifficultyCheck { get; set; }
+
         [Display(Name = "Alt Konu")]
         public int? SubSubjectId { get; set; }
+
+        [NotMapped]
+        public bool SubSubjectIdCheck { get; set; }
 
         [Display(Name = "Konu")]
         public int? SubjectId { get; set; }
 
+        [NotMapped]
+        public bool SubjectIdCheck { get; set; }
         public int? QuestionPdfId { get; set; }
-
         public int ChallengeTemplateId { get; set; }
         [Display(Name = "Sayı")]
         public int Count { get; set; }
+        public int? LectureId { get; set; }
+        [NotMapped]
+        public bool LectureIdCheck { get; set; }
+
+        [ForeignKey("LectureId")]
+        public  Lecture Lecture { get; set; }
 
         [ForeignKey("ChallengeTemplateId")]
-        public ChallengeTemplate ChallengeTemplate { get; set; }
+        public  ChallengeTemplate ChallengeTemplate { get; set; }
 
         [ForeignKey("SubSubjectId")]
-        public SubSubject SubSubject { get; set; }
+        public  SubSubject SubSubject { get; set; }
 
         [ForeignKey("SubjectId")]
-        public Subject Subject { get; set; }
+        public  Subject Subject { get; set; }
 
         [ForeignKey("QuestionPdfId")]
-        public QuestionPdf QuestionPdf { get; set; }
+        public  QuestionPdf QuestionPdf { get; set; }
     }
 }

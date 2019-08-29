@@ -49,7 +49,7 @@
                             @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-9">
                                 @Html.TextBoxFor(model => model.StartDate, new { @class = "dpicker form-control", Style = "width:70%; float:left;" })
-                                @Html.TextBoxFor(model => model.StartDateTime, new { @class = "timepicker form-control", Style = "width:30%; float:left;" })
+                                @Html.DropDownListFor(model => model.StartDateTime, Utilities.SelectLists.TimeDropDown(), new { @class = "timepicker form-control", Style = "width:30%; float:left;" })
                                 @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -59,7 +59,7 @@
                             @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-9">
                                 @Html.TextBoxFor(model => model.EndDate, new { @class = "dpicker form-control", Style = "width:70%; float:left;" })
-                                @Html.TextBoxFor(model => model.EndDateTime, new { @class = "timepicker form-control", Style = "width:30%; float:left;" })
+                                @Html.DropDownListFor(model => model.EndDateTime, Utilities.SelectLists.TimeDropDown(), new { @class = "timepicker form-control", Style = "width:30%; float:left;" })
                                 @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -92,30 +92,7 @@
     </div>
 </div>
 <div>
-    <a href="@Url.Action("Exams")" class="btn btn-success">
+    <a href="@Url.Action("ChallengeTemplates")" class="btn btn-success">
         <span class="glyphicon glyphicon-arrow-left"></span> Listeye Dön
     </a>
 </div>
-@section _scripts{
-
-    <script type="text/javascript">
-        var startTime = '@Model.StartDateTime';
-        var endTime = '@Model.EndDateTime';
-        $(document).ready(function () {
-            $('.timepicker').timepicker({
-                timeFormat: 'hh:mm',
-                interval: 30,
-                minTime: '0',
-                maxTime: '11:30pm',
-                defaultTime: '8',
-                startTime: '00:00',
-                dynamic: false,
-                dropdown: true,
-                scrollbar: true
-            });
-            $("#StartDateTime").val(startTime);
-            $("#EndDateTime").val(endTime);
-        });
-
-    </script>
-}

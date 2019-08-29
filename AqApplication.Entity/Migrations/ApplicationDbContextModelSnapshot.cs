@@ -212,7 +212,8 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.Property<int?>("Seo");
 
@@ -245,9 +246,11 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<string>("Editor");
 
-                    b.Property<int>("ExamId");
+                    b.Property<int?>("ExamId");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<int?>("LectureId");
 
                     b.Property<DateTime?>("ModifiedDate");
 
@@ -268,6 +271,8 @@ namespace AqApplication.Entity.Migrations
                     b.HasIndex("Editor");
 
                     b.HasIndex("ExamId");
+
+                    b.HasIndex("LectureId");
 
                     b.HasIndex("QuestionPdfId");
 
@@ -986,8 +991,11 @@ namespace AqApplication.Entity.Migrations
 
                     b.HasOne("AqApplication.Entity.Question.Exam", "Exam")
                         .WithMany()
-                        .HasForeignKey("ExamId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ExamId");
+
+                    b.HasOne("AqApplication.Entity.Question.Lecture", "Lecture")
+                        .WithMany()
+                        .HasForeignKey("LectureId");
 
                     b.HasOne("AqApplication.Entity.Question.QuestionPdf", "QuestionPdf")
                         .WithMany()

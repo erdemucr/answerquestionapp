@@ -297,6 +297,7 @@ namespace AqApplication.Repository.Question
                 var list = context.Subjects
                     .Include(x => x.AppUserCreator)
                     .Include(x => x.AppUserEditor)
+                    .Include(x => x.Lecture)
                     .AsEnumerable();
 
                 return new Result<IEnumerable<Subject>>
@@ -832,14 +833,8 @@ namespace AqApplication.Repository.Question
             }
             catch (Exception ex)
             {
-                new Result<IEnumerable<ChallengeTemplate>>(ex);
+                return new Result<IEnumerable<ChallengeTemplate>>(ex);
             }
-
-            return new Result<IEnumerable<ChallengeTemplate>>
-            {
-                Success = false,
-                Message = "Bir hata oluştu"
-            };
         }
 
         public Result AddChallengeTemplate(ChallengeTemplate model, string userId)
@@ -847,26 +842,18 @@ namespace AqApplication.Repository.Question
             try
             {
                 model.Creator = userId;
+                model.CreatedDate = DateTime.Now;
                 context.ChallengeTemplates.Add(model);
                 context.SaveChanges();
                 return new Result { Success = true, Message = "Yeni template başarı ile eklenişmiştir" };
             }
             catch (Exception ex)
             {
-                new Result(ex);
+                return new Result(ex);
             }
-            return new Result { Success = false, Message = "Bir hata oluştu" };
         }
 
-        public Result<Entity.Challenge.ChallengeTemplate> GetChallengeTemplateByKey(int id)
-        {
-
-            var model = context.ChallengeTemplates.FirstOrDefault(x => x.Id == id);
-            if (model == null)
-                return new Result<ChallengeTemplate> { Success = false, Message = "Template bulunamadı" };
-            return new Result<ChallengeTemplate> { Success = true, Message = "İşlem başarılı", Data = model };
-        }
-        public Result EditChallengeTemplateItem(ChallengeTemplate model, string userId)
+        public Result EditChallengeTemplate(ChallengeTemplate model, string userId)
         {
             try
             {
@@ -886,24 +873,57 @@ namespace AqApplication.Repository.Question
             }
             catch (Exception ex)
             {
-                new Result(ex);
+                return new Result(ex);
             }
-            return new Result { Success = false, Message = "Bir hata oluştu" };
         }
 
+        public Result<Entity.Challenge.ChallengeTemplate> GetChallengeTemplateByKey(int id)
+        {
+
+            var model = context.ChallengeTemplates.FirstOrDefault(x => x.Id == id);
+            if (model == null)
+                return new Result<ChallengeTemplate> { Success = false, Message = "Template bulunamadı" };
+            return new Result<ChallengeTemplate> { Success = true, Message = "İşlem başarılı", Data = model };
+        }
 
 
         public Result<IEnumerable<ChallengeTemplateItems>> GetChallengeTemplateItems(int id)
         {
+            try
+            {
+                var list = context.ChallengeTemplateItems
+                      .Include(x => x.AppUserCreator)
+                      .Include(x => x.AppUserEditor)
+                      .Include(x => x.Subject)
+                      .Include(x => x.SubSubject)
+                      .Include(x => x.Exam)
+                      .Include(x => x.Lecture)
+                    .Where(x => x.ChallengeTemplateId == id)
+                    .ToList();
+
+                return new Result<IEnumerable<ChallengeTemplateItems>>
+                {
+                    Data = list,
+                    Success = true,
+                    Message = "Challenge template listesini görüntülemektesiniz"
+                };
+            }
+            catch (Exception ex)
+            {
+               return new Result<IEnumerable<ChallengeTemplateItems>>(ex);
+            }
+        }
+        public Result<ChallengeTemplateItems> GetChallengeTemplateItemByKey(int id)
+        {
 
             try
             {
-                var list = context.ChallengeTemplateItems.Where(x => x.ChallengeTemplateId == id)
+                var list = context.ChallengeTemplateItems
                       .Include(x => x.AppUserCreator)
                     .Include(x => x.AppUserEditor)
-                    .AsEnumerable();
+                    .FirstOrDefault(x => x.Id == id);
 
-                return new Result<IEnumerable<ChallengeTemplateItems>>
+                return new Result<ChallengeTemplateItems>
                 {
                     Data = list,
                     Success = true,
@@ -912,18 +932,53 @@ namespace AqApplication.Repository.Question
             }
             catch (Exception ex)
             {
-                new Result<IEnumerable<QuestionMain>>(ex);
+                return new Result<ChallengeTemplateItems>(ex);
             }
 
-            return new Result<IEnumerable<ChallengeTemplateItems>>
+        }
+        public Result AddChallengeTemplateItem(ChallengeTemplateItems model, string userId)
+        {
+            try
             {
-                Success = false,
-                Message = "Bir hata oluştu"
-            };
-           
+                model.Creator = userId;
+                model.CreatedDate = DateTime.Now;
+                context.ChallengeTemplateItems.Add(model);
+                context.SaveChanges();
+                return new Result { Success = true, Message = "Yeni kural başarı ile eklenişmiştir" };
+            }
+            catch (Exception ex)
+            {
+                return new Result(ex);
+            }
         }
 
-
+        public Result EditChallengeTemplateItem(ChallengeTemplateItems model, string userId)
+        {
+            try
+            {
+                var editmodel = context.ChallengeTemplateItems.FirstOrDefault(x => x.Id == model.Id);
+                if (model == null)
+                    return new Result { Success = false, Message = "Branş bulunamadı" };
+                bool currentStatus = model.IsActive;
+                editmodel.IsActive = model.IsActive;
+                editmodel.Editor = userId;
+                editmodel.LectureId = model.LectureId;
+                editmodel.QuestionPdfId = model.QuestionPdfId;
+                editmodel.SubjectId = model.SubjectId;
+                editmodel.SubSubjectId = model.SubSubjectId;
+                editmodel.Count = model.Count;
+                editmodel.Difficulty = model.Difficulty;
+                editmodel.ExamId = model.ExamId;
+                editmodel.ModifiedDate = DateTime.Now;
+                context.Entry(editmodel).State = EntityState.Modified;
+                context.SaveChanges();
+                return new Result { Success = true, Message = string.Format("Yeni {0} ile {1}", "template", "güncellenmiştir") };
+            }
+            catch (Exception ex)
+            {
+                return new Result(ex);
+            }
+        }
         //public Result SetQuizTemplateItem(int id, string userId)
         //{
         //    try

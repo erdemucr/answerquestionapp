@@ -32,6 +32,10 @@
                     </th>
                     <th>
                         Değer
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
                     <th>
                         @Html.DisplayNameFor(model => model.CreatedDate)
                     </th>
@@ -60,6 +64,9 @@
                             <td>
                                 <input type="hidden" value="@list[i].Id" name="keyIds[@i]" />
                                 <input type="text" value="@list[i].Values" name="values[@i]" class="form-control" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => list[i].Description)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => list[i].CreatedDate)

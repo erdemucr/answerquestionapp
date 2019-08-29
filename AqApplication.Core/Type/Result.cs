@@ -49,7 +49,8 @@ namespace AqApplication.Core.Type
                 case "System.Exception":
                     this.Message = ex.InnerException != null ? ex.InnerException.ToString() : "";
                         break;
-
+                default: this.Message = ex.Message!=null? ex.Message:"Sistemsel bir hata oluştu";
+                    break;
             }
             this.Success = false;
         }

@@ -26,10 +26,17 @@
     <link href="/assets/demo/demo8/base/style.bundle.css" rel="stylesheet" type="text/css" />
     <link rel="shortcut icon" href="/assets/demo8/demo/media/img/logo/favicon.ico" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="/assets/plugins/bootstrap-select-1.12.4/dist/css/bootstrap-select.css" rel="stylesheet" />
     <link href="/assets/plugins/Stepper-master/jquery.fs.stepper.css" rel="stylesheet" />
     <link href="/assets/plugins/timepicker/jquery.timepicker.css" rel="stylesheet" />
-    <link href="/assets/vendors/custom/jquery-ui/jquery-ui.bundle.css" rel="stylesheet" />
+    <style type="text/css">
+        tr:nth-child(even) {
+            background-color: #e8e9ec;
+        }
+        .table {
+            display: table;
+            width: 100%;
+        }
+    </style>
     @RenderSection("_styles", false)
 </head>
 <!-- end::Head -->
@@ -78,13 +85,12 @@
     </ul>
     <!-- begin::Quick Nav -->
     <!--begin::Base Scripts -->
-    <script src="/assets/app/js/jquery-3.4.1.js" type="text/javascript"></script>
-    <script src="/assets/app/js/jquery-migrate-3.0.1.js" type="text/javascript"></script>
-    <script src="/assets/vendors/custom/jquery-ui/jquery-ui.bundle.js"></script>
+    <!-- jQuery library -->
+    <script src="/assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
     <script src="/assets/demo/demo8/base/scripts.bundle.js" type="text/javascript"></script>
     <script src="/assets/app/js/dashboard.js" type="text/javascript"></script>
-    <script src="/assets/plugins/bootstrap-select-1.12.4/js/bootstrap-select.js" type="text/javascript"></script>
-    <script src="/assets/plugins/timepicker/jquery.timepicker.js" type="text/javascript"></script>
+    <script src="/assets/plugins/Stepper-master/jquery.fs.stepper.min.js" type="text/javascript"></script>
+    <script src="~/assets/plugins/Inputmask-5.x/dist/jquery.inputmask.min.js" type="text/javascript"></script>
     @RenderSection("_scripts", false)
 
     <script>

@@ -95,9 +95,15 @@ namespace AqApplication.Repository.Question
 
         Result<Entity.Challenge.ChallengeTemplate> GetChallengeTemplateByKey(int id);
 
-        Result EditChallengeTemplateItem(ChallengeTemplate model, string userId);
+        Result EditChallengeTemplate(ChallengeTemplate model, string userId);
 
         Result<IEnumerable<ChallengeTemplateItems>> GetChallengeTemplateItems(int id);
+
+        Result AddChallengeTemplateItem(ChallengeTemplateItems model, string userId);
+
+        Result EditChallengeTemplateItem(ChallengeTemplateItems model, string userId);
+
+        Result<ChallengeTemplateItems> GetChallengeTemplateItemByKey(int id);
         #endregion
     }
 }

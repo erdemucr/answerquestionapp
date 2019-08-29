@@ -30,7 +30,7 @@ namespace AqApplication.Manage.Controllers
         private readonly IFile _ifile;
         private readonly IHostingEnvironment _hostingEnvironment;
         private const string LastSessionQuestionAddModel = "QuestionAddModel";
-        public QuestionController(IQuestion iQuestion, IFile iFile, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+        public QuestionController(IQuestion iQuestion, IFile iFile, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment):base(iQuestion)
         {
             _iquestion = iQuestion;
             _ifile = iFile;
@@ -216,38 +216,7 @@ namespace AqApplication.Manage.Controllers
             HttpContext.Session.Remove("optionImage5");
             return;
         }
-
-
-
-        private void EditorLists()
-        {
-            ViewBag.subsubjectSelectList = new List<SelectListItem>();
-
-            ViewBag.classSelectList = _iquestion.GetClass().Data.Select(x =>
-            new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.Id.ToString()
-            }).AsEnumerable();
-
-            ViewBag.examSelectList = _iquestion.GetExams().Data.Select(x =>
-            new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.Id.ToString()
-            }).AsEnumerable();
-
-            ViewBag.lectureSelectList = _iquestion.GetLectures().Data.Select(
-                x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.Id.ToString()
-                }
-                ).AsEnumerable();
-
-            ViewBag.difficultySelectList = Models.Utilities.SelectLists.Difficult();
-            ViewBag.licenceSelectList = Models.Utilities.SelectLists.Licence();
-        }
+                     
         public JsonResult GetSubjects(int lectureId)
         {
             var list = _iquestion.GetSubjectsByLectureId(lectureId);

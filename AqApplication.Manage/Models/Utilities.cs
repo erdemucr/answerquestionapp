@@ -20,6 +20,16 @@ namespace AqApplication.Manage.Models
             return isTrue ? "Doğru" : "Yanlış";
 
         }
+        public static string DifficultText(this int? diff)
+        {
+            switch (diff)
+            {
+                case 1: return "Kolay";
+                case 2: return "Orta";
+                case 3: return "Zor";
+                default: return string.Empty;
+            }
+        }
         public static class Messages
         {
 
@@ -51,7 +61,18 @@ namespace AqApplication.Manage.Models
                    new SelectListItem{ Value="true", Text="Linsansız"}
                };
             }
-
+            public static List<SelectListItem> TimeDropDown()
+            {
+                var list = new List<SelectListItem>();
+                string vl = string.Empty;
+                for(int i = 0; i <= 23; i++)
+                {
+                    vl = i.ToString().Length == 1 ? "0" + i : i.ToString();
+                    list.Add(new SelectListItem { Text = vl + ":00", Value = vl + ":00" });
+                    list.Add(new SelectListItem { Text = vl + ":30", Value = vl + ":30" });
+                }
+                return list;
+            }
         }
     }
 }

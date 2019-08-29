@@ -1,5 +1,6 @@
 ﻿using AqApplication.Core.Type;
 using System;
+using System.Collections.Generic;
 
 namespace AnswerQuestionApp.Manage.Models
 {
@@ -33,5 +34,11 @@ namespace AnswerQuestionApp.Manage.Models
         public string Editor { get; set; }
 
         public bool IsActive { get; set; }
+    }
+
+    public class ChallengeTemplateModel
+    {
+        public AqApplication.Entity.Challenge.ChallengeTemplateItems ChallengeItem { get; set; }
+        public IEnumerable<AqApplication.Entity.Challenge.ChallengeTemplateItems> ChallengeList { get; set; }
     }
 }
