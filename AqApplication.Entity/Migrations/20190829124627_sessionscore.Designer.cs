@@ -4,14 +4,16 @@ using AqApplication.Entity.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AqApplication.Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190829124627_sessionscore")]
+    partial class sessionscore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -631,8 +633,6 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<bool>("IsActive");
 
-                    b.Property<int?>("LectureId");
-
                     b.Property<bool>("Licence");
 
                     b.Property<string>("MainImage");
@@ -649,21 +649,15 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<int?>("SubSubjectId");
 
-                    b.Property<int?>("SubjectId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Creator");
 
                     b.HasIndex("Editor");
 
-                    b.HasIndex("LectureId");
-
                     b.HasIndex("QuestionPdfId");
 
                     b.HasIndex("SubSubjectId");
-
-                    b.HasIndex("SubjectId");
 
                     b.ToTable("QuestionMain");
                 });
@@ -1137,10 +1131,6 @@ namespace AqApplication.Entity.Migrations
                         .WithMany()
                         .HasForeignKey("Editor");
 
-                    b.HasOne("AqApplication.Entity.Question.Lecture", "Lecture")
-                        .WithMany()
-                        .HasForeignKey("LectureId");
-
                     b.HasOne("AqApplication.Entity.Question.QuestionPdf", "QuestionPdf")
                         .WithMany()
                         .HasForeignKey("QuestionPdfId");
@@ -1148,10 +1138,6 @@ namespace AqApplication.Entity.Migrations
                     b.HasOne("AqApplication.Entity.Question.SubSubject", "SubSubject")
                         .WithMany()
                         .HasForeignKey("SubSubjectId");
-
-                    b.HasOne("AqApplication.Entity.Question.Subject", "Subject")
-                        .WithMany()
-                        .HasForeignKey("SubjectId");
                 });
 
             modelBuilder.Entity("AqApplication.Entity.Question.QuestionPdf", b =>

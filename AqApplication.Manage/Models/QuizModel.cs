@@ -1,6 +1,7 @@
 ﻿using AqApplication.Core.Type;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace AnswerQuestionApp.Manage.Models
 {
@@ -8,10 +9,16 @@ namespace AnswerQuestionApp.Manage.Models
     {
 
         public int Id { get; set; }
+        [Display(Name = "Katılımcı Sayısı")]
         public int AttemptCount { get; set; }
+        [Display(Name = "Tamamlanma Sayısı")]
+        public int CompletedCount { get; set; }
         public DateTime CreatedDate { get; set; }
 
         public DateTime ModifiedDate { get; set; }
+
+        [Display(Name = "Soru Sayısı")]
+        public int QuestionCount { get; set; }
     }
 
     public class ChallengeTemplateListModel

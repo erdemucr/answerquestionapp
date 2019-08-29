@@ -11,18 +11,24 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AnswerQuestionApp.Repository.Configuration;
 using AnswerQuestionApp.Repository.FilterModels;
+using AnswerQuestionApp.Entity.Configuration;
+using AnswerQuestionApp.Repository;
+using Microsoft.Extensions.Caching.Memory;
+using AnswerQuestionApp.Repository.Mail;
 
 namespace AqApplication.Repository.Challenge
 {
-    public class ChallengeRepo : IChallenge
+    public class ChallengeRepo : BaseRepo, IChallenge
     {
         private ApplicationDbContext context;
         private bool disposedValue = false;
         private readonly int PageSize = 20;
-        private const int challengeExpDay = 12, challengeQuestionLimit = 8;
-        public ChallengeRepo(ApplicationDbContext _context)
+        private readonly IEmailSender iEmailSender;
+
+        public ChallengeRepo(ApplicationDbContext _context, IMemoryCache memoryCache, IEmailSender _iEmailSender) : base(_context, memoryCache)
         {
             context = _context;
+            iEmailSender = _iEmailSender;
         }
 
         public Result<List<ChallengeQuestionViewModel>> RandomQuestion(string userId)
@@ -66,7 +72,25 @@ namespace AqApplication.Repository.Challenge
         {
             try
             {
-                var addChallenge = this.AddChallenge(challengeExpDay, challengeQuestionLimit, userId);
+                var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.ChallengeServiceIsOpen);
+                if (cValue == null)
+                {
+                    return new Result<List<ChallengeQuestionViewModel>>
+                    {
+                        Success = false,
+                        Message = "Bir hata oluştu"
+                    };
+                }
+                if (cValue.Values != "1")
+                {
+                    return new Result<List<ChallengeQuestionViewModel>>
+                    {
+                        Success = false,
+                        Message = "Sunucu şuan bakımdadır. Lütfen daha sonra tekrar deneyiniz"
+                    };
+                }
+
+                var addChallenge = this.AddChallenge( userId);
 
                 if (!addChallenge.Success)
                     return new Result<List<ChallengeQuestionViewModel>>
@@ -104,6 +128,7 @@ namespace AqApplication.Repository.Challenge
 
             catch (Exception ex)
             {
+                iEmailSender.SendEmail("Error " + DateTime.Now.ToLongDateString(), "erdemucar87@gmail.com", ex.Message);
                 return new Result<List<ChallengeQuestionViewModel>>(ex);
             }
 
@@ -144,12 +169,11 @@ namespace AqApplication.Repository.Challenge
 
         }
 
-        private Result<AqApplication.Entity.Challenge.Challenge> AddChallenge(int challengeExpDay, int challengeQuestionLimit, string userId)
+        public Result<AqApplication.Entity.Challenge.Challenge> AddChallenge(string userId)
         {
             try
             {
-                var questions = context.QuestionMain.OrderByDescending(X => X.Id).Take(challengeQuestionLimit).AsEnumerable();
-                var list = questions.Select(x => new ChallengeQuestions
+                var list = GetQuestionsByRandomTemplate().Data.Select(x => new ChallengeQuestions
                 {
                     QuestionId = x.Id,
                     Seo = x.Id,
@@ -163,23 +187,10 @@ namespace AqApplication.Repository.Challenge
                     IsActive = true,
                     Creator = userId,
                     StartDate = DateTime.Now,
-                    EndDate = DateTime.Now.AddDays(challengeExpDay),
+                    EndDate = DateTime.Now.AddSeconds(challengeExpDay),
                     CreatedDate = DateTime.Now,
                     ChallengeTypeId = (int)ChallengeTypeEnum.RandomMode,
-                    ChallengeQuestions = list,
-                    ChallengeSessions = new List<ChallengeSession>
-                    {
-                        new ChallengeSession
-                        {
-                            CreatedDate=DateTime.Now,
-                            IsActive=true,
-                            Creator=userId,
-                            UserId=userId,
-                            EndDate=DateTime.Now.AddDays(challengeExpDay),
-                            StartDate=DateTime.Now,
-                            IsCompleted=false
-                        }
-                    }
+                    ChallengeQuestions = list
 
                 };
 
@@ -200,52 +211,67 @@ namespace AqApplication.Repository.Challenge
 
 
         }
-        public Result<AqApplication.Entity.Challenge.Challenge> AddChallenge(string userId, int challengeType)
+
+        public Result AddChallengeSession(string userId, int challengeId)
         {
             try
             {
-
-                var model = new AqApplication.Entity.Challenge.Challenge
+                var model = new ChallengeSession
                 {
+                    CreatedDate = DateTime.Now,
                     IsActive = true,
                     Creator = userId,
+                    UserId = userId,
                     StartDate = DateTime.Now,
-                    EndDate = DateTime.Now.AddDays(challengeExpDay),
-                    CreatedDate = DateTime.Now,
-                    ChallengeTypeId = challengeType,
-                    ChallengeSessions = new List<ChallengeSession>
-                    {
-                        new ChallengeSession
-                        {
-                            CreatedDate=DateTime.Now,
-                            IsActive=true,
-                            Creator=userId,
-                            UserId=userId,
-                            EndDate=DateTime.Now.AddDays(challengeExpDay),
-                            StartDate=DateTime.Now,
-                            IsCompleted=false
-                        }
-                    }
-
+                    IsCompleted = false
                 };
 
-                context.Challenge.Add(model);
+                context.ChallengeSessions.Add(model);
                 context.SaveChanges();
 
-                Task.Run(() =>
+
+                return new Result
                 {
-                    AddChallengeQuestions(model.Id);
-                });
-                return new Result<AqApplication.Entity.Challenge.Challenge>
-                {
-                    Data = model,
-                    Success = true
+                    Success = true,
+                    Message = "İşme başarılı"
                 };
             }
 
             catch (Exception ex)
             {
-                return new Result<AqApplication.Entity.Challenge.Challenge>(ex);
+                return new Result(ex);
+            }
+
+        }
+        public Result UpdateChallengeSessionCompleted(string userId, int challengeId, string totalMark, int correctCount)
+        {
+            try
+            {
+
+                var model = context.ChallengeSessions.FirstOrDefault(x => x.ChallengeId == challengeId && x.UserId == userId);
+                if (model != null)
+                {
+                    model.ModifiedDate = DateTime.Now;
+                    model.EndDate = DateTime.Now;
+                    model.IsCompleted = true;
+                    model.Editor = userId;
+                    model.CorrectCount = correctCount;
+                    model.TotalScore = totalMark;
+                }
+
+                context.Entry(model).State = EntityState.Modified;
+                context.SaveChanges();
+
+                return new Result
+                {
+                    Success = true,
+                    Message = "İşme başarılı"
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return new Result(ex);
             }
 
         }
@@ -440,11 +466,11 @@ namespace AqApplication.Repository.Challenge
         {
             try
             {
-                var list = context.Challenge
+                var list = context.Challenge.Include(x => x.ChallengeSessions).Include(x => x.ChallengeQuestions)
                    .AsQueryable();
                 if (model.StartDate.ToDate().HasValue)
                     list = list.Where(x => x.CreatedDate >= model.StartDate.ToDate().Value);
-                if ( model.EndDate.ToDate().HasValue)
+                if (model.EndDate.ToDate().HasValue)
                     list = list.Where(x => x.CreatedDate < model.EndDate.ToDate().Value);
 
                 return new Result<IEnumerable<Entity.Challenge.Challenge>>
@@ -468,6 +494,117 @@ namespace AqApplication.Repository.Challenge
             };
         }
 
+
+        #region ChallengeQuizGeneration
+        private Result<List<Entity.Question.QuestionMain>> GetQuestionsByRandomTemplate()
+        {
+            try
+            {
+                Random rnd = new Random();
+
+                int rndTemplateIndex = rnd.Next(0, context.ChallengeTemplates.Where(x => x.IsActive).Count());
+
+                var templates = context.ChallengeTemplates.Include(x => x.ChallengeTemplateItems)
+                    .Where(x => x.IsActive && x.ChallengeTemplateItems.Where(y=>y.IsActive).Any()).Skip(rndTemplateIndex).Take(1).FirstOrDefault();
+
+                #region NullControl
+                if (templates == null)
+                    return new Result<List<Entity.Question.QuestionMain>>
+                    {
+                        Success = false,
+                        Message = "Kayıt bulunamadı"
+                    };
+
+                if (templates.ChallengeTemplateItems == null)
+                    return new Result<List<Entity.Question.QuestionMain>>
+                    {
+                        Success = false,
+                        Message = "Kayıt bulunamadı"
+                    };
+                #endregion
+
+                var result = new List<Entity.Question.QuestionMain>();
+                bool completed = false;
+                int questionCount = base.challengeQuestionCount;
+
+                foreach (var item in templates.ChallengeTemplateItems)
+                {
+
+                    var question = context.QuestionMain.Include(x => x.QuestionExams).AsQueryable();
+
+                    if (item.Difficulty.HasValue)
+                        question.Where(x => x.Difficulty == item.Difficulty.Value);
+
+                    if (item.SubjectId.HasValue)
+                        question.Where(x => x.SubjectId == item.SubjectId.Value);
+
+                    if (item.SubSubjectId.HasValue)
+                        question.Where(x => x.SubSubjectId == item.SubSubjectId.Value);
+
+                    if (item.LectureId.HasValue)
+                        question.Where(x => x.LectureId == item.LectureId.Value);
+
+                    if (item.ExamId.HasValue)
+                        question.Where(x => x.QuestionExams.Where(y => y.Id == item.ExamId).Any());
+
+                    int questionTemplateListCount = question.Count();
+                    var questionTemplateList = question.ToList();
+
+                    if (questionTemplateListCount >= item.Count)
+                    {
+                        for (int i = 0; i < item.Count; i++) // yterli limitte soru varmı
+                        {
+                            int rndQ = 0;
+                            while (true)
+                            {
+                                rndQ = rnd.Next(0, questionTemplateListCount);
+                                if (result.FirstOrDefault(x => x.Id == questionTemplateList[rndQ].Id) == null)
+                                    result.Add(questionTemplateList[rndQ]);
+                                else
+                                    break;
+                            }
+
+                            if (result.Count == questionCount)
+                            {
+                                completed = true;
+                                break;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        for (int i = 0; i < questionTemplateListCount; i++) 
+                        {
+                            result.Add(questionTemplateList[i]);
+                            if (result.Count == questionCount)
+                            {
+                                completed = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (completed)
+                        break;
+                }
+
+                return new Result<List<Entity.Question.QuestionMain>>
+                {
+                    Data= result,
+                    Success = true,
+                    Message = "İşlem başarı ile tamamlandı"
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new Result<List<Entity.Question.QuestionMain>>(ex);
+            }
+
+        }
+
+        #endregion
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

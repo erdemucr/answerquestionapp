@@ -869,7 +869,7 @@ namespace AqApplication.Repository.Question
                 editmodel.EndDate = model.EndDate;
                 context.Entry(editmodel).State = EntityState.Modified;
                 context.SaveChanges();
-                return new Result { Success = true, Message = string.Format("Yeni {0} ile {1}", "template", "güncellenmiştir") };
+                return new Result { Success = true, Message = string.Format(" {0} başarı ile {1}", "Template", "güncellenmiştir") };
             }
             catch (Exception ex)
             {
@@ -972,7 +972,7 @@ namespace AqApplication.Repository.Question
                 editmodel.ModifiedDate = DateTime.Now;
                 context.Entry(editmodel).State = EntityState.Modified;
                 context.SaveChanges();
-                return new Result { Success = true, Message = string.Format("Yeni {0} ile {1}", "template", "güncellenmiştir") };
+                return new Result { Success = true, Message = string.Format("{0} başarı ile {1}", "Template kuralı", "güncellenmiştir") };
             }
             catch (Exception ex)
             {

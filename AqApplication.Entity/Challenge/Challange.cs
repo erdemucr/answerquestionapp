@@ -46,6 +46,10 @@ namespace AqApplication.Entity.Challenge
         public string UserId { get; set; }
 
         public bool IsCompleted { get; set; }
+        [Display(Name = "Alınan Puan")]
+        public string TotalScore { get; set; }
+        [Display(Name = "Doğru Sayısı")]
+        public int? CorrectCount { get; set; }
 
         [ForeignKey("UserId")]
         public virtual ApplicationUser ApplicationUser { get; set; }

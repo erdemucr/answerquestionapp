@@ -19,7 +19,7 @@ namespace AqApplication.Service
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-             .UseUrls("http://localhost:50999/")
+             .UseUrls("http://localhost:50999/", "http://85.105.160.53:81/webapi")
                 .UseStartup<Startup>();
     }
 }

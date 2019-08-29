@@ -12,13 +12,11 @@ namespace AqApplication.Manage.Models
 
         public string MainTitle { get; set; }
         public string MainImage { get; set; }
-        [Required(ErrorMessage = "Bu alan boş geçilmez")]
-        public int SubjectId { get; set; }
+        public int? SubjectId { get; set; }
 
         [Required(ErrorMessage = "Bu alan boş geçilmez")]
         public int LectureId { get; set; }
-        [Required(ErrorMessage = "Bu alan boş geçilmez")]
-        public int SubSubjectId { get; set; }
+        public int? SubSubjectId { get; set; }
         [Required(ErrorMessage = "Bu alan boş geçilmez")]
         public int? Difficulty { get; set; }
         public bool? Offer { get; set; }

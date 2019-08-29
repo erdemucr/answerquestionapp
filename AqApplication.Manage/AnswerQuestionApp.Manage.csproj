@@ -9,80 +9,22 @@
 
   <ItemGroup>
     <Compile Remove="assets\**" />
+    <Compile Remove="wwwroot\assets\**" />
+    <Compile Remove="wwwroot\Upload\**" />
     <Content Remove="assets\**" />
+    <Content Remove="wwwroot\assets\**" />
+    <Content Remove="wwwroot\Upload\**" />
     <EmbeddedResource Remove="assets\**" />
+    <EmbeddedResource Remove="wwwroot\assets\**" />
+    <EmbeddedResource Remove="wwwroot\Upload\**" />
     <None Remove="assets\**" />
+    <None Remove="wwwroot\assets\**" />
+    <None Remove="wwwroot\Upload\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Views\Shared\_Layout.cshtml" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\.eslintrc" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\.gitattributes" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\.github\ISSUE_TEMPLATE\issue-report.md" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\.gitignore" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\bundle.jquery.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\bundle.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\CHANGELOG.md" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\dist\bindings\inputmask.binding.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\dist\inputmask.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\dist\inputmask.min.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\dist\jquery.inputmask.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\dist\jquery.inputmask.min.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\Gruntfile.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\index.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\lib\bindings\inputmask.binding.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\lib\dependencyLibs\inputmask.dependencyLib.jqlite.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\lib\dependencyLibs\inputmask.dependencyLib.jquery.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\lib\dependencyLibs\inputmask.dependencyLib.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\lib\extensions\inputmask.date.extensions.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\lib\extensions\inputmask.extensions.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\lib\extensions\inputmask.numeric.extensions.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\lib\global\window.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\lib\inputmask.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\lib\jquery.inputmask.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\lib\maskScope.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\lib\maskset.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\nuspecs\Inputmask.nuspec" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\nuspecs\jquery.inputmask.nuspec" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\index.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\prototypeExtensions.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\simulator.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_alternations.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_attributes.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_base.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_date.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_dynamic.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_escape.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_formatvalidate.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_initialvalue.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_inputeventonly.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_ip.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_jitmasking.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_jquery_inputmask.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_keepStatic.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_multi.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_numeric.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_numericinput.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_option.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_optional.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_paste.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_regex.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\qunit\tests_setvalue.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\README.md" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\README_android.md" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\README_date.md" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\README_numeric.md" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\README_other.md" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\webpack.buildconfig.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\webpack.config.js" />
-    <None Include="wwwroot\assets\plugins\Inputmask-5.x\webpack.jqueryconfig.js" />
-    <None Include="wwwroot\assets\plugins\timepicker\AUTHORS" />
-    <None Include="wwwroot\assets\plugins\timepicker\CHANGELOG" />
-    <None Include="wwwroot\assets\plugins\timepicker\jquery.timepicker.js" />
-    <None Include="wwwroot\assets\plugins\timepicker\jquery.timepicker.min.js" />
-    <None Include="wwwroot\assets\plugins\timepicker\LICENSE-GPL" />
-    <None Include="wwwroot\assets\plugins\timepicker\LICENSE-MIT" />
-    <None Include="wwwroot\assets\plugins\timepicker\README.md" />
+    <None Include="wwwroot\assets\app\js\jquery.cookie.min.js" />
   </ItemGroup>
 
   <ItemGroup>

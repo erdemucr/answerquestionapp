@@ -65,6 +65,7 @@ namespace AqApplication.Manage
             services.AddScoped<IUser, UserRepo>();
             services.AddScoped<ChallengeCron>();
             services.AddScoped<IConfigurationValues, ConfigurationValuesRepo>();
+            services.AddScoped<AnswerQuestionApp.Repository.Mail.IEmailSender, AnswerQuestionApp.Repository.Mail.EmailSender>();
             //services.AddSingleton<IHostingEnvironment>(new HostingEnvironment());// File I/0 enviroment etc.
 
             services.AddHangfire(configuration => configuration
@@ -81,6 +82,7 @@ namespace AqApplication.Manage
              DisableGlobalLocks = true
          }));
 
+            services.AddMemoryCache();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -90,6 +92,7 @@ namespace AqApplication.Manage
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 0;
+                //options.SignIn.RequireConfirmedEmail = true;
             });
 
             services.ConfigureApplicationCookie(options =>
@@ -110,13 +113,12 @@ namespace AqApplication.Manage
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddSessionStateTempDataProvider();
 
 
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            services.AddSingleton<IEmailSender, EmailSender>();
-            services.Configure<AuthMessageSenderOptions>(Configuration);
 
             services.Configure<IISOptions>(iis =>
             {
@@ -149,13 +151,13 @@ namespace AqApplication.Manage
             app.UseAuthentication();
             app.UseSession();
 
-        //    GlobalConfiguration.Configuration
-        //.UseActivator(new HangfireActivator(serviceProvider));
+            GlobalConfiguration.Configuration
+        .UseActivator(new HangfireActivator(serviceProvider));
 
-        //    app.UseHangfireDashboard();
-        //    app.UseHangfireServer();
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
 
-           // RecurringJob.AddOrUpdate(() => serviceProvider.GetRequiredService<IChallenge>().RandomChallenge("11efabde-f29e-4240-aa5b-995d07169ced"), "*/1 * * * *");
+            RecurringJob.AddOrUpdate(() => serviceProvider.GetRequiredService<IChallenge>().RandomChallenge("11efabde-f29e-4240-aa5b-995d07169ced"), "*/1 * * * *");
 
             app.UseMvc(routes =>
             {

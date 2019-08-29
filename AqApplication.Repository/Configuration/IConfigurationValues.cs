@@ -10,6 +10,6 @@ namespace AnswerQuestionApp.Repository.Configuration
 
         Result<IEnumerable<ConfigurationValues>> GetAll();
 
-        Result Edit(List<ConfigurationValues> list);
+        Result Edit(List<ConfigurationValues> list, string userId);
     }
 }

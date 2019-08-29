@@ -34,6 +34,15 @@
                         <th>
                             @Html.DisplayNameFor(model => model.CreatedDate)
                         </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.QuestionCount)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.AttemptCount)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CompletedCount)
+                        </th>
 
                         <th>
                             @Html.DisplayNameFor(model => model.ModifiedDate)
@@ -45,23 +54,33 @@
                     {
                         foreach (var item in Model)
                         {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Id)
-                                </td>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
 
-                                <td>
-                                    @item.CreatedDate.ToString()
-                                </td>
-                                <td>
-                                    @item.ModifiedDate.RegularDatetime()
-                                </td>
-                                <td>
-                                    <a href="#" class="btn btn-info">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> Katılımcılar
-                                    </a>
-                                </td>
-                            </tr>
+                        <td>
+                            @item.CreatedDate.RegularFullDatetime()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QuestionCount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AttemptCount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CompletedCount)
+                        </td>
+
+                        <td>
+                            @item.ModifiedDate.RegularFullDatetime()
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-info">
+                                <span class="glyphicon glyphicon-arrow-down"></span> Katılımcılar
+                            </a>
+                        </td>
+                    </tr>
                         }
                     }
                     else

@@ -52,8 +52,11 @@ namespace AnswerQuestionApp.Manage.Controllers
             var list = result.Data.Select(x => new ChallengeListModel
             {
                 Id = x.Id,
-                CreatedDate = x.CreatedDate,
+                CreatedDate= x.CreatedDate,
                 ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value : new DateTime(),
+                AttemptCount = x.ChallengeSessions.Count(),
+                CompletedCount = x.ChallengeSessions.Count(y => y.IsCompleted),
+                QuestionCount= x.ChallengeQuestions.Count()
             }).AsEnumerable();
 
 

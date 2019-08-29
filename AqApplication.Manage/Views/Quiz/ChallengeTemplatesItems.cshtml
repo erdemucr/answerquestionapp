@@ -68,9 +68,10 @@
                 <th>
                     @Html.DisplayNameFor(model => model.ChallengeItem.Editor)
                 </th>
-                <td>
+                <th>
                     @Html.DisplayNameFor(model => model.ChallengeItem.IsActive)
-                </td>
+                </th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -106,13 +107,16 @@
                             @item.CreatedDate.RegularDatetime()
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Creator)
+                            @Html.DisplayFor(modelItem => item.AppUserCreator.UserName)
                         </td>
                         <td>
                             @item.ModifiedDate.RegularDatetime()
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Editor)
+                            @Html.DisplayFor(modelItem => item.AppUserEditor.UserName)
+                        </td>
+                        <td>
+                            @item.IsActive.StatusText()
                         </td>
                         <td>
                             <button onclick="EditRule(this,'@item.Id');" class="btn btn-info">

@@ -1,7 +1,7 @@
 ﻿var aqfw = function () {
 
-    const serviceUrl = 'http://localhost:50999/api';
-    const challangeSocketUrl = 'ws://localhost:50999';
+    const serviceUrl = 'http://85.105.160.53:81/webapi/api';
+    const challangeSocketUrl = 'ws://85.105.160.53:81/webapi';
 
 
     var navigation = function () {

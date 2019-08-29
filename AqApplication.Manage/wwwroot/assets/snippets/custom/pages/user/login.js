@@ -88,23 +88,28 @@ var SnippetLogin = function () {
                         "LastName": $("#register_LastName").val(),
                         "Email": $("#register_Email").val(),
                         "Password": $("#register_Password").val(),
+                        "ConfirmPassword": $("#register_RePassword").val(),
                         "returnUrl": $("#login_ReturnUrl").val()
                     },
                     success: function (data) {
                         if (data.success) {
+                            $("#login_form")
+                                .prepend('<div class="m-alert m-alert--outline alert alert-success alert-dismissible animated fadeIn" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"></button><span>' + data.message + '</span></div>');
                             setTimeout(function () {
                                 t.removeClass("m-loader m-loader--right m-loader--light").attr("disabled", !1), r.clearForm(), r.validate().resetForm(), a();
                                 var l = e.find(".m-login__signin");
                                 l.clearForm(), l.validate().resetForm(),
                                     i(l, "success", data.message);
                             }, 2e3);
+
                         }
                         else {
                             setTimeout(function () {
                                 t.removeClass("m-loader m-loader--right m-loader--light").attr("disabled", !1);
                             }, 2e3);
-                            var l = e.find(".m-login__signup");
+                            var l = e.find(".m-login__signin");
                             i(l, "danger", data.message);
+
                         }
                     }
                 }));

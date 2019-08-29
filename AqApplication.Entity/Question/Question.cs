@@ -14,8 +14,16 @@ namespace AqApplication.Entity.Question
        public string MainTitle { get; set; }
         [Display(Name = "Image Url")]
         public string MainImage { get; set; }
-        [Display(Name = "Konu")]
+        [Display(Name = "Alt Konu")]
         public int? SubSubjectId { get; set; }
+
+        [Display(Name = "Konu")]
+        public int? SubjectId { get; set; }
+
+
+        [Display(Name = "Ders")]
+        public int? LectureId { get; set; }
+
         [Display(Name = "Zorluk")]
         public int? Difficulty { get; set; }
         [Display(Name = "Teklif")]
@@ -30,9 +38,12 @@ namespace AqApplication.Entity.Question
 
         public int CorrectAnswer { get; set; }
         public int AnswerCount { get; set; }
-
+        [ForeignKey("LectureId")]
+        public Lecture Lecture { get; set; }
         [ForeignKey("SubSubjectId")]
         public SubSubject SubSubject { get; set; }
+        [ForeignKey("SubjectId")]
+        public Subject Subject { get; set; }
         public ICollection<QuestionAnswer> QuestionAnswers { get; set; }
         public ICollection<QuestionClass> QuestionClasses { get; set; }
         public ICollection<QuestionExam> QuestionExams { get; set; }

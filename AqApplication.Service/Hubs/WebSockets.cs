@@ -22,7 +22,7 @@ namespace AqApplication.Service.Hubs
 
         private AqApplication.Repository.Session.IUser _iUser;
         private AqApplication.Repository.Challenge.IChallenge _iChallenge;
-        private  const int ChallengePeriodMinutes= 1;
+        private const int ChallengePeriodMinutes = 1;
 
         private static IList<SocketClientModel> _clientsChallengeStart = new List<SocketClientModel>();
         private static IList<SocketClientModel> _clientsChallengeEnd = new List<SocketClientModel>();
@@ -67,6 +67,7 @@ namespace AqApplication.Service.Hubs
                                         FullName = user.Data.FirstName + " " + user.Data.LastName,
                                         UserName = user.Data.Email
                                     });
+                                    await AddChallengeSession(lastRandomChallenge.Data.Id, socketRequestModel.userId);
                                 }
                             }
                             int leftSecond = (int)(lastRandomChallenge.Data.CreatedDate.AddMinutes(ChallengePeriodMinutes) - DateTime.Now).TotalSeconds;
@@ -161,6 +162,23 @@ namespace AqApplication.Service.Hubs
             return 0;
         }
 
+        public async Task<int> AddChallengeSession(int challengeId, string userId)
+        {
+            await Task.Run(() =>
+            {
+                _iChallenge.AddChallengeSession(userId, challengeId);
+            });
+            return 0;
+        }
+        public async Task<int> ChallengeSessionCompleted(int challengeId, string userId, string totalMark, int correctCount)
+        {
+            await Task.Run(() =>
+            {
+                _iChallenge.UpdateChallengeSessionCompleted(userId, challengeId,  totalMark, correctCount);
+            });
+            return 0;
+        }
+
         public async Task ChallengeEnd(HttpContext hContext, WebSocket socket)
         {
             _iUser = hContext.RequestServices.GetRequiredService<IUser>();
@@ -179,6 +197,7 @@ namespace AqApplication.Service.Hubs
 
                     if (socketRequestModel.challengeId.HasValue)
                     {
+
                         var challengeResult = _iChallenge.GetResultChallenge(socketRequestModel.challengeId.Value, socketRequestModel.userId);
 
                         while (!result.CloseStatus.HasValue)
@@ -202,6 +221,9 @@ namespace AqApplication.Service.Hubs
                                         TotalMark = challengeResult.Data.Mark,
                                         Correct = challengeResult.Data.correct
                                     });
+
+                                    await ChallengeSessionCompleted(socketRequestModel.challengeId.Value, socketRequestModel.userId, challengeResult.Data.Mark, challengeResult.Data.correct);
+
                                 }
                             }
 

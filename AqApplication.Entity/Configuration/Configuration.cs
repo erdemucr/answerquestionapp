@@ -25,7 +25,9 @@ namespace AnswerQuestionApp.Entity.Configuration
     public enum ConfigKey
     {
         ChallengeNextSecond=0,
-        ChallengeTimeSecond=1
+        ChallengeTimeSecond=1,
+        ChallengeServiceIsOpen=2,
+        ChallengeQuestionCount=3
     }
 
 }

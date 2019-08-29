@@ -75,7 +75,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 }
 
 
-                                <form class="m-login__form m-form">
+                                <form class="m-login__form m-form" id="login_form">
                                     <input type="hidden" value="@ViewBag.ReturnUrl" name="returnUrl" id="login_ReturnUrl" />
                                     <div class="form-group m-form__group">
                                         <input class="form-control m-input" type="text" placeholder="E-Posta" name="Email" autocomplete="off" id="login_Email">
@@ -86,7 +86,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <div class="row m-login__form-sub">
                                         <div class="col m--align-left">
                                             <label class="m-checkbox m-checkbox--focus">
-                                                <input type="checkbox" name="RememberMe" id="login_RememberMe">
+                                                <input type="checkbox" name="RememberMeField" id="login_RememberMe">
                                                 Beni Hatırla
                                                 <span></span>
                                             </label>
@@ -128,7 +128,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                         <input class="form-control m-input" type="password" placeholder="Şifre" name="password" id="register_Password">
                                     </div>
                                     <div class="form-group m-form__group">
-                                        <input class="form-control m-input m-login__form-input--last" type="password" placeholder="Tekrar Şifre" name="rpassword">
+                                        <input class="form-control m-input m-login__form-input--last" type="password" placeholder="Tekrar Şifre" name="rpassword" id="register_RePassword">
                                     </div>
                                     <div class="row form-group m-form__group m-login__form-sub">
                                         <div class="col m--align-left">
@@ -206,6 +206,7 @@ License: You must have a valid license purchased only from themeforest(the above
             </div>
         </div>
     </div>
+
     <!-- end:: Page -->
     <!--begin::Base Scripts -->
     <script src="/assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
@@ -214,7 +215,38 @@ License: You must have a valid license purchased only from themeforest(the above
     <!--begin::Page Snippets -->
     <script src="/assets/snippets/custom/pages/user/login.js" type="text/javascript"></script>
     <script src="/assets/app/js/jquery.validation.messages_tr.js"></script>
+    <script src="/assets/app/js/jquery.cookie.min.js"></script>
 
+    <script type="text/javascript">
+        var message = '@ViewBag.message';
+        $(document).ready(function () {
+            var remember = $.cookie('remember');
+            if (remember == 'true') {
+                var username = $.cookie('username');
+                var password = $.cookie('password');
+                // autofill the fields
+                $('#login_Email').attr("value", username);
+                $('#login_Password').attr("value", password);
+            }
+            if (message !== '') {
+                $("#login_form")
+                    .prepend('<div class="m-alert m-alert--outline alert alert-success alert-dismissible animated fadeIn" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"></button><span>' + message+'</span></div>');
+            }
+        });
+        if ($('#login_RememberMe').attr('checked')) {
+            var username = $('#login_Email').attr("value");
+            var password = $('#login_Password').attr("value");
+            // set cookies to expire in 14 days
+            $.cookie('username', username, { expires: 14 });
+            $.cookie('password', password, { expires: 14 });
+            $.cookie('remember', true, { expires: 14 });
+        } else {
+            // reset cookies
+            $.cookie('username', null);
+            $.cookie('password', null);
+            $.cookie('remember', null);
+        }
+    </script>
     <!--end::Page Snippets -->
 </body>
 <!-- end::Body -->

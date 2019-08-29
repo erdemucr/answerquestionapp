@@ -14,4 +14,8 @@ namespace AqApplication.Repository.Enums
         SelectList
 
     }
+    public enum CacheKeys
+    {
+        ConfigurationValues
+    }
 }

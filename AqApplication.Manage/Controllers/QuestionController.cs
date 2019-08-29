@@ -30,7 +30,7 @@ namespace AqApplication.Manage.Controllers
         private readonly IFile _ifile;
         private readonly IHostingEnvironment _hostingEnvironment;
         private const string LastSessionQuestionAddModel = "QuestionAddModel";
-        public QuestionController(IQuestion iQuestion, IFile iFile, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment):base(iQuestion)
+        public QuestionController(IQuestion iQuestion, IFile iFile, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(iQuestion)
         {
             _iquestion = iQuestion;
             _ifile = iFile;
@@ -151,7 +151,9 @@ namespace AqApplication.Manage.Controllers
             {
                 MainImage = model.MainImage,
                 MainTitle = model.MainTitle,
-                //SubSubjectId = model.SubSubjectId,
+                SubjectId = model.SubjectId,
+                SubSubjectId = model.SubSubjectId,
+                LectureId = model.LectureId,
                 IsActive = false,
                 ModifiedDate = DateTime.Now,
                 CreatedDate = DateTime.Now,
@@ -216,7 +218,7 @@ namespace AqApplication.Manage.Controllers
             HttpContext.Session.Remove("optionImage5");
             return;
         }
-                     
+
         public JsonResult GetSubjects(int lectureId)
         {
             var list = _iquestion.GetSubjectsByLectureId(lectureId);
@@ -257,7 +259,7 @@ namespace AqApplication.Manage.Controllers
                 return Json(new { data = viewList });
             }
             return Json(false);
-       
+
         }
 
 
@@ -310,14 +312,14 @@ namespace AqApplication.Manage.Controllers
         {
             try
             {
-                string uploads = "", filePath="";
+                string uploads = "", filePath = "";
                 Byte[] fileBytes = null;
                 if (file != null && file.Length > 0)
                     try
                     {
                         var uniqueFileName = Guid.NewGuid() + ".pdf";
                         uploads = Path.Combine(_hostingEnvironment.WebRootPath, "Upload");
-                         filePath = Path.Combine(uploads, uniqueFileName);
+                        filePath = Path.Combine(uploads, uniqueFileName);
 
                         string type = file.ContentType;
                         if (type != "application/pdf")
@@ -331,7 +333,7 @@ namespace AqApplication.Manage.Controllers
                         using (var ms = new MemoryStream())
                         {
                             file.CopyTo(ms);
-                              fileBytes = ms.ToArray();
+                            fileBytes = ms.ToArray();
                             // act on the Base64 data
                         }
                         file.CopyTo(new FileStream(filePath, FileMode.Create));
@@ -373,11 +375,11 @@ namespace AqApplication.Manage.Controllers
             catch (Exception ex)
             {
                 TempData["success"] = false;
-                TempData["message"] = ex.InnerException != null ? ex.InnerException.ToString() : ex.Message != null ? ex.Message.ToString(): string.Empty;
+                TempData["message"] = ex.InnerException != null ? ex.InnerException.ToString() : ex.Message != null ? ex.Message.ToString() : string.Empty;
                 return View(model);
             }
         }
-        public void UploadPdf(PdfDocument doc, int contentId, string pdfName, string name,string dir)
+        public void UploadPdf(PdfDocument doc, int contentId, string pdfName, string name, string dir)
         {
 
             try

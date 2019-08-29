@@ -21,5 +21,19 @@ namespace AqApplication.Manage.Utilities
                 return "-";
             return date.ToString("dd/MM/yyyy");
         }
+        public static string RegularFullDatetime(this DateTime? date)
+        {
+            if (!date.HasValue)
+                return "-";
+            if (date.Value == default(DateTime))
+                return "-";
+            return date.Value.ToString("dd/MM/yyyy");
+        }
+        public static string RegularFullDatetime(this DateTime date)
+        {
+            if (date == default(DateTime))
+                return "-";
+            return date.ToString("dd/MM/yyyy HH:mm:ss");
+        }
     }
 }

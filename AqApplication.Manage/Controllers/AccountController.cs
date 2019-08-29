@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using AqApplication.Entity.Identity.Data;
 using AqApplication.Manage.Models;
 using System;
+using AnswerQuestionApp.Repository.Mail;
 
 namespace AqApplication.Manage.Controllers
 {
@@ -12,18 +13,31 @@ namespace AqApplication.Manage.Controllers
     {
         private readonly SignInManager<ApplicationUser> SignInManager;
         private readonly UserManager<ApplicationUser> UserManager;
+        private readonly IEmailSender _iEmailSender;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender iEmailSender)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _iEmailSender = iEmailSender;
         }
 
         //
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login()
+        public ActionResult Login(string userId, string code)
         {
+            if (!string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(code))
+            {
+                var result = UserManager.FindByIdAsync(userId);
+                if (result != null)
+                {
+                    UserManager.ConfirmEmailAsync(result.Result, code);
+                }
+                ViewBag.ReturnUrl = "/Home/Index";
+                ViewBag.message = Models.Utilities.Messages.EPostaConfrimed;
+                return View();
+            }
 
             ViewBag.ReturnUrl = "/Home/Index";
             return View();
@@ -50,15 +64,15 @@ namespace AqApplication.Manage.Controllers
                 else
                     return Json(new { Success = false, Message = Models.Utilities.Messages.NotValidUserError });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return Json(new { Success = false, Message = ex.InnerException!=null?ex.InnerException.ToString():"" });
+                return Json(new { Success = false, Message = ex.InnerException != null ? ex.InnerException.ToString() : "" });
             }
-         
+
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-           
+
         }
 
 
@@ -73,10 +87,14 @@ namespace AqApplication.Manage.Controllers
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
-        public  JsonResult Register(RegisterViewModel model)
+        public JsonResult Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
+                var userCnt = UserManager.FindByEmailAsync(model.Email);
+                if (userCnt.Result != null)
+                    return Json(new { Success = false, Message = Models.Utilities.Messages.EPostaExits });
+
                 var user = new ApplicationUser
                 {
                     UserName = model.Email,
@@ -84,16 +102,16 @@ namespace AqApplication.Manage.Controllers
                     FirstName = model.FirstName,
                     LastName = model.LastName
                 };
-                var result =  UserManager.CreateAsync(user, model.Password);
+                var result = UserManager.CreateAsync(user, model.Password);
                 if (result.Result.Succeeded)
                 {
                     //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                     string code =  UserManager.GenerateEmailConfirmationTokenAsync(user).Result;
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Scheme);
-                     //UserManager.email(user.Id, "A&Q Portal Hesab Doğrulama", "Hesabınızı dorğulamak için lütfen <a href=\"" + callbackUrl + "\">tklayınız</a>");
+                    string code = UserManager.GenerateEmailConfirmationTokenAsync(user).Result;
+                    var callbackUrl = Url.Action("Login", "Account", new { userId = user.Id, code = code }, protocol: Request.Scheme);
+                    _iEmailSender.SendEmail("A&Q Portal Hesab Doğrulama", model.Email, "Hesabınızı dorğulamak için lütfen <a href=\"" + callbackUrl + "\">tklayınız</a>");
 
                     return Json(new { Success = true, Message = Models.Utilities.Messages.EPostaConfrim });
                 }
@@ -103,7 +121,7 @@ namespace AqApplication.Manage.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            return Json(new { Success=false,Message= Models.Utilities.Messages.FormNotValidError});
+            return Json(new { Success = false, Message = Models.Utilities.Messages.FormNotValidError });
         }
         /// <summary>
         /// Identity Singin manager logout 

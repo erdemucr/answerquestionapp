@@ -77,7 +77,7 @@ namespace AnswerQuestionApp.Repository.Configuration
 
         }
 
-        public Result Edit(List<Entity.Configuration.ConfigurationValues> list)
+        public Result Edit(List<Entity.Configuration.ConfigurationValues> list, string userId)
         {
             try
             {
@@ -87,6 +87,8 @@ namespace AnswerQuestionApp.Repository.Configuration
                     if(model!=null)
                     {
                         model.Values = item.Values;
+                        model.ModifiedDate = DateTime.Now;
+                        model.Editor = userId;
                         context.Entry(model).State = EntityState.Modified;
                         context.SaveChanges();
                     }
@@ -96,9 +98,8 @@ namespace AnswerQuestionApp.Repository.Configuration
             }
             catch (Exception ex)
             {
-                new Result(ex);
+              return  new Result(ex);
             }
-            return new Result { Success = false, Message = "Bir hata oluştu" };
         }
         protected virtual void Dispose(bool disposing)
         {

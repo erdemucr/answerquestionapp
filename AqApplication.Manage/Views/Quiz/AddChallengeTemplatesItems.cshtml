@@ -76,7 +76,7 @@
                 </div>
                 <div class="form-group rawInput" style="opacity:1;">
                     <label>Sayı</label>
-                    @Html.TextBoxFor(model => model.Count, "Seçiniz", new { @class = "form-control onlyNumber"})
+                    @Html.TextBoxFor(model => model.Count, new { @class = "form-control onlyNumber"})
                     @Html.ValidationMessageFor(model => model.Count, "", new { @class = "text-danger" })
                 </div>
             </div>

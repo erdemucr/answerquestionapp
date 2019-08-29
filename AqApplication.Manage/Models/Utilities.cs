@@ -37,6 +37,8 @@ namespace AqApplication.Manage.Models
             public const string UserLockError = "Kullanıcı hesabı kilitli, lütfen sistem yöneticinize danışınız";
             public const string NotValidUserError = "Kullanıcı bilgileri doğru değil lütfen tekrar deneyiniz";
             public const string EPostaConfrim = "Doğrulama linki e-posta adresinize gönderilmiştir";
+            public const string EPostaConfrimed = "E-posta adresiniz doğrulanmıştır. Giriş yapabilirsiniz";
+            public const string EPostaExits = "Bu E-Posta adresi kullanımdadır";
         }
 
         public static class SelectLists

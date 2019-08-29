@@ -1,5 +1,6 @@
 ﻿using AnswerQuestionApp.Manage.HangFire;
 using AnswerQuestionApp.Repository.Configuration;
+using AnswerQuestionApp.Repository.Mail;
 using AqApplication.Entity.Identity.Data;
 using AqApplication.Logging.Providers;
 using AqApplication.Repository.Challenge;
@@ -58,6 +59,9 @@ namespace AqApplication.Service
             services.AddScoped<IFile, FileRepo>();
             services.AddScoped<IUser, UserRepo>();
             services.AddScoped<IConfigurationValues, ConfigurationValuesRepo>();
+            services.AddScoped<AnswerQuestionApp.Repository.Mail.IEmailSender, AnswerQuestionApp.Repository.Mail.EmailSender>();
+            services.AddMemoryCache();
+
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -73,7 +77,7 @@ namespace AqApplication.Service
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("AnqApplication", new Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("AnswerQuestionApp", new Info { Title = "My API", Version = "v1" });
             });
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -154,7 +158,7 @@ namespace AqApplication.Service
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/AnqApplication/swagger.json", "MyAPI V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "AnswerQuestionApp");
             });
 
             app.UseWebSockets(); //-> UseDotNetify socket development
