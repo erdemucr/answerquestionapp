@@ -65,9 +65,23 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <label class="col-md-6">  @Html.RadioButtonFor(model => model.Type, AqApplication.Entity.Constants.ChallengeTypeEnum.RandomMode)Challange Modu</label>
 
+                        <label class="col-md-6">  @Html.RadioButtonFor(model => model.Type, AqApplication.Entity.Constants.ChallengeTypeEnum.PracticeMode) Antreman Modu</label>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
 
-
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LectureId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.LectureId, (IEnumerable<SelectListItem>)ViewBag.lectureSelectList, "Seçiniz", new { @class = "form-control " })
+                        @Html.ValidationMessageFor(model => model.LectureId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">

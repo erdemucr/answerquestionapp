@@ -214,6 +214,8 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<int?>("LectureId");
+
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<string>("Name")
@@ -223,11 +225,15 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<DateTime?>("StartDate");
 
+                    b.Property<int>("Type");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Creator");
 
                     b.HasIndex("Editor");
+
+                    b.HasIndex("LectureId");
 
                     b.ToTable("ChallengeTemplates");
                 });
@@ -488,6 +494,41 @@ namespace AqApplication.Entity.Migrations
                     b.ToTable("Exams");
                 });
 
+            modelBuilder.Entity("AqApplication.Entity.Question.ExamLecture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("Creator");
+
+                    b.Property<string>("Editor");
+
+                    b.Property<int>("ExamId");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<int>("LectureId");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int?>("Seo");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Creator");
+
+                    b.HasIndex("Editor");
+
+                    b.HasIndex("ExamId");
+
+                    b.HasIndex("LectureId");
+
+                    b.ToTable("ExamLectures");
+                });
+
             modelBuilder.Entity("AqApplication.Entity.Question.Lecture", b =>
                 {
                     b.Property<int>("Id")
@@ -629,6 +670,8 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<string>("Editor");
 
+                    b.Property<int?>("HeightImage");
+
                     b.Property<bool>("IsActive");
 
                     b.Property<int?>("LectureId");
@@ -650,6 +693,8 @@ namespace AqApplication.Entity.Migrations
                     b.Property<int?>("SubSubjectId");
 
                     b.Property<int?>("SubjectId");
+
+                    b.Property<int?>("WidthImage");
 
                     b.HasKey("Id");
 
@@ -984,6 +1029,10 @@ namespace AqApplication.Entity.Migrations
                     b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "AppUserEditor")
                         .WithMany()
                         .HasForeignKey("Editor");
+
+                    b.HasOne("AqApplication.Entity.Question.Lecture", "Lecture")
+                        .WithMany()
+                        .HasForeignKey("LectureId");
                 });
 
             modelBuilder.Entity("AqApplication.Entity.Challenge.ChallengeTemplateItems", b =>
@@ -1064,6 +1113,27 @@ namespace AqApplication.Entity.Migrations
                     b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "AppUserEditor")
                         .WithMany()
                         .HasForeignKey("Editor");
+                });
+
+            modelBuilder.Entity("AqApplication.Entity.Question.ExamLecture", b =>
+                {
+                    b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "AppUserCreator")
+                        .WithMany()
+                        .HasForeignKey("Creator");
+
+                    b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "AppUserEditor")
+                        .WithMany()
+                        .HasForeignKey("Editor");
+
+                    b.HasOne("AqApplication.Entity.Question.Exam", "Exam")
+                        .WithMany()
+                        .HasForeignKey("ExamId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AqApplication.Entity.Question.Lecture", "Lecture")
+                        .WithMany("ExamLectures")
+                        .HasForeignKey("LectureId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("AqApplication.Entity.Question.Lecture", b =>

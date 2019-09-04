@@ -41,6 +41,8 @@ namespace AnswerQuestionApp.Manage.Models
         public string Editor { get; set; }
 
         public bool IsActive { get; set; }
+
+        public int Type { get; set; }
     }
 
     public class ChallengeTemplateModel

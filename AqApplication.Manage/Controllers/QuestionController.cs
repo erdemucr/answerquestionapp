@@ -44,6 +44,7 @@ namespace AqApplication.Manage.Controllers
             var searhmodel = new SearchModel();
             searhmodel.Controller = "Question";
             searhmodel.Action = "Index";
+            searhmodel.Position = SearchModelPosition.Vertical;
             searhmodel.SearchInput = new List<SearchInput>();
             searhmodel.SearchInput.Add(new SearchInput(Repository.Enums.InputType.Text, "Name", "nameSearchTxt", "Arama Anahtarı"));
             searhmodel.SearchInput.Add(new SearchInput(Repository.Enums.InputType.Date, "StartDate", "startdateSearchTxt", "Başlangıç Tarihi"));
@@ -165,7 +166,9 @@ namespace AqApplication.Manage.Controllers
                 Seo = 0,
                 QuestionPdfId = model.QuestionPdfId,
                 CorrectAnswer = model.TrueOption,
-                AnswerCount = model.Option4 ? 5 : 4
+                AnswerCount = model.Option4 ? 5 : 4,
+                WidthImage= model.WidthImage,
+                HeightImage=model.HeightImage
 
             };
 
@@ -362,10 +365,10 @@ namespace AqApplication.Manage.Controllers
                 var result = _ifile.AddQuestionPdf(model, User.GetUserId());
                 if (result.Success)
                 {
-                    var myTask = System.Threading.Tasks.Task.Factory.StartNew(() =>
-                    {
+                    //var myTask = System.Threading.Tasks.Task.Factory.StartNew(() =>
+                    //{
                         UploadPdf(doc, result.InstertedId, model.PdfUrl, model.Name, uploads);
-                    });
+                    //});
                 }
 
                 TempData["success"] = result.Success;
@@ -405,7 +408,7 @@ namespace AqApplication.Manage.Controllers
                     {
                         using (FileStream fs = new FileStream(outputFileName, FileMode.Create, FileAccess.Write))
                         {
-                            bmp.Save(memory, ImageFormat.Jpeg);
+                            zoomImg.Save(memory, ImageFormat.Png);
                             byte[] bytes = memory.ToArray();
                             fs.Write(bytes, 0, bytes.Length);
                         }

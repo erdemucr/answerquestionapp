@@ -1,0 +1,160 @@
+﻿<div class="container mt-4 main-container">
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <input type="hidden" value="" id="challengeIdHdn" />
+            <input type="hidden" value="" id="questionLenHdn" />
+            <div class="card rounded-0 border-0 mb-3" id="antreman-header">
+                <div class="row text-center">
+                    <div class="col py-12">
+                        <h5 class="content-color-primary mb-0 content-header"> Antreman Modu</h5>
+                        <!--<p class="content-color-secondary small mb-0">Toplam Soru</p>-->
+                    </div>
+                </div>
+            </div>
+
+            <div id="lectures-wrapper">
+
+            </div>
+            <div id="question_wrapper" style="display:none;">
+                <div class="card rounded-0 border-0 mb-3">
+                    <div class="row text-center">
+                        <div class="col py-3">
+                            <h5 class="content-color-primary mb-0" id="totalQuestion"></h5>
+                            <p class="content-color-secondary small mb-0">Toplam Soru</p>
+                        </div>
+                        <div class="col py-3">
+                            <h5 class="content-color-primary mb-0" id="answeredQuestionCount"></h5>
+                            <p class="content-color-secondary small mb-0">Cevaplanan</p>
+                        </div>
+                        <div class="col py-3">
+                            <h5 class="content-color-primary mb-0" id="timeClockQuestion"></h5>
+                            <p class="content-color-secondary small mb-0">Kalan Süre</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card rounded-0 border-0 mb-3">
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div class="card-body pb-0">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col">
+                                            <div class="carosel swiper-location-carousel" id="caruselSlider">
+                                                <div data-pagination='{"el": ".swiper-pagination"}' data-space-between="0" data-slides-per-view="1" class="swiper-container swiper-init swiper-product">
+                                                    <div class="swiper-pagination"></div>
+                                                    <div class="swiper-wrapper" id="sliderWrapper">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card rounded-0 border-0 page-boxes-wrapper">
+                    <h6 class="card-subtitle mb-2 header-color-secondary text-center" id="page-boxes"></h6>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="answer-option-item questionBtn optionA" id="option0">
+                            <div class="card" style="padding:0.5em 1.95em">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4 class="mb fleft">A</h4>
+                                    </div>
+                                    <div class="icon-circle icon-30" style="display:none;">
+                                        <i class="material-icons">assignment_turned_in</i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12">
+                        <div class="answer-option-item questionBtn optionB" id="option1">
+                            <div class="card" style="padding:0.5em 1.95em">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4 class="mb fleft">B</h4>
+
+                                    </div>
+                                    <div class="icon-circle icon-30" style="display:none;">
+                                        <i class="material-icons">assignment_turned_in</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12">
+                        <div class="answer-option-item questionBtn optionC" id="option2">
+                            <div class="card" style="padding:0.5em 1.95em">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4 class="mb fleft">C</h4>
+                                        <div class="icon-circle icon-30" style="display:none;">
+                                            <i class="material-icons">assignment_turned_in</i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12">
+                        <div class="answer-option-item questionBtn optionD" id="option3">
+                            <div class="card" style="padding:0.5em 1.95em">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4 class="mb fleft">D</h4>
+                                        <div class="icon-circle icon-30" style="display:none;">
+                                            <i class="material-icons">assignment_turned_in</i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12" id="fiveOption">
+                        <div class="answer-option-item questionBtn optionE" id="option4">
+                            <div class="card" style="padding:0.5em 1.95em">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4 class="mb fleft">D</h4>
+                                        <h4 class="mb ">E</h4>
+                                        <div class="icon-circle icon-30" style="display:none;">
+                                            <i class="material-icons">assignment_turned_in</i>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="challenge_result" style="display:none;">
+                <div class="card rounded-0 border-0 mb-3">
+                    <div class="card-body">
+                        <table class="table border-bottom mb-0 footable-2 footable-paging footable-paging-center breakpoint breakpoint-xs" style="">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col py-12 text-center">
+                        <input type="button" value="Ana Sayfa" class="btn btn-default" onclick="aqfw().Navigation().Redirect(aqfw().Navigation().Routes.Index);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

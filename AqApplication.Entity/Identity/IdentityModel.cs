@@ -65,6 +65,8 @@ namespace AqApplication.Entity.Identity.Data
 
         public DbSet<ChallengeTemplateItems> ChallengeTemplateItems { get; set; }
 
+        public DbSet<ExamLecture> ExamLectures { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

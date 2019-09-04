@@ -29,6 +29,9 @@
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
                 <th>
+                    Sınavlar
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.CreatedDate)
                 </th>
                 <th>
@@ -51,6 +54,12 @@
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @if (item.Exams != null)
+                        {
+                            @item.Exams.ArrayToText()
+                        }
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.CreatedDate)

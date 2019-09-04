@@ -105,5 +105,7 @@ namespace AqApplication.Repository.Question
 
         Result<ChallengeTemplateItems> GetChallengeTemplateItemByKey(int id);
         #endregion
+
+        Result<IEnumerable<Lecture>> GetLecturesByExamId(int examId);
     }
 }

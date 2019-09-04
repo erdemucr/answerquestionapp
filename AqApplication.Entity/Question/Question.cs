@@ -47,6 +47,9 @@ namespace AqApplication.Entity.Question
         public ICollection<QuestionAnswer> QuestionAnswers { get; set; }
         public ICollection<QuestionClass> QuestionClasses { get; set; }
         public ICollection<QuestionExam> QuestionExams { get; set; }
+
+        public int? WidthImage { get; set; }
+        public int? HeightImage { get; set; }
     }
 
     public class QuestionAnswer 

@@ -22,7 +22,8 @@ namespace AqApplication.Service.Hubs
 
         private AqApplication.Repository.Session.IUser _iUser;
         private AqApplication.Repository.Challenge.IChallenge _iChallenge;
-        private const int ChallengePeriodMinutes = 1;
+        private int ChallengePeriodSecond = 0;
+        private int MinimumChallegneSecond = 0;
 
         private static IList<SocketClientModel> _clientsChallengeStart = new List<SocketClientModel>();
         private static IList<SocketClientModel> _clientsChallengeEnd = new List<SocketClientModel>();
@@ -30,6 +31,10 @@ namespace AqApplication.Service.Hubs
         {
             _iUser = hContext.RequestServices.GetRequiredService<IUser>();
             _iChallenge = hContext.RequestServices.GetRequiredService<IChallenge>();
+
+            bool isChallengeServiceOpen = _iChallenge.challengeServiceIsOpen();
+            MinimumChallegneSecond = _iChallenge.minimumSecondEntryChallenge();
+            ChallengePeriodSecond = _iChallenge.challengeAttemptSecond();
 
             while (socket.State == WebSocketState.Open)
             {
@@ -39,61 +44,110 @@ namespace AqApplication.Service.Hubs
                 {
                     var bag = new byte[4096];
                     result = await socket.ReceiveAsync(new ArraySegment<byte>(bag), CancellationToken.None);
-
-                    var incomingMessage = System.Text.Encoding.UTF8.GetString(bag, 0, result.Count);
-                    var socketRequestModel = Newtonsoft.Json.JsonConvert.DeserializeObject<SocketRequestModel>(incomingMessage);
-
-
-                    var lastRandomChallenge = _iChallenge.GetLastChallengeByType(ChallengeTypeEnum.RandomMode);
-
-                    if (lastRandomChallenge.Success)
+                    while (!result.CloseStatus.HasValue)
                     {
-                        while (!result.CloseStatus.HasValue)
+                        var incomingMessage = System.Text.Encoding.UTF8.GetString(bag, 0, result.Count);
+                        var socketRequestModel = Newtonsoft.Json.JsonConvert.DeserializeObject<SocketRequestModel>(incomingMessage);
+
+                        var lastRandomChallenge = _iChallenge.GetLastChallengeByType(ChallengeTypeEnum.RandomMode);
+
+                        int leftSecond = (int)(lastRandomChallenge.Data.CreatedDate.AddSeconds(ChallengePeriodSecond) - DateTime.Now).TotalSeconds;
+                        string message = string.Empty;
+                        bool success = true;
+
+                        if (lastRandomChallenge.Success)
                         {
-                            if (socketRequestModel != null)
+                            if (socketRequestModel == null)
                             {
-                                var user = _iUser.GetUserInfo(socketRequestModel.userId);
-                                if (user.Success
-                                    && _clientsChallengeStart.FirstOrDefault(x => x.UserId == socketRequestModel.userId
-                                    && x.ChallengeId == lastRandomChallenge.Data.Id // eğer ensonki
-                                    ) == null
-                                    )
+                                message = JsonConvert.SerializeObject(new SocketClientResult
                                 {
-                                    _clientsChallengeStart.Add(new SocketClientModel
-                                    {
-                                        Socket = socket,
-                                        UserId = socketRequestModel.userId,
-                                        ChallengeId = lastRandomChallenge.Data.Id,
-                                        FullName = user.Data.FirstName + " " + user.Data.LastName,
-                                        UserName = user.Data.Email
-                                    });
-                                    await AddChallengeSession(lastRandomChallenge.Data.Id, socketRequestModel.userId);
-                                }
+                                    LeftSecond = leftSecond,
+                                    ChallengeSocketResult = ChallengeSocketResult.Error,
+                                    Message = "Sistemsel bir hata oluştu. Lütfen daha sonra tekrar deneyiniz."
+                                });
+                                success = false;
                             }
-                            int leftSecond = (int)(lastRandomChallenge.Data.CreatedDate.AddMinutes(ChallengePeriodMinutes) - DateTime.Now).TotalSeconds;
+                            else if (!isChallengeServiceOpen)
+                            {
+                                message = JsonConvert.SerializeObject(new SocketClientResult
+                                {
+                                    LeftSecond = leftSecond,
+                                    ChallengeSocketResult = ChallengeSocketResult.Error,
+                                    Message = "Sunucu şuan bakım aşamasındadır. Lütfen daha sonra tekrar deneyiniz."
+                                });
+                                success = false;
+                            }
+                            else if (leftSecond < MinimumChallegneSecond)
+                            {
+                                message = JsonConvert.SerializeObject(new SocketClientResult
+                                {
+                                    LeftSecond = _iChallenge.challengeNextSecond() + MinimumChallegneSecond,
+                                    ChallengeSocketResult = ChallengeSocketResult.Next,
+                                    Next = MinimumChallegneSecond
+                                });
 
-                            await SendClientListByChallengeId(lastRandomChallenge.Data.Id, leftSecond <= 0 ? -1 : leftSecond);
-                            result = await socket.ReceiveAsync(new ArraySegment<byte>(bag), CancellationToken.None);
+                                success = false;
+                            }
+                            else if (_clientsChallengeStart.FirstOrDefault(x => x.ChallengeId == lastRandomChallenge.Data.Id && x.UserId == socketRequestModel.userId) != null) // eğer mevcut kullanıcı ile başka bir oturumda giriş yapmış ise
+                            {
+                                message = JsonConvert.SerializeObject(new SocketClientResult
+                                {
+                                    LeftSecond = leftSecond,
+                                    ChallengeSocketResult = ChallengeSocketResult.Error,
+                                    Message = "Mevcut kullanıcı ile başka bir aygıtta giriş yaptınız."
+                                });
+                                success = false;
+                            }
                         }
+                        else
+                        {
+                            message = JsonConvert.SerializeObject(new SocketClientResult
+                            {
+                                LeftSecond = leftSecond,
+                                ChallengeSocketResult = ChallengeSocketResult.Error,
+                                Message = "Sistemsel bir hata oluştu. Lütfen daha sonra tekrar deneyiniz."
+                            });
+                            success = false;
+                        }
+
+                        if (success)
+                        {
+                            var user = _iUser.GetUserInfo(socketRequestModel.userId);
+                            if (user.Success
+                                && _clientsChallengeStart.FirstOrDefault(x => x.UserId == socketRequestModel.userId
+                                && x.ChallengeId == lastRandomChallenge.Data.Id // eğer ensonki
+                                ) == null
+                                )
+                            {
+                                _clientsChallengeStart.Add(new SocketClientModel
+                                {
+                                    Socket = socket,
+                                    UserId = socketRequestModel.userId,
+                                    ChallengeId = lastRandomChallenge.Data.Id,
+                                    FullName = user.Data.FirstName + " " + user.Data.LastName,
+                                    UserName = user.Data.Email
+                                });
+                                await AddChallengeSession(lastRandomChallenge.Data.Id, socketRequestModel.userId);
+                            }
+
+                            await SendClientListByChallengeId(lastRandomChallenge.Data.Id,
+                                (int)((TimeSpan)(lastRandomChallenge.Data.EndDate - lastRandomChallenge.Data.StartDate)).TotalSeconds,
+                                leftSecond);
+                        }
+                        else
+                        {
+                            byte[] outgoingMessage = System.Text.Encoding.UTF8.GetBytes(message);
+
+                            await socket.SendAsync(new ArraySegment<byte>(outgoingMessage, 0, outgoingMessage.Length),
+                              WebSocketMessageType.Text, true, CancellationToken.None);
+                        }
+                        result = await socket.ReceiveAsync(new ArraySegment<byte>(bag), CancellationToken.None);
                     }
-
-
                     await socket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
-
                 }
                 catch (AggregateException e)
                 {
                     continue;
-                }
-                switch (result.MessageType)
-                {
-                    case WebSocketMessageType.Close:
-                        await HandleClose(socket);
-                        break;
-
-                    case WebSocketMessageType.Text:
-                        // Handle text message 
-                        break;
                 }
             }
 
@@ -136,7 +190,7 @@ namespace AqApplication.Service.Hubs
             return 0;
         }
 
-        private async Task<int> SendClientListByChallengeId(int challengeId, int leftSecond = -1)
+        private async Task<int> SendClientListByChallengeId(int challengeId, int quizDuration = -1, int leftSecond = -1)
         {
             await Task.Run(() =>
             {
@@ -146,7 +200,9 @@ namespace AqApplication.Service.Hubs
                 {
                     LeftSecond = leftSecond,
                     SocketClientModelList = clients,
-                    ChallengeId = challengeId
+                    ChallengeId = challengeId,
+                    QuizDuration = quizDuration,
+                    ChallengeSocketResult = ChallengeSocketResult.Success
                 });
 
                 byte[] outgoingMessage = System.Text.Encoding.UTF8.GetBytes(message);
@@ -174,7 +230,7 @@ namespace AqApplication.Service.Hubs
         {
             await Task.Run(() =>
             {
-                _iChallenge.UpdateChallengeSessionCompleted(userId, challengeId,  totalMark, correctCount);
+                _iChallenge.UpdateChallengeSessionCompleted(userId, challengeId, totalMark, correctCount);
             });
             return 0;
         }
@@ -334,6 +390,20 @@ public class SocketClientResult
     public int ChallengeId { get; set; }
     public int LeftSecond { get; set; }
     public List<SocketClientModel> SocketClientModelList { get; set; }
+
+    public int QuizDuration { get; set; }
+
+    public string Message { get; set; }
+
+    public int Next { get; set; }
+    public ChallengeSocketResult ChallengeSocketResult { get; set; }
+}
+
+public enum ChallengeSocketResult
+{
+    Success = 0,
+    Error = 1,
+    Next = 2,
 }
 public class SocketResultList
 {

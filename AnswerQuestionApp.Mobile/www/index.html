@@ -6,14 +6,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
     <!-- favicons -->
     <link rel="apple-touch-icon" href="img/favicon-apple.png">
     <link rel="icon" href="img/favicon.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
     <!-- Material design icons CSS -->
     <link rel="stylesheet" href="vendor/materializeicon/material-icons.css">
 
@@ -80,7 +78,21 @@
             </div>
         </div>
     </footer>
-
+    <div class="modal fade" id="messageBox" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="messageBoxHeader"></h4>
+                </div>
+                <div class="modal-body">
+                    <p id="messageBoxContent"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="messageBoxCloseButton"></button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- modal for create form -->
     <!-- modal for create form ends-->
     <!-- Optional JavaScript -->
@@ -124,46 +136,6 @@
 
     <script src="vendor/swiper/js/swiper.min.js"></script>
 
-
-    <!-- page specific script -->
-    <script>
-        "use script";
-        $(window).on('load', function () {
-            var tour = new Tour({
-                steps: [{
-                    element: "#left-menu",
-                    title: "Main Menu",
-                    content: "Access the demo pages from sidebar",
-                    smartPlacement: true,
-                    storage: false
-                }, {
-                    element: "button[data-target='#createOrder']",
-                    title: "Creative Form",
-                    content: "See beautifully designed form in modal",
-                    smartPlacement: true,
-                    placement: "left",
-                    storage: false
-
-                }, {
-                    element: ".close-sidebar",
-                    title: "Customizaton Menu",
-                    content: "Customize your Layout style",
-                    smartPlacement: true,
-                    placement: "left",
-                    storage: false
-
-                }]
-
-            });
-
-            // Initialize the tour
-            tour.init();
-
-            // Start the tour
-            tour.start();
-        });
-
-    </script>
     <script>
 
 
@@ -173,14 +145,14 @@
             });
             aqfw().Auth().CheckLoginRedirectLogin();
         });
-        $(document).ajaxSend(function (event, jqxhr, settings) {
-            if (settings.url.indexOf('/Question/SetChallengeAnswer') === -1) {
-                $('.loader').show();
-            }
-        });
-        $(document).ajaxStop(function () {
-            $('.loader').hide();
-        });
+            //$(document).ajaxSend(function (event, jqxhr, settings) {
+            //    if (settings.url.indexOf('/Question/SetChallengeAnswer') === -1) {
+            //        $('.loader').show();
+            //    }
+            //});
+            //$(document).ajaxStop(function () {
+            //    $('.loader').hide();
+            //});
 
     </script>
 

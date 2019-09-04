@@ -34,8 +34,8 @@
                             <p class="content-color-secondary small mb-0">Cevaplanan</p>
                         </div>
                         <div class="col py-3">
-                            <h5 class="content-color-primary mb-0" id="notAnsweredQuesitonCount"></h5>
-                            <p class="content-color-secondary small mb-0">Cevaplanmayan</p>
+                            <h5 class="content-color-primary mb-0" id="timeClockQuestion"></h5>
+                            <p class="content-color-secondary small mb-0" >Kalan Süre</p>
                         </div>
                     </div>
                 </div>
@@ -148,18 +148,18 @@
 
             </div>
 
-            <div class="card rounded-0 border-0 mb-3" id="challenge_result" style="display:none;">
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col" colspan="2">Kullanıcı</th>
-                                <th scope="col">Puan</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+            <div id="challenge_result" style="display:none;">
+                <div class="card rounded-0 border-0 mb-3">
+                    <div class="card-body">
+                        <table class="table border-bottom mb-0 footable-2 footable-paging footable-paging-center breakpoint breakpoint-xs" style="">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col py-12 text-center">
+                        <input type="button" value="Ana Sayfa" class="btn btn-default" onclick="aqfw().Navigation().Redirect(aqfw().Navigation().Routes.Index);" />
+                    </div>
                 </div>
             </div>
         </div>

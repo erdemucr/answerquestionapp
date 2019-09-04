@@ -68,29 +68,11 @@ namespace AqApplication.Repository.Challenge
             }
 
         }
-        public Result<List<ChallengeQuestionViewModel>> RandomChallenge(string userId)
+        public Result<List<ChallengeQuestionViewModel>> CreateChallenge(string userId, int? lectureId, ChallengeTypeEnum challengeType)
         {
             try
             {
-                var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.ChallengeServiceIsOpen);
-                if (cValue == null)
-                {
-                    return new Result<List<ChallengeQuestionViewModel>>
-                    {
-                        Success = false,
-                        Message = "Bir hata oluştu"
-                    };
-                }
-                if (cValue.Values != "1")
-                {
-                    return new Result<List<ChallengeQuestionViewModel>>
-                    {
-                        Success = false,
-                        Message = "Sunucu şuan bakımdadır. Lütfen daha sonra tekrar deneyiniz"
-                    };
-                }
-
-                var addChallenge = this.AddChallenge( userId);
+                var addChallenge = this.AddChallenge(userId, challengeType, challengeQuestionCount, lectureId);
 
                 if (!addChallenge.Success)
                     return new Result<List<ChallengeQuestionViewModel>>
@@ -102,10 +84,9 @@ namespace AqApplication.Repository.Challenge
                     return new Result<List<ChallengeQuestionViewModel>>
                     {
                         Success = false,
-                        Message = "Bir hata oluştu"
+                        Message = "Üzgünüz! Bu kategori şuan yapım aşamasında"
                     };
 
-                var quizDuration = new ConfigurationValuesRepo(context).GetByKey(AnswerQuestionApp.Entity.Configuration.ConfigKey.ChallengeTimeSecond);
 
                 var questionList = addChallenge.Data.ChallengeQuestions.Select(x => new ChallengeQuestionViewModel
                 {
@@ -114,13 +95,15 @@ namespace AqApplication.Repository.Challenge
                     Image = x.QuestionMain.MainImage,
                     QuestionId = x.QuestionMain.Id,
                     AnswerCount = x.QuestionMain.AnswerCount,
-                    QuizDuration = Convert.ToInt32(quizDuration.Data.Values)
-
+                    QuizDuration = challengeExpDay,
+                    ImageHeight = x.QuestionMain.HeightImage,
+                    ImageWidth = x.QuestionMain.WidthImage
                 }).ToList();
 
                 return new Result<List<ChallengeQuestionViewModel>>
                 {
                     Data = questionList,
+                    InstertedId = addChallenge.Data.Id,
                     Success = true,
                     Message = "İşlem başarı ile tamamlandı"
                 };
@@ -150,7 +133,9 @@ namespace AqApplication.Repository.Challenge
                     QuestionId = x.QuestionMain.Id,
                     AnswerCount = x.QuestionMain.AnswerCount,
                     ChallengeId = x.ChallengeId,
-                    CorrectAnswer = x.QuestionMain.CorrectAnswer
+                    CorrectAnswer = x.QuestionMain.CorrectAnswer,
+                    ImageWidth = x.QuestionMain.WidthImage ?? 0,
+                    ImageHeight = x.QuestionMain.HeightImage ?? 0
 
                 }).ToList();
 
@@ -169,11 +154,11 @@ namespace AqApplication.Repository.Challenge
 
         }
 
-        public Result<AqApplication.Entity.Challenge.Challenge> AddChallenge(string userId)
+        public Result<AqApplication.Entity.Challenge.Challenge> AddChallenge(string userId, ChallengeTypeEnum challengeType, int questionCount, int? lectureId)
         {
             try
             {
-                var list = GetQuestionsByRandomTemplate().Data.Select(x => new ChallengeQuestions
+                var list = GetQuestionsByRandomTemplate(challengeType, questionCount, lectureId).Data.Select(x => new ChallengeQuestions
                 {
                     QuestionId = x.Id,
                     Seo = x.Id,
@@ -190,8 +175,7 @@ namespace AqApplication.Repository.Challenge
                     EndDate = DateTime.Now.AddSeconds(challengeExpDay),
                     CreatedDate = DateTime.Now,
                     ChallengeTypeId = (int)ChallengeTypeEnum.RandomMode,
-                    ChallengeQuestions = list
-
+                    ChallengeQuestions = list,
                 };
 
                 context.Challenge.Add(model);
@@ -223,7 +207,8 @@ namespace AqApplication.Repository.Challenge
                     Creator = userId,
                     UserId = userId,
                     StartDate = DateTime.Now,
-                    IsCompleted = false
+                    IsCompleted = false,
+                    ChallengeId = challengeId
                 };
 
                 context.ChallengeSessions.Add(model);
@@ -239,7 +224,7 @@ namespace AqApplication.Repository.Challenge
 
             catch (Exception ex)
             {
-                return new Result(ex);
+                throw ex;
             }
 
         }
@@ -480,7 +465,7 @@ namespace AqApplication.Repository.Challenge
                     Message = "Challenge listesini görüntülemektesiniz",
                     Paginition = new Paginition(list.Count(), PageSize, model.CurrentPage.HasValue ? model.CurrentPage.Value : 1, model.Name,
                     model.StartDate,
-                model.EndDate)
+                    model.EndDate)
                 };
             }
             catch (Exception ex)
@@ -496,36 +481,37 @@ namespace AqApplication.Repository.Challenge
 
 
         #region ChallengeQuizGeneration
-        private Result<List<Entity.Question.QuestionMain>> GetQuestionsByRandomTemplate()
+        private Result<List<Entity.Question.QuestionMain>> GetQuestionsByRandomTemplate(ChallengeTypeEnum type, int questionCount, int? lectureId)
         {
             try
             {
                 Random rnd = new Random();
 
-                int rndTemplateIndex = rnd.Next(0, context.ChallengeTemplates.Where(x => x.IsActive).Count());
+                int rndTemplateIndex = rnd.Next(0, context.ChallengeTemplates.Where(x => x.IsActive && x.Type == type && (lectureId.HasValue && x.LectureId == lectureId || !lectureId.HasValue)).Count());
 
                 var templates = context.ChallengeTemplates.Include(x => x.ChallengeTemplateItems)
-                    .Where(x => x.IsActive && x.ChallengeTemplateItems.Where(y=>y.IsActive).Any()).Skip(rndTemplateIndex).Take(1).FirstOrDefault();
+                    .Where(x => x.IsActive && (lectureId.HasValue && x.LectureId == lectureId || !lectureId.HasValue) && x.ChallengeTemplateItems.Where(y => y.IsActive).Any()).Skip(rndTemplateIndex).Take(1).FirstOrDefault();
 
                 #region NullControl
                 if (templates == null)
                     return new Result<List<Entity.Question.QuestionMain>>
                     {
                         Success = false,
-                        Message = "Kayıt bulunamadı"
+                        Message = "Kayıt bulunamadı",
+                        Data = new List<Entity.Question.QuestionMain>()
                     };
 
                 if (templates.ChallengeTemplateItems == null)
                     return new Result<List<Entity.Question.QuestionMain>>
                     {
                         Success = false,
-                        Message = "Kayıt bulunamadı"
+                        Message = "Kayıt bulunamadı",
+                        Data = new List<Entity.Question.QuestionMain>()
                     };
                 #endregion
 
                 var result = new List<Entity.Question.QuestionMain>();
                 bool completed = false;
-                int questionCount = base.challengeQuestionCount;
 
                 foreach (var item in templates.ChallengeTemplateItems)
                 {
@@ -555,32 +541,37 @@ namespace AqApplication.Repository.Challenge
                         for (int i = 0; i < item.Count; i++) // yterli limitte soru varmı
                         {
                             int rndQ = 0;
-                            while (true)
+                            while (!completed)
                             {
                                 rndQ = rnd.Next(0, questionTemplateListCount);
-                                if (result.FirstOrDefault(x => x.Id == questionTemplateList[rndQ].Id) == null)
+                                if (!result.Any(x => x.Id == questionTemplateList[rndQ].Id))
+                                {
                                     result.Add(questionTemplateList[rndQ]);
-                                else
-                                    break;
+                                    if (result.Count == questionCount)
+                                    {
+                                        completed = true;
+                                        break;
+                                    }
+                                }
                             }
 
-                            if (result.Count == questionCount)
-                            {
-                                completed = true;
+                            if (completed)
                                 break;
-                            }
                         }
 
                     }
                     else
                     {
-                        for (int i = 0; i < questionTemplateListCount; i++) 
+                        for (int i = 0; i < questionTemplateListCount; i++)
                         {
-                            result.Add(questionTemplateList[i]);
-                            if (result.Count == questionCount)
+                            if (!result.Any(x => x.Id == questionTemplateList[i].Id))
                             {
-                                completed = true;
-                                break;
+                                result.Add(questionTemplateList[i]);
+                                if (result.Count == questionCount)
+                                {
+                                    completed = true;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -591,7 +582,7 @@ namespace AqApplication.Repository.Challenge
 
                 return new Result<List<Entity.Question.QuestionMain>>
                 {
-                    Data= result,
+                    Data = result,
                     Success = true,
                     Message = "İşlem başarı ile tamamlandı"
                 };
@@ -605,6 +596,70 @@ namespace AqApplication.Repository.Challenge
         }
 
         #endregion
+
+
+        public bool challengeServiceIsOpen()
+        {
+            var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.ChallengeServiceIsOpen);
+            if (cValue != null)
+            {
+                if (cValue.Values == null)
+                    return false;
+                return cValue.Values.ToString() == "1";
+            }
+            return false;
+        }
+        public int minimumSecondEntryChallenge()
+        {
+
+            var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.MinimumSecondEntryChallenge);
+            if (cValue != null)
+            {
+                return Convert.ToInt32(cValue.Values);
+            }
+            return -1;
+        }
+        public int challengeNextSecond()
+        {
+
+            var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.ChallengeNextSecond);
+            if (cValue != null)
+            {
+                return Convert.ToInt32(cValue.Values);
+            }
+            return -1;
+        }
+
+        public int challengeAttemptSecond()
+        {
+
+            var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.ChallengeAttemptSecond);
+            if (cValue != null)
+            {
+                return Convert.ToInt32(cValue.Values);
+            }
+            return -1;
+        }
+
+        public int practiceModeQuestionCount()
+        {
+
+            var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.PracticeModeQuestionCount);
+            if (cValue != null)
+            {
+                return Convert.ToInt32(cValue.Values);
+            }
+            return -1;
+        }
+        public int practiceModeExamDuration()
+        {
+            var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.PracticeModeExamDuration);
+            if (cValue != null)
+            {
+                return Convert.ToInt32(cValue.Values);
+            }
+            return -1;
+        }
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

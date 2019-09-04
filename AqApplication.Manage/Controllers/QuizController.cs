@@ -52,11 +52,11 @@ namespace AnswerQuestionApp.Manage.Controllers
             var list = result.Data.Select(x => new ChallengeListModel
             {
                 Id = x.Id,
-                CreatedDate= x.CreatedDate,
+                CreatedDate = x.CreatedDate,
                 ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value : new DateTime(),
                 AttemptCount = x.ChallengeSessions.Count(),
                 CompletedCount = x.ChallengeSessions.Count(y => y.IsCompleted),
-                QuestionCount= x.ChallengeQuestions.Count()
+                QuestionCount = x.ChallengeQuestions.Count()
             }).AsEnumerable();
 
 
@@ -70,6 +70,7 @@ namespace AnswerQuestionApp.Manage.Controllers
             var searhmodel = new SearchModel();
             searhmodel.Controller = "Quiz";
             searhmodel.Action = "ChallengeList";
+            searhmodel.Position = SearchModelPosition.Horizontal;
             searhmodel.SearchInput = new List<SearchInput>();
             searhmodel.SearchInput.Add(new SearchInput(AqApplication.Repository.Enums.InputType.Text, "Name", "nameSearchTxt", "Arama Anahtarı"));
             searhmodel.SearchInput.Add(new SearchInput(AqApplication.Repository.Enums.InputType.Date, "StartDate", "startdateSearchTxt", "Başlangıç Tarihi"));
@@ -85,33 +86,32 @@ namespace AnswerQuestionApp.Manage.Controllers
                 return View(new List<ChallengeTemplateListModel>());
             }
 
-            var list = result.Data.Select(x => new ChallengeTemplateListModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description,
-                Creator = x.AppUserCreator.FirstName + " " + x.AppUserCreator.LastName,
-                CreatedDate = x.CreatedDate,
-                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value : new DateTime(),
-                Editor = x.AppUserCreator.FirstName + " " + x.AppUserCreator.LastName,
-                StartDate = x.StartDate,
-                EndDate = x.EndDate,
-                IsActive = x.IsActive
-            }).AsEnumerable();
-
-
             ViewBag.pagination = result.Paginition;
 
-            return View(list);
+            return View(result.Data);
         }
 
         public IActionResult AddChallengeTemplate()
         {
+            ViewBag.lectureSelectList = _iQuestion.GetLectures().Data.Select(
+            x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }
+            ).AsEnumerable();
             return View();
         }
         [HttpPost]
         public IActionResult AddChallengeTemplate(ChallengeTemplate model)
         {
+            ViewBag.lectureSelectList = _iQuestion.GetLectures().Data.Select(
+                x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                }
+                ).AsEnumerable();
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
@@ -130,6 +130,13 @@ namespace AnswerQuestionApp.Manage.Controllers
         }
         public IActionResult EditChallengeTemplate(int id)
         {
+            ViewBag.lectureSelectList = _iQuestion.GetLectures().Data.Select(
+            x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }
+            ).AsEnumerable();
             var result = _iQuestion.GetChallengeTemplateByKey(id);
             if (!result.Success)
             {
@@ -146,6 +153,13 @@ namespace AnswerQuestionApp.Manage.Controllers
         [HttpPost]
         public IActionResult EditChallengeTemplate(ChallengeTemplate model)
         {
+            ViewBag.lectureSelectList = _iQuestion.GetLectures().Data.Select(
+            x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }
+            ).AsEnumerable();
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;

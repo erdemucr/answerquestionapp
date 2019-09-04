@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AqApplication.Manage.Controllers
@@ -31,6 +32,12 @@ namespace AqApplication.Manage.Controllers
         public IActionResult Lectures()
         {
             var result = _iquestion.GetLectures();
+
+            var exams = _iquestion.GetExams();
+
+            result.Data = result.Data.Select(x => { x.Exams = x.ExamLectures.Select(y=>  exams.Data.First(z=> z.Id== y.ExamId).Name).ToArray(); return x; });
+
+
             return View(result.Data);
         }
         public IActionResult SetLectureStatus(int id)
@@ -42,11 +49,27 @@ namespace AqApplication.Manage.Controllers
         }
         public IActionResult AddLecuture()
         {
+            ViewBag.examSelectList = _iquestion.GetExams().Data.Select(x =>
+             new SelectListItem
+             {
+                 Text = x.Name,
+                 Value = x.Id.ToString()
+             }).AsEnumerable();
             return View();
         }
         [HttpPost]
         public IActionResult AddLecuture(Lecture model)
         {
+            ViewBag.examSelectList = _iquestion.GetExams().Data.Select(x =>
+             new SelectListItem
+             {
+                 Text = x.Name,
+                 Value = x.Id.ToString()
+             }).AsEnumerable();
+
+            if (model.Exams != null)
+                model.ExamLectures= model.Exams.Select(x => new ExamLecture { ExamId = Convert.ToInt32(x)}).ToList();
+
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
@@ -61,6 +84,12 @@ namespace AqApplication.Manage.Controllers
         }
         public IActionResult EditLecture(int id)
         {
+            ViewBag.examSelectList = _iquestion.GetExams().Data.Select(x =>
+             new SelectListItem
+             {
+                 Text = x.Name,
+                 Value = x.Id.ToString()
+             }).AsEnumerable();
             var result = _iquestion.GetLectureByKey(id);
             if (!result.Success)
             {
@@ -68,18 +97,29 @@ namespace AqApplication.Manage.Controllers
                 TempData["message"] = result.Message;
                 return RedirectToAction("Lectures");
             }
+            if (result.Data.ExamLectures != null)
+                result.Data.Exams = result.Data.ExamLectures.ToList().Select(x => x.ExamId.ToString()).ToArray();
 
             return View(result.Data);
         }
         [HttpPost]
         public IActionResult EditLecture(Lecture model)
         {
+            ViewBag.examSelectList = _iquestion.GetExams().Data.Select(x =>
+             new SelectListItem
+             {
+                 Text = x.Name,
+                 Value = x.Id.ToString()
+             }).AsEnumerable();
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
                 TempData["message"] = "Lütfen alanları kontrol ediniz";
                 return View(model);
             }
+            if (model.Exams != null)
+                model.ExamLectures = model.Exams.Select(x => new ExamLecture { ExamId = Convert.ToInt32(x) }).ToList();
+
             var result = _iquestion.EditLecture(model, User.GetUserId());
             TempData["success"] = result.Success;
             TempData["message"] = result.Message;
@@ -214,7 +254,7 @@ namespace AqApplication.Manage.Controllers
             ViewBag.subjectId = id;
             ViewBag.subjectname = subject.Data.Name;
             var result = _iquestion.GetSubSubjects(id);
-     
+
             return View(result.Data);
         }
         public IActionResult SetSubSubjectStatus(int id)
@@ -282,9 +322,9 @@ namespace AqApplication.Manage.Controllers
             var result = _iquestion.AddSubSubject(model, User.GetUserId());
             TempData["success"] = result.Success;
             TempData["message"] = result.Message;
-            return RedirectToAction("SubSubjects",new {id=model.SubjectId });
+            return RedirectToAction("SubSubjects", new { id = model.SubjectId });
         }
-        public IActionResult EditSubSubject(int id,int subjectId)
+        public IActionResult EditSubSubject(int id, int subjectId)
         {
             var subject = _iquestion.GetSubjectByKey(subjectId);
 
@@ -360,7 +400,7 @@ namespace AqApplication.Manage.Controllers
         public IActionResult Exams()
         {
             var result = _iquestion.GetExams();
-      
+
             return View(result.Data);
         }
         public IActionResult SetExamStatus(int id)
@@ -391,7 +431,7 @@ namespace AqApplication.Manage.Controllers
         }
         public IActionResult EditExam(int id)
         {
-            var result = _iquestion.GetExamByKey(id);
+           var result = _iquestion.GetExamByKey(id);
             if (!result.Success)
             {
                 TempData["success"] = result.Success;
@@ -404,6 +444,7 @@ namespace AqApplication.Manage.Controllers
         [HttpPost]
         public IActionResult EditExam(Exam model)
         {
+
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
@@ -431,7 +472,7 @@ namespace AqApplication.Manage.Controllers
         public IActionResult Classes()
         {
             var result = _iquestion.GetClass();
-        
+
             return View(result.Data);
         }
         public IActionResult SetClassStatus(int id)

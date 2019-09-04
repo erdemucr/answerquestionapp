@@ -13,6 +13,9 @@ namespace AqApplication.Entity.Question
         [Display(Name = "Adı:")]
         [Required(ErrorMessage = "Bu alan boş geçilmez")]
         public string Name { get; set; }
+        [NotMapped]
+        public string[] Exams { get; set; }
+        public virtual ICollection<ExamLecture> ExamLectures { get; set; }
     }
 
     public class Class : BaseEntity
@@ -31,6 +34,7 @@ namespace AqApplication.Entity.Question
         public string Name { get; set; }
         [Display(Name = "Açıklama")]
         public string Description { get; set; }
+ 
     }
     public class Subject : BaseEntity
     {
@@ -54,5 +58,15 @@ namespace AqApplication.Entity.Question
 
         [ForeignKey("SubjectId")]
         public Subject Subject { get; set; }
+    }
+
+    public class ExamLecture : BaseEntity
+    {
+        public int LectureId { get; set; }
+        [ForeignKey("LectureId")]
+        public Lecture Lecture { get; set; }
+        public int ExamId { get; set; }
+        [ForeignKey("ExamId")]
+        public Exam Exam { get; set; }
     }
 }

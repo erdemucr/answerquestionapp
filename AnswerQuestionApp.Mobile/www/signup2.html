@@ -69,7 +69,7 @@
 
             var isValid = aqfw().Validation('registerForm').CheckAllFields();
             if (isValid !== '') {
-                alert(isValid);
+                aqfw().MessageBox().ShowWarningMessageBoxOk("Uyarı", isValid, "Kapat");
             }
             else {
                 registerUser(userName, name, surname, email, pass);
@@ -90,10 +90,14 @@
             type: 'POST',
             url: aqfw().ServiceUrl + '/Account/Register',
             data: JSON.stringify(obj),
+            beforeSend: function () {
+                $('.loader').show();
+            },
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data, textStatus, xhr) {
                 console.log(data);
+                $('.loader').hide();
                 if (xhr.status === 200) {
                     if (data.success) {
                         aqfw().MessageBox().ShowSucess('İşlem tamamladı', 'Kayıt işleminiz tamamlanmıştır. Lütfen bilgileriniz ile gitiş yapınız.');

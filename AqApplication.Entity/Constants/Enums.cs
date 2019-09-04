@@ -14,6 +14,7 @@ namespace AqApplication.Entity.Constants
 
     public enum ChallengeTypeEnum
     {
-        RandomMode=1
+        RandomMode=1,
+        PracticeMode=2
     }
 }

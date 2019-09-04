@@ -22,9 +22,11 @@ namespace AqApplication.Repository.ViewModels
         public int CorrectAnswer { get; set; }
 
         public int QuizDuration { get; set; }
+
+        public int? ImageWidth { get; set; }
+
+        public int? ImageHeight { get; set; }
     }
-
-
     public class ChallengeQuestionAnswerViewModel
     {
         public int ChallengeId { get; set; }

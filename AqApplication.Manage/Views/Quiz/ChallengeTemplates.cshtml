@@ -1,6 +1,6 @@
 ﻿@using AqApplication.Manage.Models;
 @using AqApplication.Manage.Utilities;
-@model IEnumerable<AnswerQuestionApp.Manage.Models.ChallengeTemplateListModel>
+@model IEnumerable<AqApplication.Entity.Challenge.ChallengeTemplate>
 
 @{
     ViewBag.Title = "Challange Templateler";
@@ -20,7 +20,7 @@
 
 <div class="row">
     @Html.Partial("_SearchBar", (SearchModel)ViewBag.searchModel)
-    <div class="col-md-9 col-xs-12">
+    <div class="col-md-12 col-xs-12">
         <div class="card">
             <div class="card-header">
                 <i class="glyphicon glyphicon-edit"></i>  Template Listesi
@@ -28,7 +28,7 @@
             <div class="card-body">
                 <table class="table table-responsive table-striped table-dar">
                     <tr>
-                        <td colspan="10">
+                        <td colspan="13">
                             @Html.Raw(PaginationHelper.Paginate(this.ViewContext, (AqApplication.Core.Type.Paginition)ViewBag.pagination))
                         </td>
                     </tr>
@@ -38,6 +38,9 @@
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Type)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.StartDate)
@@ -60,14 +63,14 @@
                         <th>
                             @Html.DisplayNameFor(model => model.Editor)
                         </th>
-                        <td>
+                        <th>
                             @Html.DisplayNameFor(model => model.IsActive)
-                        </td>
+                        </th>
                         <th colspan="2">
                         </th>
                     </tr>
 
-                    @if (Model!=null)
+                    @if (Model != null)
                     {
                         foreach (var item in Model)
                         {
@@ -78,6 +81,9 @@
 
                                 <td>
                                     @item.Name
+                                </td>
+                                <td>
+                                    @item.Type.ChallengeTypeEnumText()
                                 </td>
                                 <td>
                                     @item.StartDate
@@ -92,13 +98,13 @@
                                     @item.CreatedDate.RegularDatetime()
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Creator)
+                                    @Html.DisplayFor(modelItem => item.AppUserCreator.UserName)
                                 </td>
                                 <td>
                                     @item.ModifiedDate.RegularDatetime()
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Editor)
+                                    @Html.DisplayFor(modelItem => item.AppUserEditor.UserName)
                                 </td>
                                 <td>
                                     @item.IsActive.StatusText()

@@ -45,7 +45,7 @@ namespace AnswerQuestionApp.Repository
         {
             get
             {
-                var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.ChallengeTimeSecond);
+                var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.ChallengeTimeDuration);
                 if (cValue != null)
                 {
                     return Convert.ToInt32(cValue.Values);
@@ -58,7 +58,7 @@ namespace AnswerQuestionApp.Repository
         {
             get
             {
-                var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.ChallengeTimeSecond);
+                var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.ChallengeQuestionCount);
                 if (cValue != null)
                 {
                     return Convert.ToInt32(cValue.Values);
@@ -78,5 +78,6 @@ namespace AnswerQuestionApp.Repository
                 return -1;
             }
         }
+  
     }
 }

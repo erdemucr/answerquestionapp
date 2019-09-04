@@ -158,7 +158,7 @@ namespace AqApplication.Repository.Question
         {
             try
             {
-                var list = context.Lectures.Include(x => x.AppUserCreator)
+                var list = context.Lectures.Include(x => x.ExamLectures).Include(x => x.AppUserCreator)
                         .Include(x => x.AppUserEditor).AsEnumerable();
 
 
@@ -181,11 +181,40 @@ namespace AqApplication.Repository.Question
             };
         }
 
+        public Result<IEnumerable<Lecture>> GetLecturesByExamId(int examId)
+        {
+            try
+            {
+                var list = context.Lectures.Include(x => x.ExamLectures).Where(x => x.ExamLectures.Where(y => y.ExamId == examId).Any() && x.IsActive).AsEnumerable();
+
+
+                return new Result<IEnumerable<Lecture>>
+                {
+                    Data = list,
+                    Success = true,
+                    Message = "Branş listesini görüntülemektesiniz"
+                };
+            }
+            catch (Exception ex)
+            {
+                new Result<IEnumerable<QuestionMain>>(ex);
+            }
+
+            return new Result<IEnumerable<Lecture>>
+            {
+                Success = false,
+                Message = "Bir hata oluştu"
+            };
+        }
 
         public Result AddLecture(Lecture model, string userId)
         {
             try
             {
+                if (model.ExamLectures != null)
+                {
+                    model.ExamLectures = model.ExamLectures.Select(c => { c.Creator = userId; c.CreatedDate = model.CreatedDate; model.IsActive = true; return c; }).ToList();
+                }
                 model.Creator = userId;
                 context.Lectures.Add(model);
                 context.SaveChanges();
@@ -201,7 +230,7 @@ namespace AqApplication.Repository.Question
         public Result<Lecture> GetLectureByKey(int id)
         {
 
-            var model = context.Lectures.FirstOrDefault(x => x.Id == id);
+            var model = context.Lectures.Include(x => x.ExamLectures).FirstOrDefault(x => x.Id == id);
             if (model == null)
                 return new Result<Lecture> { Success = false, Message = "Branş bulunamadı" };
             return new Result<Lecture> { Success = true, Message = "İşlem başarılı", Data = model };
@@ -236,6 +265,27 @@ namespace AqApplication.Repository.Question
                 var editmodel = context.Lectures.FirstOrDefault(x => x.Id == model.Id);
                 if (model == null)
                     return new Result { Success = false, Message = "Branş bulunamadı" };
+
+                var examLectures = context.ExamLectures.Where(x => x.LectureId == model.Id).ToList();
+
+                var addList = model.ExamLectures.Where(x => !examLectures.Where(y => y.ExamId == x.ExamId).Any()).ToList();
+                var removeList = examLectures.Where(x => !model.ExamLectures.Where(y => y.ExamId == x.ExamId).Any()).ToList();
+
+                foreach (var item in addList)
+                {
+                    item.ModifiedDate = model.ModifiedDate;
+                    item.CreatedDate = model.CreatedDate;
+                    item.Creator = userId;
+                    item.LectureId = model.Id;
+                    context.ExamLectures.Add(item);
+                    context.SaveChanges();
+                }
+                foreach (var item in removeList)
+                {
+                    context.Entry(item).State = EntityState.Deleted;
+                    context.SaveChanges();
+                }
+
                 bool currentStatus = model.IsActive;
                 editmodel.Name = model.Name;
                 editmodel.IsActive = model.IsActive;
@@ -867,6 +917,8 @@ namespace AqApplication.Repository.Question
                 editmodel.Editor = userId;
                 editmodel.StartDate = model.StartDate;
                 editmodel.EndDate = model.EndDate;
+                editmodel.Type = model.Type;
+                editmodel.LectureId = model.LectureId;
                 context.Entry(editmodel).State = EntityState.Modified;
                 context.SaveChanges();
                 return new Result { Success = true, Message = string.Format(" {0} başarı ile {1}", "Template", "güncellenmiştir") };
@@ -910,7 +962,7 @@ namespace AqApplication.Repository.Question
             }
             catch (Exception ex)
             {
-               return new Result<IEnumerable<ChallengeTemplateItems>>(ex);
+                return new Result<IEnumerable<ChallengeTemplateItems>>(ex);
             }
         }
         public Result<ChallengeTemplateItems> GetChallengeTemplateItemByKey(int id)

@@ -70,7 +70,9 @@
                                 <td>
                                     @if (!string.IsNullOrEmpty(item.MainImage))
                                     {
-                                        <img src="@item.MainImage" alt="" width="200" height="200" />
+                                        <a data-fancybox="gallery" href="@item.MainImage">
+                                            <img src="@item.MainImage" alt="" width="200" height="200" />
+                                        </a>
                                     }
                                 </td>
                                 <td>

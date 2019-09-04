@@ -23,8 +23,38 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\assets\plugins\fancybox-master\bower.json" />
+    <Content Include="wwwroot\assets\plugins\fancybox-master\dist\jquery.fancybox.css" />
+    <Content Include="wwwroot\assets\plugins\fancybox-master\dist\jquery.fancybox.min.css" />
+    <Content Include="wwwroot\assets\plugins\fancybox-master\docs\index.html" />
+    <Content Include="wwwroot\assets\plugins\fancybox-master\package.json" />
+    <Content Include="wwwroot\assets\plugins\fancybox-master\src\css\core.css" />
+    <Content Include="wwwroot\assets\plugins\fancybox-master\src\css\fullscreen.css" />
+    <Content Include="wwwroot\assets\plugins\fancybox-master\src\css\share.css" />
+    <Content Include="wwwroot\assets\plugins\fancybox-master\src\css\slideshow.css" />
+    <Content Include="wwwroot\assets\plugins\fancybox-master\src\css\thumbs.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="wwwroot\assets\app\js\jquery.cookie.min.js" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\.github\ISSUE_TEMPLATE\bug_report.md" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\.github\ISSUE_TEMPLATE\feature_request.md" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\.github\ISSUE_TEMPLATE\question.md" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\.gitignore" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\dist\jquery.fancybox.js" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\dist\jquery.fancybox.min.js" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\gulpfile.js" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\README.md" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\src\js\core.js" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\src\js\fullscreen.js" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\src\js\guestures.js" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\src\js\hash.js" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\src\js\media.js" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\src\js\share.js" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\src\js\slideshow.js" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\src\js\thumbs.js" />
+    <None Include="wwwroot\assets\plugins\fancybox-master\src\js\wheel.js" />
   </ItemGroup>
 
   <ItemGroup>

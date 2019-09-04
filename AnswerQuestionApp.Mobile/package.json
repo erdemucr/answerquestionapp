@@ -1,7 +1,33 @@
 {
-    "name": "AnswerQuestionApp.Mobile",
-    "version": "1.0.0",
-    "private": true,
-    "dependencies": {
+  "name": "AnswerQuestionApp.Mobile",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "cordova-common": "^3.2.0",
+    "cordova-ios": "4.2.0",
+    "cordova-plugin-facebook4": "6.0.0",
+    "cordova-plugin-googleplus": "git+https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git",
+    "cordova-windows": "4.4.2",
+    "elementtree": "^0.1.7",
+    "properties-parser": "^0.3.1",
+    "q": "^1.5.1",
+    "shelljs": "^0.8.3"
+  },
+  "cordova": {
+    "platforms": [
+      "ios",
+      "windows",
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-googleplus": {
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.780027022157-a0pm96tr2hq3ahfttpbp7hiv2ok4m1qe",
+        "WEB_APPLICATION_CLIENT_ID": "780027022157-a0pm96tr2hq3ahfttpbp7hiv2ok4m1qe.apps.googleuserconte"
+      }
     }
+  },
+  "devDependencies": {
+    "cordova-plugin-whitelist": "1.2.2"
+  }
 }

@@ -208,14 +208,6 @@ namespace AqApplication.Service.Controllers
             #endregion
             return Ok(new { success = true });
         }
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("Test")]
-        public IActionResult Test()
-        {
-            _iChallenge.RandomChallenge("11efabde-f29e-4240-aa5b-995d07169ced");
-            return Ok();
-        }
 
     }
 }

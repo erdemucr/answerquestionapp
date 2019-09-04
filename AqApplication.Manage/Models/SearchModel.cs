@@ -12,6 +12,13 @@ namespace AqApplication.Manage.Models
         public string Action { get; set; }
 
         public List<SearchInput> SearchInput { get; set; }
+
+        public SearchModelPosition Position { get; set; }
+    }
+    public enum SearchModelPosition
+    {
+        Horizontal,
+        Vertical
     }
 
     public class SearchInput

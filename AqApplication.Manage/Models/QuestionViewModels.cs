@@ -32,6 +32,10 @@ namespace AqApplication.Manage.Models
 
         public int TrueOption { get; set; }
         public bool Option4  {get;set;}
+
+        public int? WidthImage { get; set; }
+
+        public int? HeightImage { get; set; }
     }
 
     public class AnswerAddModel

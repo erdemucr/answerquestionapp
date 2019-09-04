@@ -7,16 +7,16 @@
                 <div class="card mb-2">
                     <div class="card-body p-0">
                         <label for="inputEmail" class="sr-only">E-Posta Adresiniz</label>
-                        <input type="email" id="inputEmail" value="erdemucar87@gmail.com" 
-                               class="form-control text-center form-control-lg border-0" 
-                               placeholder="E-Posta Adresiniz" 
-                               data-required="true" data-required-message="Lütfen e-posta adresinizi giriniz" 
+                        <input type="email" id="inputEmail" value="erdemucar87@gmail.com"
+                               class="form-control text-center form-control-lg border-0"
+                               placeholder="E-Posta Adresiniz"
+                               data-required="true" data-required-message="Lütfen e-posta adresinizi giriniz"
                                data-email="true" data-email-message="Lütfen geçerli bir eposta adresi giriniz"
                                autofocus="">
                         <hr class="my-0">
                         <label for="inputPassword" class="sr-only">Şifreniz</label>
-                        <input type="password" id="inputPassword" value="er7303032" 
-                               data-required="true" data-required-message="Lütfen şifrenizi giriniz" 
+                        <input type="password" id="inputPassword" value="er7303032"
+                               data-required="true" data-required-message="Lütfen şifrenizi giriniz"
                                class="form-control text-center form-control-lg border-0" placeholder="Şifreniz" required="">
                     </div>
                 </div>
@@ -40,12 +40,29 @@
 
             </div>
         </form>
+        <a href="javascript:void(0);" id="loginAsFacebook" class=" btn btn-success success-gradient">Facebook</a>
     </div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-
-       
+        $("#loginAsFacebook").click(function () {
+            window.plugins.googleplus.login(
+                {
+                },
+                function (obj) {
+                    alert(JSON.stringify(obj)); // do something useful instead of alerting
+                },
+                function (msg) {
+                    alert('error: ' + msg);
+                }
+            );
+        });
+        function funonSignInSuccess() {
+            console.log("funonSignInSuccess");
+        }
+        function onSignInError() {
+            console.log("onSignInError");
+        }
         $("#loginBtn").click(function () {
             var email = $("#inputEmail").val();
             var pass = $("#inputPassword").val();
@@ -53,7 +70,7 @@
             var isValid = aqfw().Validation('loginform').CheckAllFields();
 
             if (isValid !== '') {
-                alert(isValid);
+                aqfw().MessageBox().ShowWarningMessageBoxOk("Uyarı", isValid, "Kapat");
             }
             else
             {
@@ -71,10 +88,16 @@
                 type: 'POST',
                 url: aqfw().ServiceUrl + '/Account/Login',
                 data: JSON.stringify(obj),
+                beforeSend: function () {
+                    $('.loader').show();
+                },
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert('new textStatus=' + textStatus + ' errorThrown=' + errorThrown);
+                },
                 success: function (data, textStatus, xhr) {
-                    console.log(data);
+                    $('.loader').hide();
                     if (xhr.status === 200) {
                         window.localStorage.setItem('token', data.token);
                         window.localStorage.setItem('username', data.userName);
@@ -84,13 +107,10 @@
                         aqfw().Navigation().Redirect(aqfw().Navigation().Routes.Index);
                     }
                     else {
+
                         aqfw().MessageBox().ShowWarning('Uyarı', 'Giriş Bilgileriniz Hatalı Lütfen Bilgilerinizi Kontrol Ediniz');
                     }
-                },
-                error: function (err) {
-                    console.log(err);
                 }
-
             });
             return 1;
         }

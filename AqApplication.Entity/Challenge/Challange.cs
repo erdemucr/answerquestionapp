@@ -1,4 +1,5 @@
 ﻿using AqApplication.Entity.Common;
+using AqApplication.Entity.Constants;
 using AqApplication.Entity.Identity.Data;
 using AqApplication.Entity.Question;
 using System;
@@ -125,6 +126,14 @@ namespace AqApplication.Entity.Challenge
         public string StartDateTime { get; set; }
         [NotMapped]
         public string EndDateTime { get; set; }
+        [Display(Name = "Challenge Tipi")]
+        [Required(ErrorMessage ="Bu alan boş geçilmez")]
+        public ChallengeTypeEnum Type { get; set; }
+        [Display(Name = "Ders")]
+        public int? LectureId { get; set; }
+
+        [ForeignKey("LectureId")]
+        public Lecture Lecture { get; set; }
 
         public  ICollection<ChallengeTemplateItems> ChallengeTemplateItems { get; set; }
     }
