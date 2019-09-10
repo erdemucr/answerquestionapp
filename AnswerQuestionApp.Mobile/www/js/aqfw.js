@@ -679,33 +679,95 @@ function ResultPage(challengeId, challengeType) {
         $("#page-boxes").parent().hide();
     }
     else { // or practive mode
-        $.ajax({
-            type: "GET", //GET, POST, PUT   
-            url: aqfw().ServiceUrl + '/Question/GetResultPractiveModeChallenge?ChallengeId=' + challengeId + '&userId=' + aqfw().Auth().GetuserId(),  //the url to call
-            contentType: "application/json; charset=utf-8",
-            beforeSend: function (xhr) {   //Include the bearer token in header
-                xhr.setRequestHeader("Authorization", 'Bearer ' + aqfw().Auth().GetToken());
-            },
-            success: function (data) {
-                $("#question_wrapper").hide();
-                $("#challenge_result").show();
-                var $tableResult = $("#challenge_result tbody");
-                $tableResult.html("");
-                var str = '<tr>' +
-                    '<td>Toplam Puan</td>' +
-                    '<td>' + data.mark + '</td>' +
-                    '</tr>';
-                $tableResult.append(str);
 
-                $('.loader').hide();
 
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                aqfw().MessageBox().ShowWarningMessageBoxOk("Uyarı", 'Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz', "Kapat");
-                aqfw().Navigation().Redirect(aqfw().Navigation().Routes.Index);
+        $("#challenge_result").load('result.html', function (response, status, xhr) {
+
+            if (xhr.status !== 200) {
+                messageBox().ShowWarning('Hata', 'Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz');
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: aqfw().ServiceUrl + '/Question/GetResultPractiveModeChallenge?ChallengeId=' + challengeId + '&userId=' + aqfw().Auth().GetuserId(),  //the url to call
+                    contentType: "application/json; charset=utf-8",
+                    beforeSend: function (xhr) {   //Include the bearer token in header
+                        xhr.setRequestHeader("Authorization", 'Bearer ' + aqfw().Auth().GetToken());
+                    },
+                    success: function (data) {
+                        $("#question_wrapper").hide();
+
+                       console.log(GenerateResultOpticalAnswer(data.QuestionAnswerViewModel));
+
+                       // $("#answerTabContent").html(GenerateResultOpticalAnswer(data.QuestionAnswerViewModel));
+
+                        $("#challenge_result").show();
+                        $('.loader').hide();
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        aqfw().MessageBox().ShowWarningMessageBoxOk("Uyarı", 'Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz', "Kapat");
+                        aqfw().Navigation().Redirect(aqfw().Navigation().Routes.Index);
+                    }
+                });
             }
         });
     }
 
 
+}
+
+
+function GenerateResultOpticalAnswer(questionAnswerViewModel) {
+    var optionList = "";
+
+    $.each(questionAnswerViewModel, function (i, v) {
+        optionList += OpticalAnswerRow(v.AnswerCount, v.Seo);
+    });
+
+    return optionList;
+}
+
+function OpticalAnswerRow(answerCount, seo) {
+    var row = '<div class="row">' +
+        '<div class="col-sm-10" style="max-width:100% !important;">' +
+        '<div class="form-group bmd-form-group" style="cursor:pointer;">' +
+        '<div class="form-check" style="display: inline-flex;">' +
+        '<a style="padding-right: 10px; padding-top: 4px;" href="#">' + seo + '.</a>';
+
+    for (var i = 0; i < answerCount; i++) {
+        row += OpticalAnswerRadio(i);
+    }
+
+    row += '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+    return row;
+}
+function OpticalAnswerRadio(optionIndex) {
+    var letter = '';
+    if (optionIndex === 0) {
+        letter = 'A';
+    }
+    else if (optionIndex === 1) {
+        letter = 'B';
+    }
+    else if (optionIndex === 2) {
+        letter = 'C';
+    }
+    else if (optionIndex === 3) {
+        letter = 'D';
+    }
+    else if (optionIndex === 4) {
+        letter = 'E';
+    }
+    var option = '<label class="form-check-label" style="padding-right: 10px !important;">' +
+        '<input class="form-check-input" type="radio" name="yanit122" id="yanit122" value="' + optionIndex + '">' +
+        '<span class="circle">' +
+        '<span class="check-textqqx2">' + letter + '</span><span class="check"></span>' +
+        '</span>' +
+        '</label>';
+    return option;
 }

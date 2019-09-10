@@ -17,7 +17,7 @@ namespace AqApplication.Repository.Challenge
 
         Result SetChallengeAnswer(ChallengeQuestionAnswerViewModel model);
 
-        Result<ChallengeChallengeUserViewModel> GetResultChallenge(int challengeId, string userId);
+        Result<QuizResultViewModel> GetResultChallenge(int challengeId, string userId);
 
         Result<AqApplication.Entity.Challenge.Challenge> AddChallenge(string userId, ChallengeTypeEnum challengeType, int questionCount, int? lectureId);
 

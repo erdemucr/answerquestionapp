@@ -5,6 +5,7 @@ using AqApplication.Manage.Utilities;
 using AqApplication.Repository.File;
 using AqApplication.Repository.FilterModels;
 using AqApplication.Repository.Question;
+using IronOcr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +19,9 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace AqApplication.Manage.Controllers
 {
@@ -102,6 +105,7 @@ namespace AqApplication.Manage.Controllers
                     MainImage = " ",
                     MainTitle = " ",
                     Licence = false,
+                    Option4 = true,
                     QuestionAnswer = new List<AnswerAddModel>{
                    new AnswerAddModel{},
                    new AnswerAddModel{},
@@ -126,6 +130,7 @@ namespace AqApplication.Manage.Controllers
                     Licence = model.Licence,
                     QuestionPdfId = model.QuestionPdfId,
                     CurrentPage = model.CurrentPage,
+                    Option4 = model.Option4,
                     QuestionAnswer = new List<AnswerAddModel>{
                    new AnswerAddModel{},
                    new AnswerAddModel{},
@@ -166,9 +171,9 @@ namespace AqApplication.Manage.Controllers
                 Seo = 0,
                 QuestionPdfId = model.QuestionPdfId,
                 CorrectAnswer = model.TrueOption,
-                AnswerCount = model.Option4 ? 5 : 4,
-                WidthImage= model.WidthImage,
-                HeightImage=model.HeightImage
+                AnswerCount = model.Option4 ? 4 : 5,
+                WidthImage = model.WidthImage,
+                HeightImage = model.HeightImage
 
             };
 
@@ -191,7 +196,26 @@ namespace AqApplication.Manage.Controllers
                 }
             }
 
+            var questionAnswers = new List<QuestionAnswer>();
+
+            if (model.QuestionAnswer != null)
+            {
+                foreach (var item in model.QuestionAnswer)
+                {
+                    if (addModel.AnswerCount < model.QuestionAnswer.IndexOf(item))
+                    {
+                        questionAnswers.Add(new QuestionAnswer
+                        {
+                            Title = item.Title,
+                            IsTrue = model.QuestionAnswer.IndexOf(item) == model.TrueOption,
+                        });
+                    }
+                }
+            }
+
             addModel.QuestionExams = questionExams.Any() ? questionExams : null;
+            addModel.QuestionAnswers = questionAnswers.Any() ? questionAnswers : null;
+
             var result = _iquestion.SaveQuestion(addModel);
             TempData["success"] = result.Success;
             TempData["message"] = result.Message;
@@ -367,7 +391,7 @@ namespace AqApplication.Manage.Controllers
                 {
                     //var myTask = System.Threading.Tasks.Task.Factory.StartNew(() =>
                     //{
-                        UploadPdf(doc, result.InstertedId, model.PdfUrl, model.Name, uploads);
+                    UploadPdf(doc, result.InstertedId, model.PdfUrl, model.Name, uploads);
                     //});
                 }
 
@@ -433,6 +457,35 @@ namespace AqApplication.Manage.Controllers
         }
 
 
+        #endregion
+
+
+        #region ImageProccessing
+        private static readonly HttpClient client = new HttpClient();
+        [HttpPost]
+        public async Task<JsonResult> GetTextFormImage(string imageString)
+        {
+            try
+            {
+                var values = new Dictionary<string, string>
+                        {
+                        { "imageString",imageString }
+                        };
+
+                var content = new FormUrlEncodedContent(values);
+
+                var response = await client.PostAsync("http://localhost:28724/Home/GetTextFormImage", content);
+
+                var responseString = await response.Content.ReadAsStringAsync();
+
+                return Json(new { success = true, data = responseString });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.InnerException != null ? ex.InnerException.ToString() : "Bir hata oluştu." });
+            }
+        }
         #endregion
 
     }

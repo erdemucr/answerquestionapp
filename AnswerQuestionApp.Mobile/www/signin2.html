@@ -40,29 +40,11 @@
 
             </div>
         </form>
-        <a href="javascript:void(0);" id="loginAsFacebook" class=" btn btn-success success-gradient">Facebook</a>
     </div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#loginAsFacebook").click(function () {
-            window.plugins.googleplus.login(
-                {
-                },
-                function (obj) {
-                    alert(JSON.stringify(obj)); // do something useful instead of alerting
-                },
-                function (msg) {
-                    alert('error: ' + msg);
-                }
-            );
-        });
-        function funonSignInSuccess() {
-            console.log("funonSignInSuccess");
-        }
-        function onSignInError() {
-            console.log("onSignInError");
-        }
+      
         $("#loginBtn").click(function () {
             var email = $("#inputEmail").val();
             var pass = $("#inputPassword").val();

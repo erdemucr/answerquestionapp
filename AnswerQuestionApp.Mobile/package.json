@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "cordova-android": "^7.0.0",
     "cordova-common": "^3.2.0",
     "cordova-ios": "4.2.0",
     "cordova-plugin-facebook4": "6.0.0",
@@ -23,7 +24,8 @@
       "cordova-plugin-whitelist": {},
       "cordova-plugin-googleplus": {
         "REVERSED_CLIENT_ID": "com.googleusercontent.apps.780027022157-a0pm96tr2hq3ahfttpbp7hiv2ok4m1qe",
-        "WEB_APPLICATION_CLIENT_ID": "780027022157-a0pm96tr2hq3ahfttpbp7hiv2ok4m1qe.apps.googleuserconte"
+        "WEB_APPLICATION_CLIENT_ID": "780027022157-a0pm96tr2hq3ahfttpbp7hiv2ok4m1qe.apps.googleusercontent.com",
+        "PLAY_SERVICES_VERSION": "11.8.0"
       }
     }
   },

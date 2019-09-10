@@ -26,6 +26,8 @@ namespace AqApplication.Repository.ViewModels
         public int? ImageWidth { get; set; }
 
         public int? ImageHeight { get; set; }
+
+        public int Seo { get; set; }
     }
     public class ChallengeQuestionAnswerViewModel
     {
@@ -49,7 +51,7 @@ namespace AqApplication.Repository.ViewModels
     }
 
 
-    public class ChallengeChallengeUserViewModel
+    public class ChallengeUserViewModel
     {
         public string UserName { get; set; }
 
@@ -59,5 +61,20 @@ namespace AqApplication.Repository.ViewModels
 
         public int correct { get; set; }
 
+    }
+    public class QuestionAnswerViewModel
+    {
+        public int Seo { get; set; }
+        public int AnswerCount { get; set; }
+
+        public int CorrectAnswer { get; set; }
+
+        public int UserAnswer { get; set; }
+    }
+    public class QuizResultViewModel
+    {
+        public ChallengeUserViewModel ChallengeUserViewModel { get; set; }
+
+        public List<QuestionAnswerViewModel> QuestionAnswerViewModel { get; set; }
     }
 }

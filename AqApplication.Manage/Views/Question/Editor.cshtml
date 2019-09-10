@@ -27,6 +27,10 @@
         .btn {
             cursor: pointer;
         }
+
+        #MainTitle {
+            font-size: 24px;
+        }
     </style>
 }
 
@@ -116,6 +120,11 @@
                 <div class="well text-center">
                     <div class="row">
                         <div class="col-md-12">
+                            <p>
+                                <button onclick="TextAnalysis(this);" class="btn btn-success " id="newRuleBtn" type="button">
+                                    <span class="glyphicon glyphicon-plus"></span> Text Analizi
+                                </button>
+                            </p>
                             <img src="@(string.IsNullOrEmpty(Model.MainImage)|| Model.MainImage==" "?"/Assets/images/noimage.png":Model.MainImage)" height="250" width="350" style="margin-bottom:15px; cursor:pointer" class="questionimage" id="questionimage" />
                             @Html.HiddenFor(model => model.MainImage)
                             @Html.HiddenFor(model => model.WidthImage)
@@ -123,56 +132,68 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-11">
                             @Html.TextAreaFor(model => model.MainTitle, new { @cols = "40", @rows = "5", @class = "form-control" })
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn m-nav-pills--btn-sm btn-success" onclick="RefreshOptionValues();"><i class="la la-level-down"></i></button>
                         </div>
                     </div>
                 </div>
 
                 <div class="row" style="padding:20px">
-                    <div class="col-md-1">
-                        <div class="form-group has-feedback">
-                            <label>A)</label>
-                            @Html.RadioButtonFor(model => model.TrueOption, "0", new { @class = "form-control input-sm", @style = "background-color:#b9d6b9" })
-                        </div>
-
-                    </div>
-                    <div class="col-md-1">
-                        <div class="form-group has-feedback">
-                            <label>B)</label>
-                            @Html.RadioButtonFor(model => model.TrueOption, "1", new { @class = "form-control input-sm" })
+                    <div class="row col-md-12" style="margin-bottom:20px;">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label>A)</label>
+                                @Html.RadioButtonFor(model => model.TrueOption, "0", new { @class = "col-md-2", @style = "background-color:#b9d6b9" })
+                                @Html.TextBoxFor(model => model.QuestionAnswer[0].Title, new { @class = "form-control input-sm col-md-9 optionItem" })
+                            </div>
 
                         </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label>B)</label>
+                                @Html.RadioButtonFor(model => model.TrueOption, "1", new { @class = "col-md-2" })
+                                @Html.TextBoxFor(model => model.QuestionAnswer[1].Title, new { @class = "form-control input-sm col-md-9 optionItem" })
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-1">
-                        <div class="form-group has-feedback">
-                            <label>C)</label>
-                            @Html.RadioButtonFor(model => model.TrueOption, "2", new { @class = "form-control input-sm" })
+                    <div class="row col-md-12" style="margin-bottom:20px;">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label>C)</label>
+                                @Html.RadioButtonFor(model => model.TrueOption, "2", new { @class = "col-md-2" })
+                                @Html.TextBoxFor(model => model.QuestionAnswer[2].Title, new { @class = "form-control input-sm col-md-9 optionItem" })
+                            </div>
+                        </div>
 
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label>D)</label>
+                                @Html.RadioButtonFor(model => model.TrueOption, "3", new { @class = "col-md-2" })
+                                @Html.TextBoxFor(model => model.QuestionAnswer[3].Title, new { @class = "form-control input-sm col-md-9 optionItem" })
+                            </div>
                         </div>
                     </div>
+                    <div class="row col-md-12" style="margin-bottom:20px;">
+                        <div class="col-md-6" id="5optionField" style="@if (Model.Option4) { <text>display:none;</text>} ">
+                            <div class="row">
+                                <label>E)</label>
+                                @Html.RadioButtonFor(model => model.TrueOption, "4", new { @class = "col-md-2" })
+                                @Html.TextBoxFor(model => model.QuestionAnswer[4].Title, new { @class = "form-control input-sm col-md-9 optionItem" })
+                            </div>
+                        </div>
+                        <div class="col-md-3 offset-md-3">
+                            <small style="color:#b9d6b9">Lütfen doğru cevabı seçiniz</small>
+                            <label>4</label>
+                            @Html.RadioButtonFor(model => model.Option4, true)
+                            <label>5</label>
+                            @Html.RadioButtonFor(model => model.Option4, false)
+                        </div>
 
-                    <div class="col-md-1">
-                        <div class="form-group has-feedback">
-                            <label>D)</label>
-                            @Html.RadioButtonFor(model => model.TrueOption, "3", new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
-                    <div class="col-md-1" id="5optionField">
-                        <div class="form-group has-feedback">
-                            <label>E)</label>
-                            @Html.RadioButtonFor(model => model.TrueOption, "4", new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label>4</label>
-                        @Html.RadioButton("Option4", false)
-                        <label>5</label>
-                        @Html.RadioButton("Option4", true, true)
                     </div>
                 </div>
-                <small style="color:#b9d6b9">Lütfen doğru cevabı seçiniz</small>
-
             </div>
 
         </div>
@@ -291,7 +312,7 @@ Try it Yourself »
                 $el.attr('width', parseInt(width));
                 $el.attr('height', parseInt(height));
             }, 100);
-
+            $(".optionItem").val('');
             $.ajax({
                 type: "POST",
                 url: "/Question/SetImageSession",
@@ -309,10 +330,10 @@ Try it Yourself »
         $(document).on("change", "input[name=Option4]", function () {
             var vl = $("input[name=Option4]:checked").val();
             if (vl =='False') {
-                $("#5optionField").hide();
+                $("#5optionField").show();
             }
             else {
-                $("#5optionField").show();
+                $("#5optionField").hide();
             }
         });
 
@@ -492,8 +513,6 @@ Try it Yourself »
                     imageSmoothingQuality: 'high',
                     cropBoxMovable: true,
                     cropBoxResizable: true,
-                    minCropBoxWidth: 200,
-                    minCropBoxHeight: 100,
                     crop: function (e) {
                         var data = e.detail;
                         var cropper = this.cropper;
@@ -560,6 +579,71 @@ Try it Yourself »
                 });
             });
 
+        function TextAnalysis(el) {
+            var base64Str = $("#questionimage").attr('src');
+            if (base64Str === '') {
+                alert("Lütfen görsel seçimi yapınız");
+                return;
+            }
+            else if (base64Str.indexOf('noimage.png') > -1) {
+                alert("Lütfen görsel seçimi yapınız");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/Question/GetTextFormImage",
+                data: { 'imageString': base64Str },
+                beforeSend: function () {
+                    $(el).addClass("m-loader m-loader--right m-loader--light");
+                },
+                success: function (data) {
+                    $(el).removeClass("m-loader m-loader--right m-loader--light");
+                    if (data.success) {
+                        var parsedData = JSON.parse(data.data);
+                        console.log(parsedData);
+                        SplitQuestionOptions(parsedData);
+                        $("#MainImage").val("");
+                    }
+                    else {
+                        alert(data.message);
+                    }
+
+                }
+            });
+        }
+        function RefreshOptionValues() {
+            var vl = $("#MainTitle").val();
+            SplitQuestionOptions(vl);
+        }
+        function SplitQuestionOptions(questionText) {
+            if (questionText !== '' && questionText !== null) {
+                var optionAIndexOf = questionText.indexOf('A)');
+                var optionBIndexOf = questionText.indexOf('B)');
+                var optionCIndexOf = questionText.indexOf('C)');
+                var optionDIndexOf = questionText.indexOf('D)');
+                var optionEIndexOf = questionText.indexOf('E)');
+                console.log(optionAIndexOf + " " + optionBIndexOf + " " + optionCIndexOf + " " + optionDIndexOf + " " + optionEIndexOf);
+                if (optionAIndexOf > -1 && optionBIndexOf > -1 && optionCIndexOf > -1 && optionDIndexOf > -1) {
+
+                    $("#MainTitle").val(questionText.substring(0, optionAIndexOf));
+                    $("#QuestionAnswer_0__Title").val(questionText.substring(optionAIndexOf+2, optionBIndexOf));
+                    $("#QuestionAnswer_1__Title").val(questionText.substring(optionBIndexOf + 2, optionCIndexOf));
+                    $("#QuestionAnswer_2__Title").val(questionText.substring(optionCIndexOf + 2, optionDIndexOf));
+                    if (optionEIndexOf > -1) {
+                        $("#QuestionAnswer_3__Title").val(questionText.substring(optionDIndexOf + 2, optionEIndexOf));
+                        $("#QuestionAnswer_4__Title").val(questionText.substring(optionEIndexOf + 2, questionText.length ));
+                    }
+                    else {
+                        $("#QuestionAnswer_3__Title").val(questionText.substring(optionDIndexOf + 2, questionText.length));
+                    }
+                }
+                else {
+                    $("#MainTitle").val(questionText);
+                }
+
+            }
+        }
 
 
     </script>

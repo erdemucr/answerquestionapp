@@ -7,6 +7,11 @@
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+
   <ItemGroup>
     <Compile Remove="assets\**" />
     <Compile Remove="wwwroot\assets\**" />
@@ -61,6 +66,9 @@
     <PackageReference Include="Bootstrap.v3.Datetimepicker.CSS" Version="4.17.45" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.6" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.6" />
+    <PackageReference Include="IronOcr" Version="4.4.0" />
+    <PackageReference Include="IronOcr.Languages.Turkish" Version="4.4.4.1" />
+    <PackageReference Include="Magick.NET-Q8-x86" Version="7.14.3" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />

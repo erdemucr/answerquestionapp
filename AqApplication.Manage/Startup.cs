@@ -25,6 +25,7 @@ using AnswerQuestionApp.Manage.HangFire;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using AnswerQuestionApp.Repository.Configuration;
+using IronOcr;
 
 namespace AqApplication.Manage
 {
@@ -109,6 +110,8 @@ namespace AqApplication.Manage
             {
                 opt.Cookie.IsEssential = true;
             });
+
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddSessionStateTempDataProvider();
 

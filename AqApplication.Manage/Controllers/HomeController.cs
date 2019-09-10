@@ -18,6 +18,8 @@ namespace AqApplication.Manage.Controllers
         }
         public IActionResult Index()
         {
+            var temp= System.IO.Path.GetTempPath();
+            ViewBag.temp = temp;
             return View();
         }
 

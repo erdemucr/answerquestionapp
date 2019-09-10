@@ -57,7 +57,7 @@ namespace AqApplication.Service.Controllers
         }
         [Route("GetResultChallenge")]
         [HttpGet]
-        public ActionResult<Result<List<ChallengeChallengeUserViewModel>>> GetResultChallenge(int ChallengeId)
+        public ActionResult<Result<List<ChallengeUserViewModel>>> GetResultChallenge(int ChallengeId)
         {
             var result = _iChallenge.GetResultChallenge(ChallengeId, HttpContextUserInfo.GetUserId(HttpContext.User.Identity));
             if (!result.Success)
@@ -98,7 +98,7 @@ namespace AqApplication.Service.Controllers
         }
         [Route("GetResultPractiveModeChallenge")]
         [HttpGet]
-        public ActionResult<Result<List<ChallengeQuestionViewModel>>> GetResultPractiveModeChallenge(int ChallengeId, string userId)
+        public ActionResult<Result<QuizResultViewModel>> GetResultPractiveModeChallenge(int ChallengeId, string userId)
         {
             var result = _iChallenge.GetResultChallenge(ChallengeId, userId);
             if (!result.Success)

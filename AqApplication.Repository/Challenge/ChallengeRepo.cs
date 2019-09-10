@@ -135,13 +135,14 @@ namespace AqApplication.Repository.Challenge
                     ChallengeId = x.ChallengeId,
                     CorrectAnswer = x.QuestionMain.CorrectAnswer,
                     ImageWidth = x.QuestionMain.WidthImage ?? 0,
-                    ImageHeight = x.QuestionMain.HeightImage ?? 0
+                    ImageHeight = x.QuestionMain.HeightImage ?? 0,
+                    Seo = x.Seo
 
                 }).ToList();
 
                 return new Result<List<ChallengeQuestionViewModel>>
                 {
-                    Data = questionList,
+                    Data = questionList.OrderBy(x => x.Seo).ToList(),
                     Success = questionList.Any(),
                     Message = questionList.Any() ? "İşlem başarı ile tamamlandı" : "Soru datası bulunamadı"
                 };
@@ -161,7 +162,7 @@ namespace AqApplication.Repository.Challenge
                 var list = GetQuestionsByRandomTemplate(challengeType, questionCount, lectureId).Data.Select(x => new ChallengeQuestions
                 {
                     QuestionId = x.Id,
-                    Seo = x.Id,
+                    Seo = x.Seo ?? 0,
                     QuestionMain = x,
                 }).ToList();
 
@@ -325,11 +326,13 @@ namespace AqApplication.Repository.Challenge
             }
         }
 
-        public Result<ChallengeChallengeUserViewModel> GetResultChallenge(int challengeId, string userId)
+        public Result<QuizResultViewModel> GetResultChallenge(int challengeId, string userId)
         {
             try
             {
                 List<ChallengeQuestions> challangeQuestion = context.ChallengeQuizs.Include(x => x.QuestionMain).Where(x => x.ChallengeId == challengeId).ToList();
+
+                List<QuestionAnswerViewModel> questionAnswerViewModelList = new List<QuestionAnswerViewModel>();
 
                 List<ChallengeQuestionAnswers> challengeAnswer = context.ChallengeQuestionAnswers
                     .Include(x => x.ApplicationUser)
@@ -338,72 +341,67 @@ namespace AqApplication.Repository.Challenge
 
                 //List<string> challengeUser = challengeAnswer.Select(x => x.UserId).Distinct().ToList();
 
-                var resultList = new List<ChallengeChallengeUserViewModel>();
+                var result = new ChallengeUserViewModel();
 
                 int totalQuestion = challangeQuestion.Count();
 
-                //foreach (var user in challengeUser)
-                //{
-                var answers = challengeAnswer.Where(x => x.UserId == userId && x.ChallengeId
-              == challengeId).ToList();
                 int correct = 0, wrong = 0;
-                foreach (var item in answers)
+
+                foreach (var challengeQuestionItem in challangeQuestion)
                 {
-                    var question = challangeQuestion.FirstOrDefault(x => x.QuestionId == item.QuestionId);
+                    var answer = challengeAnswer.Where(x => x.UserId == userId && x.ChallengeId
+         == challengeId && x.QuestionId == challengeQuestionItem.QuestionId).FirstOrDefault();
+
+                    var question = challangeQuestion.FirstOrDefault(x => x.QuestionId == challengeQuestionItem.QuestionId);
                     if (question == null)
                         throw new Exception();
-                    if (item.AnswerIndex == question.QuestionMain.CorrectAnswer)
-                        correct++;
+
+                    if (answer != null)
+                    {
+                        if (answer.AnswerIndex == question.QuestionMain.CorrectAnswer)
+                            correct++;
+                        else
+                            wrong++;
+
+                        questionAnswerViewModelList.Add(new QuestionAnswerViewModel
+                        {
+                            AnswerCount = question.QuestionMain.AnswerCount,
+                            CorrectAnswer = question.QuestionMain.CorrectAnswer,
+                            UserAnswer = answer.AnswerIndex,
+                            Seo = challengeQuestionItem.ChallengeId
+                        });
+                    }
                     else
-                        wrong++;
+                    {
+                        questionAnswerViewModelList.Add(new QuestionAnswerViewModel
+                        {
+                            AnswerCount = question.QuestionMain.AnswerCount,
+                            CorrectAnswer = question.QuestionMain.CorrectAnswer,
+                            UserAnswer = -1,
+                            Seo = challengeQuestionItem.ChallengeId
+                        });
+                    }
+
                 }
-                resultList.Add(new ChallengeChallengeUserViewModel
+
+                result = new ChallengeUserViewModel
                 {
                     correct = correct,
-                    UserName = challengeAnswer.FirstOrDefault(x => x.UserId == userId).ApplicationUser.UserName
-                });
+                    UserName = challengeAnswer.FirstOrDefault(x => x.UserId == userId).ApplicationUser.UserName,
+                    Mark = decimal.Round(((correct * 100) / totalQuestion), 2, MidpointRounding.AwayFromZero).ToString()
+                };
 
-                //}
-                var resultordered = new List<ChallengeChallengeUserViewModel>();
-                foreach (var item in resultList)
+
+
+                return new Result<QuizResultViewModel>
                 {
-
-                    resultordered.Add(new ChallengeChallengeUserViewModel
-                    {
-
-                        Mark = decimal.Round(((item.correct * 100) / totalQuestion), 2, MidpointRounding.AwayFromZero).ToString(),
-                        UserName = item.UserName
-                    });
-                }
-
-                var resultseqList = new ChallengeChallengeUserViewModel();
-
-                resultordered = resultordered.OrderByDescending(x => x.Mark).ToList();
-
-                int i = 1;
-
-                foreach (var item in resultordered)
-                {
-
-                    resultseqList = new ChallengeChallengeUserViewModel
-                    {
-
-                        Mark = item.Mark,
-                        Seq = i,
-                        UserName = item.UserName
-                    };
-                    i++;
-                }
-
-                return new Result<ChallengeChallengeUserViewModel>
-                {
-                    Data = resultseqList,
+                    Data = new QuizResultViewModel { ChallengeUserViewModel = result, QuestionAnswerViewModel = questionAnswerViewModelList },
                     Success = true
                 };
             }
             catch (Exception ex)
             {
-                return new Result<ChallengeChallengeUserViewModel>(ex);
+                return new Result<QuizResultViewModel>(ex);
             }
         }
 
@@ -512,7 +510,7 @@ namespace AqApplication.Repository.Challenge
 
                 var result = new List<Entity.Question.QuestionMain>();
                 bool completed = false;
-
+                int seo = 1;
                 foreach (var item in templates.ChallengeTemplateItems)
                 {
 
@@ -546,6 +544,8 @@ namespace AqApplication.Repository.Challenge
                                 rndQ = rnd.Next(0, questionTemplateListCount);
                                 if (!result.Any(x => x.Id == questionTemplateList[rndQ].Id))
                                 {
+                                    questionTemplateList[rndQ].Seo = seo;
+                                    seo++;
                                     result.Add(questionTemplateList[rndQ]);
                                     if (result.Count == questionCount)
                                     {
@@ -566,6 +566,8 @@ namespace AqApplication.Repository.Challenge
                         {
                             if (!result.Any(x => x.Id == questionTemplateList[i].Id))
                             {
+                                questionTemplateList[i].Seo = seo;
+                                seo++;
                                 result.Add(questionTemplateList[i]);
                                 if (result.Count == questionCount)
                                 {

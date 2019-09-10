@@ -274,11 +274,11 @@ namespace AqApplication.Service.Hubs
                                         ChallengeId = socketRequestModel.challengeId.Value,
                                         FullName = user.Data.FirstName + " " + user.Data.LastName,
                                         UserName = user.Data.Email,
-                                        TotalMark = challengeResult.Data.Mark,
-                                        Correct = challengeResult.Data.correct
+                                        TotalMark = challengeResult.Data.ChallengeUserViewModel.Mark,
+                                        Correct = challengeResult.Data.ChallengeUserViewModel.correct
                                     });
 
-                                    await ChallengeSessionCompleted(socketRequestModel.challengeId.Value, socketRequestModel.userId, challengeResult.Data.Mark, challengeResult.Data.correct);
+                                    await ChallengeSessionCompleted(socketRequestModel.challengeId.Value, socketRequestModel.userId, challengeResult.Data.ChallengeUserViewModel.Mark, challengeResult.Data.ChallengeUserViewModel.correct);
 
                                 }
                             }
