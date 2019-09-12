@@ -5,7 +5,7 @@ using System.Web;
 
 namespace AqApplication.Repository.ViewModels
 {
-     public class ChallengeQuestionViewModel
+    public class ChallengeQuestionViewModel
     {
         public string MainText { get; set; }
 
@@ -61,6 +61,10 @@ namespace AqApplication.Repository.ViewModels
 
         public int correct { get; set; }
 
+        public string DurationPercentage { get; set; }
+
+        public string Duration { get; set; }
+
     }
     public class QuestionAnswerViewModel
     {
@@ -70,6 +74,8 @@ namespace AqApplication.Repository.ViewModels
         public int CorrectAnswer { get; set; }
 
         public int UserAnswer { get; set; }
+
+        public int QuestionId { get; set; }
     }
     public class QuizResultViewModel
     {

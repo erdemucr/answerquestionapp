@@ -34,8 +34,11 @@ namespace AqApplication.Repository.Question
         Result EditLecture(Lecture model, string userId);
         Result DeleteLecture(int id);
         Result<Lecture> GetLectureByKey(int id);
+
+        Result<IEnumerable<Lecture>> GetLecturesByExamId(int examId);
+
         #endregion
-    
+
         #region Subject
         Result AddSubject(Subject model, string userId);
         Result<IEnumerable<Subject>> GetSubjects();
@@ -106,6 +109,19 @@ namespace AqApplication.Repository.Question
         Result<ChallengeTemplateItems> GetChallengeTemplateItemByKey(int id);
         #endregion
 
-        Result<IEnumerable<Lecture>> GetLecturesByExamId(int examId);
+
+        #region Difficulty
+
+        Result AddDifficulty(Difficulty model, string userId);
+        Result<IEnumerable<Difficulty>> Difficulty();
+        Result<Difficulty> GetDifficultyByKey(int id);
+        Result SetDifficultyStatus(int id, string userId);
+        Result EditDifficulty(Difficulty model, string userId);
+        Result DeleteDifficulty(int id);
+
+        #endregion
+
+        Result SetQuestionCorrectAnswer(int questionId, string questionContent, int correctIndex, string userId);
+
     }
 }

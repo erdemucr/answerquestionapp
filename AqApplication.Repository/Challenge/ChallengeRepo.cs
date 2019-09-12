@@ -197,7 +197,7 @@ namespace AqApplication.Repository.Challenge
 
         }
 
-        public Result AddChallengeSession(string userId, int challengeId)
+        public Result AddChallengeSession(string userId, int challengeId, DateTime startDate)
         {
             try
             {
@@ -207,7 +207,7 @@ namespace AqApplication.Repository.Challenge
                     IsActive = true,
                     Creator = userId,
                     UserId = userId,
-                    StartDate = DateTime.Now,
+                    StartDate = startDate,
                     IsCompleted = false,
                     ChallengeId = challengeId
                 };
@@ -229,7 +229,7 @@ namespace AqApplication.Repository.Challenge
             }
 
         }
-        public Result UpdateChallengeSessionCompleted(string userId, int challengeId, string totalMark, int correctCount)
+        public Result UpdateChallengeSessionCompleted(string userId, int challengeId, string totalMark, int correctCount, DateTime date)
         {
             try
             {
@@ -237,8 +237,8 @@ namespace AqApplication.Repository.Challenge
                 var model = context.ChallengeSessions.FirstOrDefault(x => x.ChallengeId == challengeId && x.UserId == userId);
                 if (model != null)
                 {
-                    model.ModifiedDate = DateTime.Now;
-                    model.EndDate = DateTime.Now;
+                    model.ModifiedDate = date;
+                    model.EndDate = date;
                     model.IsCompleted = true;
                     model.Editor = userId;
                     model.CorrectCount = correctCount;
@@ -326,11 +326,14 @@ namespace AqApplication.Repository.Challenge
             }
         }
 
-        public Result<QuizResultViewModel> GetResultChallenge(int challengeId, string userId)
+        public Result<QuizResultViewModel> GetResultChallenge(int challengeId, string userId, ChallengeTypeEnum challengeType = ChallengeTypeEnum.RandomMode)
         {
             try
             {
-                List<ChallengeQuestions> challangeQuestion = context.ChallengeQuizs.Include(x => x.QuestionMain).Where(x => x.ChallengeId == challengeId).ToList();
+                DateTime now = DateTime.Now;
+
+                List<ChallengeQuestions> challangeQuestion = context.ChallengeQuizs.Include(x => x.QuestionMain)
+                 .Where(x => x.ChallengeId == challengeId).ToList();
 
                 List<QuestionAnswerViewModel> questionAnswerViewModelList = new List<QuestionAnswerViewModel>();
 
@@ -339,13 +342,44 @@ namespace AqApplication.Repository.Challenge
                     .Where(x => x.ChallengeId
                 == challengeId).ToList();
 
+                var challengeSession = context.ChallengeSessions.FirstOrDefault(x => x.UserId == userId && x.ChallengeId == challengeId);
+
                 //List<string> challengeUser = challengeAnswer.Select(x => x.UserId).Distinct().ToList();
+
+                int duration = 0;
+
+                if (challengeType == ChallengeTypeEnum.RandomMode)
+                    duration = challengeDuration;
+                else if (challengeType == ChallengeTypeEnum.PracticeMode)
+                    duration = practiceModeExamDuration();
 
                 var result = new ChallengeUserViewModel();
 
                 int totalQuestion = challangeQuestion.Count();
 
                 int correct = 0, wrong = 0;
+
+                #region DurationCalculation
+
+                decimal calculatedDuration = 0;
+
+                TimeSpan endDuration = ((TimeSpan)(now - challengeSession.StartDate));
+
+                int totalSecondEndDuration = (int)endDuration.TotalSeconds;
+
+                calculatedDuration = decimal.Round(((totalSecondEndDuration * 100) / duration), 1, MidpointRounding.AwayFromZero);
+
+                string durationString = endDuration.ToString(@"hh\:mm\:ss");
+
+                int orginalDuration = 0;
+
+                if (challengeType == ChallengeTypeEnum.RandomMode)
+                    orginalDuration = base.challengeDuration;
+                else if (challengeType == ChallengeTypeEnum.PracticeMode)
+                    orginalDuration = practiceModeExamDuration();
+
+                #endregion
+
 
                 foreach (var challengeQuestionItem in challangeQuestion)
                 {
@@ -368,7 +402,8 @@ namespace AqApplication.Repository.Challenge
                             AnswerCount = question.QuestionMain.AnswerCount,
                             CorrectAnswer = question.QuestionMain.CorrectAnswer,
                             UserAnswer = answer.AnswerIndex,
-                            Seo = challengeQuestionItem.ChallengeId
+                            Seo = challengeQuestionItem.Seo,
+                            QuestionId = question.QuestionMain.Id
                         });
                     }
                     else
@@ -378,7 +413,8 @@ namespace AqApplication.Repository.Challenge
                             AnswerCount = question.QuestionMain.AnswerCount,
                             CorrectAnswer = question.QuestionMain.CorrectAnswer,
                             UserAnswer = -1,
-                            Seo = challengeQuestionItem.ChallengeId
+                            Seo = challengeQuestionItem.Seo,
+                            QuestionId = question.QuestionMain.Id
                         });
                     }
 
@@ -388,10 +424,13 @@ namespace AqApplication.Repository.Challenge
                 {
                     correct = correct,
                     UserName = challengeAnswer.FirstOrDefault(x => x.UserId == userId).ApplicationUser.UserName,
-                    Mark = decimal.Round(((correct * 100) / totalQuestion), 2, MidpointRounding.AwayFromZero).ToString()
+                    Mark = decimal.Round(((correct * 100) / totalQuestion), 2, MidpointRounding.AwayFromZero).ToString(),
+                    DurationPercentage = calculatedDuration.ToString(),
+                    Duration = durationString,
                 };
 
 
+                UpdateChallengeSessionCompleted(userId, challengeId, result.Mark, result.correct, now);
 
                 return new Result<QuizResultViewModel>
                 {

@@ -26,6 +26,7 @@ namespace AqApplication.Entity.Question
 
         [Display(Name = "Zorluk")]
         public int? Difficulty { get; set; }
+
         [Display(Name = "Teklif")]
         public bool? Offer { get; set; }
         [Required(ErrorMessage = "Bu alan boş geçilmez")]
@@ -65,6 +66,8 @@ namespace AqApplication.Entity.Question
         public string ImageUrl { get; set; }
 
         public bool IsTrue { get; set; }
+
+        public int? Seo { get; set; }
 
         public string Description { get; set; }
         [ForeignKey("QuestionId")]

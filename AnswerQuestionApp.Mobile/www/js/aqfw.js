@@ -1,5 +1,9 @@
-﻿const serviceUrl = 'http://85.105.160.53:81/webapi/api';
-const challangeSocketUrl = 'ws://85.105.160.53:81/webapi';
+﻿//const serviceUrl = 'http://85.105.160.53:81/webapi/api';
+//const challangeSocketUrl = 'ws://85.105.160.53:81/webapi';
+
+const serviceUrl = 'http://localhost:50999/api';
+const challangeSocketUrl = 'ws://localhost:50999';
+
 var examId = '2';
 var questionData = null;
 var currentQuestion = 0;
@@ -610,7 +614,7 @@ function SliderInit(duration, challengeId, challengeType) {
             'userId': aqfw().Auth().GetuserId()
         };
         $.ajax({
-            type: "POST", //GET, POST, PUT   
+            type: "POST",
             url: aqfw().ServiceUrl + '/Question/SetChallengeAnswer',
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -697,9 +701,15 @@ function ResultPage(challengeId, challengeType) {
                     success: function (data) {
                         $("#question_wrapper").hide();
 
-                       console.log(GenerateResultOpticalAnswer(data.QuestionAnswerViewModel));
+                        $("#resultMark").text(data.challengeUserViewModel.mark);
+                        $("#resultCorrectcount").text(data.challengeUserViewModel.correct);
+                        $("#resultDuration").text(data.challengeUserViewModel.duration);
 
-                       // $("#answerTabContent").html(GenerateResultOpticalAnswer(data.QuestionAnswerViewModel));
+                        $("#resultMarkProgressBar").attr('aria-valuenow', '50');
+                        $("#resultCorrectcountProgressBar").attr('aria-valuenow', '50');
+                        $("#resultDurationProgressBar").css('width', data.challengeUserViewModel.durationPercentage + '%').attr('aria-valuenow', data.challengeUserViewModel.durationPercentage);  
+
+                        $("#answerTabContent").html(GenerateResultOpticalAnswer(data.questionAnswerViewModel));
 
                         $("#challenge_result").show();
                         $('.loader').hide();
@@ -719,34 +729,34 @@ function ResultPage(challengeId, challengeType) {
 
 
 function GenerateResultOpticalAnswer(questionAnswerViewModel) {
+
     var optionList = "";
 
     $.each(questionAnswerViewModel, function (i, v) {
-        optionList += OpticalAnswerRow(v.AnswerCount, v.Seo);
+        optionList += OpticalAnswerRow(v.answerCount, v.seo, v.correctAnswer, v.userAnswer, v.questionId);
     });
 
     return optionList;
 }
 
-function OpticalAnswerRow(answerCount, seo) {
-    var row = '<div class="row">' +
+function OpticalAnswerRow(answerCount, seo, correctAnswer, userAnswer, questionId) {
+    var row = '<div class="opticalAnswerRow">' +
         '<div class="col-sm-10" style="max-width:100% !important;">' +
-        '<div class="form-group bmd-form-group" style="cursor:pointer;">' +
+        '<div class="bmd-form-group" style="cursor:pointer;">' +
         '<div class="form-check" style="display: inline-flex;">' +
         '<a style="padding-right: 10px; padding-top: 4px;" href="#">' + seo + '.</a>';
 
     for (var i = 0; i < answerCount; i++) {
-        row += OpticalAnswerRadio(i);
+        row += OpticalAnswerRadio(i, i === correctAnswer, i === userAnswer);
     }
 
     row += '</div>' +
         '</div>' +
-        '</div>' +
+        '</div><input type="button" class="btn btn-default btn-sm" value="?"  onclick="ShowAnsweredQuestion(' + questionId+');" />' +
         '</div>';
-
     return row;
 }
-function OpticalAnswerRadio(optionIndex) {
+function OpticalAnswerRadio(optionIndex, isCorrectAnswer, isUserAnswer) {
     var letter = '';
     if (optionIndex === 0) {
         letter = 'A';
@@ -763,11 +773,33 @@ function OpticalAnswerRadio(optionIndex) {
     else if (optionIndex === 4) {
         letter = 'E';
     }
+
+    var answerClass = '';
+
+    if (isCorrectAnswer && isUserAnswer) {
+        answerClass = ' correct-confirmed';
+    }
+    else if (!isCorrectAnswer && isUserAnswer) {
+        answerClass = ' wrong-answer';
+    }
+
     var option = '<label class="form-check-label" style="padding-right: 10px !important;">' +
         '<input class="form-check-input" type="radio" name="yanit122" id="yanit122" value="' + optionIndex + '">' +
-        '<span class="circle">' +
+        '<span class="circle';
+
+    if (answerClass !== '') {
+        option += answerClass;
+    }
+
+    option+= '">' +
         '<span class="check-textqqx2">' + letter + '</span><span class="check"></span>' +
         '</span>' +
         '</label>';
+
     return option;
+}
+function ShowAnsweredQuestion(questionId) {
+
+
+
 }

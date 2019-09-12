@@ -127,7 +127,7 @@ namespace AqApplication.Service.Hubs
                                     FullName = user.Data.FirstName + " " + user.Data.LastName,
                                     UserName = user.Data.Email
                                 });
-                                await AddChallengeSession(lastRandomChallenge.Data.Id, socketRequestModel.userId);
+                                await AddChallengeSession(lastRandomChallenge.Data.Id, socketRequestModel.userId, lastRandomChallenge.Data.CreatedDate); // random challange de başlangı tarih ve saati statikdir
                             }
 
                             await SendClientListByChallengeId(lastRandomChallenge.Data.Id,
@@ -218,22 +218,15 @@ namespace AqApplication.Service.Hubs
             return 0;
         }
 
-        public async Task<int> AddChallengeSession(int challengeId, string userId)
+        public async Task<int> AddChallengeSession(int challengeId, string userId, DateTime startDate)
         {
             await Task.Run(() =>
             {
-                _iChallenge.AddChallengeSession(userId, challengeId);
+                _iChallenge.AddChallengeSession(userId, challengeId, startDate);
             });
             return 0;
         }
-        public async Task<int> ChallengeSessionCompleted(int challengeId, string userId, string totalMark, int correctCount)
-        {
-            await Task.Run(() =>
-            {
-                _iChallenge.UpdateChallengeSessionCompleted(userId, challengeId, totalMark, correctCount);
-            });
-            return 0;
-        }
+
 
         public async Task ChallengeEnd(HttpContext hContext, WebSocket socket)
         {
@@ -278,7 +271,6 @@ namespace AqApplication.Service.Hubs
                                         Correct = challengeResult.Data.ChallengeUserViewModel.correct
                                     });
 
-                                    await ChallengeSessionCompleted(socketRequestModel.challengeId.Value, socketRequestModel.userId, challengeResult.Data.ChallengeUserViewModel.Mark, challengeResult.Data.ChallengeUserViewModel.correct);
 
                                 }
                             }

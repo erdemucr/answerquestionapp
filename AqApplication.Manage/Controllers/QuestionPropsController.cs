@@ -35,7 +35,7 @@ namespace AqApplication.Manage.Controllers
 
             var exams = _iquestion.GetExams();
 
-            result.Data = result.Data.Select(x => { x.Exams = x.ExamLectures.Select(y=>  exams.Data.First(z=> z.Id== y.ExamId).Name).ToArray(); return x; });
+            result.Data = result.Data.Select(x => { x.Exams = x.ExamLectures.Select(y => exams.Data.First(z => z.Id == y.ExamId).Name).ToArray(); return x; });
 
 
             return View(result.Data);
@@ -68,7 +68,7 @@ namespace AqApplication.Manage.Controllers
              }).AsEnumerable();
 
             if (model.Exams != null)
-                model.ExamLectures= model.Exams.Select(x => new ExamLecture { ExamId = Convert.ToInt32(x)}).ToList();
+                model.ExamLectures = model.Exams.Select(x => new ExamLecture { ExamId = Convert.ToInt32(x) }).ToList();
 
             if (!ModelState.IsValid)
             {
@@ -431,7 +431,7 @@ namespace AqApplication.Manage.Controllers
         }
         public IActionResult EditExam(int id)
         {
-           var result = _iquestion.GetExamByKey(id);
+            var result = _iquestion.GetExamByKey(id);
             if (!result.Success)
             {
                 TempData["success"] = result.Success;
@@ -534,6 +534,79 @@ namespace AqApplication.Manage.Controllers
             TempData["success"] = result.Success;
             TempData["message"] = result.Message;
             return RedirectToAction("Classes");
+        }
+
+        #endregion
+
+
+
+        #region Difficulty
+
+        public IActionResult Difficulties()
+        {
+            var result = _iquestion.Difficulty();
+
+            return View(result.Data);
+        }
+        public IActionResult SetDifficultyStatus(int id)
+        {
+            var result = _iquestion.SetDifficultyStatus(id, User.GetUserId());
+            TempData["success"] = result.Success;
+            TempData["message"] = result.Message;
+            return RedirectToAction("Difficulties");
+        }
+        public IActionResult AddDifficulty()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddDifficulty(Difficulty model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["success"] = false;
+                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                return View(model);
+            }
+            model.CreatedDate = DateTime.Now;
+            var result = _iquestion.AddDifficulty(model, User.GetUserId());
+            TempData["success"] = result.Success;
+            TempData["message"] = result.Message;
+            return RedirectToAction("Difficulties");
+        }
+        public IActionResult EditDifficulty(int id)
+        {
+            var result = _iquestion.GetDifficultyByKey(id);
+            if (!result.Success)
+            {
+                TempData["success"] = result.Success;
+                TempData["message"] = result.Message;
+                return RedirectToAction("Difficulties");
+            }
+
+            return View(result.Data);
+        }
+        [HttpPost]
+        public IActionResult EditDifficulty(Difficulty model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["success"] = false;
+                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                return View(model);
+            }
+            var result = _iquestion.EditDifficulty(model, User.GetUserId());
+            TempData["success"] = result.Success;
+            TempData["message"] = result.Message;
+            return RedirectToAction("Difficulties");
+        }
+
+        public IActionResult DeleteDifficulty(int id)
+        {
+            var result = _iquestion.DeleteDifficulty(id);
+            TempData["success"] = result.Success;
+            TempData["message"] = result.Message;
+            return RedirectToAction("Difficulties");
         }
 
         #endregion

@@ -17,7 +17,7 @@ namespace AqApplication.Repository.Challenge
 
         Result SetChallengeAnswer(ChallengeQuestionAnswerViewModel model);
 
-        Result<QuizResultViewModel> GetResultChallenge(int challengeId, string userId);
+        Result<QuizResultViewModel> GetResultChallenge(int challengeId, string userId, ChallengeTypeEnum challengeType = ChallengeTypeEnum.RandomMode);
 
         Result<AqApplication.Entity.Challenge.Challenge> AddChallenge(string userId, ChallengeTypeEnum challengeType, int questionCount, int? lectureId);
 
@@ -27,9 +27,9 @@ namespace AqApplication.Repository.Challenge
 
         Result<IEnumerable<Entity.Challenge.Challenge>> GetChallengesPaginated(ChallengeFilterModel model);
 
-        Result AddChallengeSession(string userId, int challengeId);
+        Result AddChallengeSession(string userId, int challengeId, DateTime startDate);
 
-        Result UpdateChallengeSessionCompleted(string userId, int challengeId, string totalMark, int correctCount);
+        Result UpdateChallengeSessionCompleted(string userId, int challengeId, string totalMark, int correctCount, DateTime date);
 
         bool challengeServiceIsOpen();
 

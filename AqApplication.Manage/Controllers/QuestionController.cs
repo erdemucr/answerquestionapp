@@ -88,7 +88,8 @@ namespace AqApplication.Manage.Controllers
             {
                 ImageUrl = x.ImageUrl,
                 Title = x.Title,
-                IsTrue = x.IsTrue
+                IsTrue = x.IsTrue,
+                Seo= x.Seo??0
             }).AsEnumerable();
             return View(list);
 

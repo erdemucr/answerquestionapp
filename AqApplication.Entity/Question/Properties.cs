@@ -69,4 +69,10 @@ namespace AqApplication.Entity.Question
         [ForeignKey("ExamId")]
         public Exam Exam { get; set; }
     }
+    public class Difficulty: BaseEntity
+    {
+        public short Value { get; set; }
+        [MaxLength(255,ErrorMessage ="Bu alan en fazla 250 karakter olabilir")]
+        public string Name { get; set; }
+    }
 }

@@ -54,6 +54,19 @@ namespace AnswerQuestionApp.Repository
             }
         }
 
+        public int challengeDuration
+        {
+            get
+            {
+                var cValue = ConfigurationValues.FirstOrDefault(x => x.Key == ConfigKey.ChallengeTimeDuration);
+                if (cValue != null)
+                {
+                    return Convert.ToInt32(cValue.Values);
+                }
+                return -1;
+            }
+        }
+
         public int challengeQuestionLimit
         {
             get

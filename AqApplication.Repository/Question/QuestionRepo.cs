@@ -152,6 +152,39 @@ namespace AqApplication.Repository.Question
         }
 
 
+        public Result SetQuestionCorrectAnswer(int questionId, string questionContent, int correctIndex, string userId)
+        {
+            try
+            {
+                var question = context.QuestionMain.Where(x => x.Id == questionId).FirstOrDefault();
+                if (question != null)
+                {
+                    question.CorrectAnswer = correctIndex;
+                    question.Editor = userId;
+                    question.ModifiedDate = DateTime.Now;
+                }
+                var questionAnswer = context.QuestionAnswers.Where(x => x.QuestionId == questionId).ToList();
+
+                int seo = 1;
+                foreach(var item in questionAnswer.OrderBy(x => x.Id).ToList())
+                {
+                    item.Seo = seo;
+                    item.IsTrue = (correctIndex + 1) == seo;
+                    context.Entry(item).State = EntityState.Modified;
+                    seo++;
+                }
+                context.Entry(question).State = EntityState.Modified;
+                context.SaveChanges();
+                return new Result { Success = true, Message = string.Format("Yeni {0} ile {1}", "konu", "güncellenmiştir") };
+            }
+            catch (Exception ex)
+            {
+                new Result(ex);
+            }
+            return new Result { Success = false, Message = "Bir hata oluştu" };
+        }
+
+
         #region Lecture
 
         public Result<IEnumerable<Lecture>> GetLectures()
@@ -329,14 +362,18 @@ namespace AqApplication.Repository.Question
         {
             try
             {
+                var subject = context.Subjects.FirstOrDefault(x => x.Name.ToLower() == model.Name.ToLower());
+                if (subject != null)
+                    return new Result { Success = false, Message = "Bu kayıt zaten mevcut", InstertedId = subject.Id };
+
                 model.Creator = userId;
                 context.Subjects.Add(model);
                 context.SaveChanges();
-                return new Result { Success = true, Message = "Yeni konu başarı ile eklenişmiştir" };
+                return new Result { Success = true, Message = "Yeni konu başarı ile eklenişmiştir", InstertedId = model.Id };
             }
             catch (Exception ex)
             {
-                new Result(ex);
+                return new Result(ex);
             }
             return new Result { Success = false, Message = "Bir hata oluştu" };
         }
@@ -1072,6 +1109,132 @@ namespace AqApplication.Repository.Question
         //    }
         //    return new Result { Success = false, Message = "Bir hata oluştu" };
         //}
+
+        #endregion
+
+        #region Difficulty
+
+        public Result AddDifficulty(Difficulty model, string userId)
+        {
+            try
+            {
+                var subject = context.Difficulty.FirstOrDefault(x => x.Name.ToLower() == model.Name.ToLower());
+                if (subject != null)
+                    return new Result { Success = false, Message = "Bu kayıt zaten mevcut", InstertedId = subject.Id };
+
+                model.Creator = userId;
+                context.Difficulty.Add(model);
+                context.SaveChanges();
+                return new Result { Success = true, Message = "Yeni seviye başarı ile eklenişmiştir", InstertedId = model.Id };
+            }
+            catch (Exception ex)
+            {
+                return new Result(ex);
+            }
+  
+        }
+
+
+        public Result<IEnumerable<Difficulty>> Difficulty()
+        {
+            try
+            {
+                var list = context.Difficulty.Include(x => x.AppUserCreator)
+                    .Include(x => x.AppUserEditor).AsEnumerable();
+
+
+                return new Result<IEnumerable<Difficulty>>
+                {
+                    Data = list,
+                    Success = true,
+                    Message = "Sınıf listesini görüntülemektesiniz"
+                };
+            }
+            catch (Exception ex)
+            {
+                new Result<IEnumerable<Difficulty>>(ex);
+            }
+
+            return new Result<IEnumerable<Difficulty>>
+            {
+                Success = false,
+                Message = "Bir hata oluştu"
+            };
+        }
+
+        public Result<Difficulty> GetDifficultyByKey(int id)
+        {
+
+            var model = context.Difficulty.FirstOrDefault(x => x.Id == id);
+            if (model == null)
+                return new Result<Difficulty> { Success = false, Message = "Seviye bulunamadı" };
+            return new Result<Difficulty> { Success = true, Message = "İşlem başarılı", Data = model };
+        }
+
+
+        public Result SetDifficultyStatus(int id, string userId)
+        {
+            try
+            {
+                var model = context.Difficulty.FirstOrDefault(x => x.Id == id);
+                if (model == null)
+                    return new Result { Success = false, Message = "Sınıf bulunamadı" };
+                bool currentStatus = model.IsActive;
+                model.IsActive = !model.IsActive;
+                model.Editor = userId;
+                context.Entry(model).State = EntityState.Modified;
+                context.SaveChanges();
+                return new Result { Success = true, Message = string.Format("Yeni {0} ile {1} edilmiştir", "seviye", currentStatus ? "pasif" : "aktif") };
+            }
+            catch (Exception ex)
+            {
+                new Result(ex);
+            }
+            return new Result { Success = false, Message = "Bir hata oluştu" };
+        }
+
+        public Result EditDifficulty(Difficulty model, string userId)
+        {
+            try
+            {
+                var editmodel = context.Difficulty.FirstOrDefault(x => x.Id == model.Id);
+                if (model == null)
+                    return new Result { Success = false, Message = "Sınıf bulunamadı" };
+                bool currentStatus = model.IsActive;
+                editmodel.Name = model.Name;
+                editmodel.IsActive = model.IsActive;
+                editmodel.Editor = userId;
+                context.Entry(editmodel).State = EntityState.Modified;
+                context.SaveChanges();
+                return new Result { Success = true, Message = string.Format("Yeni {0} ile {1}", "seviye", "güncellenmiştir") };
+            }
+            catch (Exception ex)
+            {
+                new Result(ex);
+            }
+            return new Result { Success = false, Message = "Bir hata oluştu" };
+        }
+
+        public Result DeleteDifficulty(int id)
+        {
+            try
+            {
+                var deletemodel = context.Difficulty.FirstOrDefault(x => x.Id == id);
+                if (deletemodel == null)
+                    return new Result { Success = false, Message = "Seviye bulunamadı" };
+
+
+                context.Entry(deletemodel).State = EntityState.Deleted;
+                context.SaveChanges();
+                return new Result { Success = true, Message = string.Format("Seviye başarı ile silinmiştir") };
+            }
+            catch (Exception ex)
+            {
+                new Result(ex);
+            }
+            return new Result { Success = false, Message = "Bir hata oluştu" };
+        }
+
 
         #endregion
 

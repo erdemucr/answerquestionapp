@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AnswerQuestionApp.Service.Models;
 using AqApplication.Core.Type;
+using AqApplication.Entity.Constants;
 using AqApplication.Repository.Challenge;
 using AqApplication.Repository.Question;
 using AqApplication.Repository.ViewModels;
@@ -59,7 +60,7 @@ namespace AqApplication.Service.Controllers
         [HttpGet]
         public ActionResult<Result<List<ChallengeUserViewModel>>> GetResultChallenge(int ChallengeId)
         {
-            var result = _iChallenge.GetResultChallenge(ChallengeId, HttpContextUserInfo.GetUserId(HttpContext.User.Identity));
+            var result = _iChallenge.GetResultChallenge(ChallengeId, HttpContextUserInfo.GetUserId(HttpContext.User.Identity), ChallengeTypeEnum.PracticeMode);
             if (!result.Success)
                 return BadRequest();
             return Ok(result.Data);
@@ -92,7 +93,8 @@ namespace AqApplication.Service.Controllers
             if (!result.Success)
                 return Ok(result);
 
-            _iChallenge.AddChallengeSession(userId, result.InstertedId);
+            _iChallenge.AddChallengeSession(userId, result.InstertedId, DateTime.Now); // BU farklı bir request olarak düzenlenebilir
+
 
             return Ok(new { Success = true, Data = result.Data, Duration = _iChallenge.practiceModeExamDuration(), ChallangeId = result.InstertedId });
         }

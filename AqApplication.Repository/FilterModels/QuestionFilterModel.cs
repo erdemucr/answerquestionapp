@@ -13,4 +13,7 @@ namespace AqApplication.Repository.FilterModels
     public class DocumentFilterModel: BaseFilterModel
     {
     }
+    public class PdfFilterModel : BaseFilterModel
+    {
+    }
 }

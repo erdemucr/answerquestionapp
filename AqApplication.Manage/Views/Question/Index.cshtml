@@ -100,8 +100,11 @@
 
                                 <td>
                                     <a href="@Url.Action("DeleteQuestion", "Question", new { id = item.Id })" class="btn btn-info">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> Delete Question
+                                        <span class="glyphicon glyphicon-arrow-down"></span> Sil
                                     </a>
+                                    <button class="btn btn-info" onclick="AnswerModal('@item.Id',this);">
+                                        Cevaplar
+                                    </button>
                                 </td>
                             </tr>
                         }
@@ -121,3 +124,45 @@
     </div>
 
 </div>
+<div id="answerModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Cevaplar</h4>
+
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="answerModalContent">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section _scripts{
+    <script type="text/javascript">
+        function AnswerModal(questionId,el) {
+
+            $.ajax({
+                type: 'GET',
+                beforeSend: function () {
+                    $(el).addClass("m-loader m-loader--right m-loader--light")
+                },
+                url: '/Question/Answers?id=' + questionId,
+                success: function (html) {
+                    $("#answerModalContent").html(html);
+                    $("#answerModal").modal('show');
+                    $(el).removeClass("m-loader m-loader--right m-loader--light")
+                }
+            });
+
+        }
+
+    </script>
+}

@@ -226,3 +226,12 @@ input[type="radio"], input[type="checkbox"] {
 #resultTabPanel .nav-item a{
     text-align:center;
 }
+.form-check-label .wrong-answer{
+    border-color:red;
+    background-color:red;
+}
+
+.form-check-label .correct-confirmed {
+    border-color: green;
+    background-color: green;
+}
