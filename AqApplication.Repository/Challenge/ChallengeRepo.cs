@@ -72,7 +72,7 @@ namespace AqApplication.Repository.Challenge
         {
             try
             {
-                var addChallenge = this.AddChallenge(userId, challengeType, challengeQuestionCount, lectureId);
+                var addChallenge = this.AddChallenge(userId, challengeType, challengeType == ChallengeTypeEnum.RandomMode ? challengeQuestionCount : practiceModeQuestionCount(), lectureId);
 
                 if (!addChallenge.Success)
                     return new Result<List<ChallengeQuestionViewModel>>
@@ -96,8 +96,11 @@ namespace AqApplication.Repository.Challenge
                     QuestionId = x.QuestionMain.Id,
                     AnswerCount = x.QuestionMain.AnswerCount,
                     QuizDuration = challengeExpDay,
-                    ImageHeight = x.QuestionMain.HeightImage,
-                    ImageWidth = x.QuestionMain.WidthImage
+                    ChallengeAnswerViewModel = x.QuestionMain.QuestionAnswers.Select(y => new ChallengeAnswerViewModel
+                    {
+                        Index = (y.Seo ?? 0) - 1,
+                        Title = y.Title
+                    }).ToList()
                 }).ToList();
 
                 return new Result<List<ChallengeQuestionViewModel>>
@@ -122,7 +125,7 @@ namespace AqApplication.Repository.Challenge
             try
             {
                 var challengeQuestions =
-                    context.ChallengeQuizs.Include(x => x.QuestionMain)
+                    context.ChallengeQuizs.Include(x => x.QuestionMain.QuestionAnswers)
                     .Where(x => x.ChallengeId == challengeId).AsEnumerable();
 
                 var questionList = challengeQuestions.Select(x => new ChallengeQuestionViewModel
@@ -134,15 +137,18 @@ namespace AqApplication.Repository.Challenge
                     AnswerCount = x.QuestionMain.AnswerCount,
                     ChallengeId = x.ChallengeId,
                     CorrectAnswer = x.QuestionMain.CorrectAnswer,
-                    ImageWidth = x.QuestionMain.WidthImage ?? 0,
-                    ImageHeight = x.QuestionMain.HeightImage ?? 0,
-                    Seo = x.Seo
+                    Seo = x.Seo,
+                    ChallengeAnswerViewModel = x.QuestionMain.QuestionAnswers.Select(y => new ChallengeAnswerViewModel
+                    {
+                        Index = (y.Seo ?? 0) - 1,
+                        Title = y.Title
+                    }).ToList()
 
-                }).ToList();
+                }).OrderBy(x => x.Seo).ToList();
 
                 return new Result<List<ChallengeQuestionViewModel>>
                 {
-                    Data = questionList.OrderBy(x => x.Seo).ToList(),
+                    Data = questionList,
                     Success = questionList.Any(),
                     Message = questionList.Any() ? "İşlem başarı ile tamamlandı" : "Soru datası bulunamadı"
                 };
@@ -553,7 +559,7 @@ namespace AqApplication.Repository.Challenge
                 foreach (var item in templates.ChallengeTemplateItems)
                 {
 
-                    var question = context.QuestionMain.Include(x => x.QuestionExams).AsQueryable();
+                    var question = context.QuestionMain.Include(x => x.QuestionExams).Include(x=>x.QuestionAnswers).AsQueryable();
 
                     if (item.Difficulty.HasValue)
                         question.Where(x => x.Difficulty == item.Difficulty.Value);

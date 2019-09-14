@@ -26,6 +26,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using AnswerQuestionApp.Repository.Configuration;
 using IronOcr;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace AqApplication.Manage
 {
@@ -153,6 +155,14 @@ namespace AqApplication.Manage
 
             app.UseAuthentication();
             app.UseSession();
+
+            var supportedCultures = new[] { new CultureInfo("tr-TR") };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("tr-TR"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
 
             GlobalConfiguration.Configuration
         .UseActivator(new HangfireActivator(serviceProvider));

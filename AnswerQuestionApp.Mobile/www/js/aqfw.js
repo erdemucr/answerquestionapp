@@ -1,10 +1,10 @@
-﻿//const serviceUrl = 'http://85.105.160.53:81/webapi/api';
-//const challangeSocketUrl = 'ws://85.105.160.53:81/webapi';
+﻿const serviceUrl = 'http://85.105.160.53:81/webapi/api';
+const challangeSocketUrl = 'ws://85.105.160.53:81/webapi';
 
-const serviceUrl = 'http://localhost:50999/api';
-const challangeSocketUrl = 'ws://localhost:50999';
+//const serviceUrl = 'http://localhost:50999/api';
+//const challangeSocketUrl = 'ws://localhost:50999';
 
-var examId = '2';
+var examId = '3';
 var questionData = null;
 var currentQuestion = 0;
 var mySwiper = null;
@@ -517,9 +517,29 @@ function StartQuiz(questionList) {
     $("#page-boxes").html("");
     $.each(questionData, function (i, v) {
         var questionDiv = '<div class="swiper-slide text-center">' +
-            ' <img src="' + v.image + '" alt="" class="questionImage" style="max-width:' + v.imageWidth + 'px" />' +
-            ' <input type="hidden" value="' + v.questionId + '" class="questionIds"/>' +
-            ' <input type="hidden" value="" class="selectedAnswer"/>' +
+            ' <p class="questionMainTitle">' + v.mainText + '</p>' +
+            ' <input type="hidden" value="' + v.questionId + '" class="questionIds"/>';
+        $.each(v.challengeAnswerViewModel, function (t, k) {
+            var classNameOption = '';
+            if (k.index === 0) {
+                classNameOption = 'optionAHidden';
+            }
+            else if (k.index === 1) {
+                classNameOption = 'optionBHidden';
+            }
+            else if (k.index === 2) {
+                classNameOption = 'optionCHidden';
+            }
+            else if (k.index === 3) {
+                classNameOption = 'optionDHidden';
+            }
+            else if (k.index === 4) {
+                classNameOption = 'optionEHidden';
+            }
+            questionDiv += ' <input type="hidden" value="' + k.title + '" class="' + classNameOption + '"/>';
+        });
+        questionDiv += ' <input type="hidden" value="' + v.answerCount + '" class="optionAnswerCount"/>';
+        questionDiv += ' <input type="hidden" value="" class="selectedAnswer"/>' +
             '</div>';
         var $questionDiv = $(questionDiv);
         $questionDiv.appendTo('#caruselSlider #sliderWrapper');
@@ -562,14 +582,11 @@ function SliderInit(duration, challengeId, challengeType) {
             $(".pagedBox").removeClass('active');
             $('#page-boxes .pagedBox:eq(' + mySwiper.activeIndex + ')').addClass('active');
             $(".questionBtn").removeClass('answer-option-item-choiced');
-            var answerIndex = $('#caruselSlider #sliderWrapper .swiper-slide:eq(' + mySwiper.activeIndex + ')').find('.selectedAnswer').val();
-            $(".icon-circle").hide();
-            if (answerIndex !== '') {
-                var answerDiv = '#option' + answerIndex;
-                $(answerDiv).find(".icon-circle").show();
-                $(answerDiv).addClass('answer-option-item-choiced');
-            }
+            OptionInt(mySwiper.activeIndex);
+            $('#page-boxes').animate({ scrollLeft: $('#page-boxes .pagedBox:eq(' + mySwiper.activeIndex + ')').position().left - 13 }, 500);
         });
+
+
         var elapsed_seconds = duration;
         quizintervalInstance = setInterval(function () {
             elapsed_seconds = elapsed_seconds - 1;
@@ -579,7 +596,7 @@ function SliderInit(duration, challengeId, challengeType) {
                 clearInterval(quizintervalInstance);
             }
         }, 1000);
-
+        OptionInt(0);
         $('.loader').hide();
     }, 100);
 
@@ -599,13 +616,37 @@ function SliderInit(duration, challengeId, challengeType) {
 
     $('.swiper-pagination').css("display", "none");
 
+    function OptionInt(index) {
+        var $currectSliderEl = $('#caruselSlider #sliderWrapper .swiper-slide:eq(' + index + ')');
+        var answerIndex = $currectSliderEl.find('.selectedAnswer').val();
+        var optionAnwerCount = $currectSliderEl.find(".optionAnswerCount").val();
+        var asdsd = $currectSliderEl.find('.optionAHidden').val();
+        $("#option0Text").text(asdsd);
+        $("#option1Text").text($currectSliderEl.find('.optionBHidden').val());
+        $("#option2Text").text($currectSliderEl.find('.optionCHidden').val());
 
-    if (questionData[currentQuestion] === 5) {
-        $("#fiveOption").show();
+        if (optionAnwerCount === '3') {
+            $("#fourOption").hide();
+            $("#fiveOption").hide();
+        }
+        else if (optionAnwerCount === '4') {
+            $("#fiveOption").hide();
+            $("#fourOption").show();
+            $("#option3Text").text($currectSliderEl.find('.optionDHidden').val());
+        }
+        else if (optionAnwerCount === '5') {
+            $("#fourOption").show();
+            $("#fiveOption").show();
+            $("#option3Text").text($currectSliderEl.find('.optionDHidden').val());
+            $("#option4Text").text($currectSliderEl.find('.optionEHidden').val());
+        }
+        if (answerIndex !== '') {
+            var answerDiv = '#option' + answerIndex;
+            $(answerDiv).addClass('answer-option-item-choiced');
+        }
     }
-    else {
-        $("#fiveOption").hide();
-    }
+
+
     function SetAnswer(challengeId, answerIndex, questionId, sliderIndex) {
         var obj = {
             'ChallengeId': challengeId,
@@ -631,22 +672,22 @@ function SliderInit(duration, challengeId, challengeType) {
                     $("#answeredQuestionCount").text(parseInt(answered) + 1);
                 }
                 var answerDiv = '#option' + answerIndex;
-                $(".icon-circle").hide();
                 $(".questionBtn").removeClass('answer-option-item-choiced');
-                $(answerDiv).find(".icon-circle").show();
                 $(answerDiv).addClass('answer-option-item-choiced');
                 var questionLen = $("#questionLenHdn").val();
                 setTimeout(function () {
                     if ((sliderIndex + 1) !== parseInt(questionLen)) {
                         mySwiper.slideTo(sliderIndex + 1, 1000, false);
-                        $(".icon-circle").hide();
                     }
                     else {
                         // alert('Tüm soruları cevapladın. Geri kalan süre içerisinde cevaplarını kontrol edebilirsin');
                         ResultPage(challengeId, challengeType);
                     }
                 }, 1000);
-
+                $('#page-boxes .pagedBox:eq(' + sliderIndex + ')').css({
+                    'color': 'black',
+                    'background-color': '#ccc'
+                });
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 aqfw().MessageBox().ShowWarningMessageBoxOk("Uyarı", 'Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz', "Kapat");
@@ -707,9 +748,19 @@ function ResultPage(challengeId, challengeType) {
 
                         $("#resultMarkProgressBar").attr('aria-valuenow', '50');
                         $("#resultCorrectcountProgressBar").attr('aria-valuenow', '50');
-                        $("#resultDurationProgressBar").css('width', data.challengeUserViewModel.durationPercentage + '%').attr('aria-valuenow', data.challengeUserViewModel.durationPercentage);  
+                        $("#resultDurationProgressBar").css('width', data.challengeUserViewModel.durationPercentage + '%').attr('aria-valuenow', data.challengeUserViewModel.durationPercentage);
 
-                        $("#answerTabContent").html(GenerateResultOpticalAnswer(data.questionAnswerViewModel));
+                        var sortedQuestionAnswerViewModel = data.questionAnswerViewModel.sort(function (a, b) {
+                            if (a.seo > b.seo) {
+                                return 1;
+                            }
+                            if (a.seo < b.seo) {
+                                return -1;
+                            }
+                            return 0;
+                        });
+
+                        $("#answerTabContent").html(GenerateResultOpticalAnswer(sortedQuestionAnswerViewModel));
 
                         $("#challenge_result").show();
                         $('.loader').hide();
@@ -750,9 +801,9 @@ function OpticalAnswerRow(answerCount, seo, correctAnswer, userAnswer, questionI
         row += OpticalAnswerRadio(i, i === correctAnswer, i === userAnswer);
     }
 
-    row += '</div>' +
+    row += '<input type="button" class="btn btn-default btn-sm" value="?"  onclick="ShowAnsweredQuestion(' + seo + ');" /></div>' +
         '</div>' +
-        '</div><input type="button" class="btn btn-default btn-sm" value="?"  onclick="ShowAnsweredQuestion(' + questionId+');" />' +
+        '</div>' +
         '</div>';
     return row;
 }
@@ -791,15 +842,39 @@ function OpticalAnswerRadio(optionIndex, isCorrectAnswer, isUserAnswer) {
         option += answerClass;
     }
 
-    option+= '">' +
+    option += '">' +
         '<span class="check-textqqx2">' + letter + '</span><span class="check"></span>' +
         '</span>' +
         '</label>';
 
     return option;
 }
-function ShowAnsweredQuestion(questionId) {
+function ShowAnsweredQuestion(seo) {
+    var $currectSliderEl = $('#caruselSlider #sliderWrapper .swiper-slide:eq(' + (seo - 1) + ')');
+    var questionMainTitle = $currectSliderEl.find('.questionMainTitle').html();
+    var optionAnwerCount = $currectSliderEl.find(".optionAnswerCount").val();
+    $("#questionPreviewModalContent").text(questionMainTitle);
 
+    $("#option0TextModal").text('A) ' + $currectSliderEl.find('.optionAHidden').val());
+    $("#option1TextModal").text('B) ' +$currectSliderEl.find('.optionBHidden').val());
+    $("#option2TextModal").text('C) ' +$currectSliderEl.find('.optionCHidden').val());
+
+    if (optionAnwerCount === '3') {
+        $("#option3TextModal").hide();
+        $("#option4TextModal").hide();
+    }
+    else if (optionAnwerCount === '4') {
+        $("#option4TextModal").hide();
+        $("#option3TextModal").show();
+        $("#option3TextModal").text('D) ' +$currectSliderEl.find('.optionDHidden').val());
+    }
+    else if (optionAnwerCount === '5') {
+        $("#option3TextModal").show();
+        $("#option4TextModal").show();
+        $("#option3TextModal").text('D) ' +$currectSliderEl.find('.optionDHidden').val());
+        $("#option4TextModal").text('E) ' +$currectSliderEl.find('.optionEHidden').val());
+    }
+    $("#questionPreviewModal").modal('show');
 
 
 }

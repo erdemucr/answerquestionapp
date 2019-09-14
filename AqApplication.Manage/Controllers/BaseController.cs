@@ -43,7 +43,13 @@ namespace AqApplication.Manage.Controllers
                 }
                 ).AsEnumerable();
 
-            ViewBag.difficultySelectList = Models.Utilities.SelectLists.Difficult();
+            ViewBag.difficultySelectList = _iquestion.Difficulty().Data.Select(
+                x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                }
+                ).AsEnumerable();
             ViewBag.licenceSelectList = Models.Utilities.SelectLists.Licence();
         }
     }

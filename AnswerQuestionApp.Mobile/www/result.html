@@ -8,10 +8,10 @@
 
             <ul class="nav nav-tabs" id="resultTabPanel" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="result-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                    <a class="nav-link active" id="result-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Sonuç</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="answer-tab" data-toggle="tab" href="#answerTabContent" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                    <a class="nav-link" id="answer-tab" data-toggle="tab" href="#answerTabContent" role="tab" aria-controls="profile" aria-selected="false">Cevaplar</a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -74,5 +74,19 @@
 <div class="row">
     <div class="col py-12 text-center">
         <input type="button" value="Ana Sayfa" class="btn btn-default" onclick="aqfw().Navigation().Redirect(aqfw().Navigation().Routes.Index);" />
+    </div>
+</div>
+<div class="modal fade" id="questionPreviewModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p id="questionPreviewModalContent"></p>
+                <p id="option0TextModal" class="text-center"></p>
+                <p id="option1TextModal" class="text-center"></p>
+                <p id="option2TextModal" class="text-center"></p>
+                <p id="option3TextModal" class="text-center"></p>
+                <p id="option4TextModal" class="text-center"></p>
+            </div>
+        </div>
     </div>
 </div>

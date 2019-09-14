@@ -48,8 +48,8 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-9">
-                                @Html.TextBoxFor(model => model.StartDate, new { @class = "dpicker form-control", Style = "width:70%; float:left;" })
-                                @Html.DropDownListFor(model => model.StartDateTime, Utilities.SelectLists.TimeDropDown(), new { @class = "timepicker form-control", Style = "width:30%; float:left;" })
+                                @Html.TextBox("StartDate", Model.StartDate.HasValue?Model.StartDate.Value.ToString("dd/MM/yyyy"):string.Empty, new { @class = "dpicker form-control", Style = "width:70%; float:left;" })
+                                @Html.DropDownListFor(model => model.StartDateTime, Utilities.SelectLists.TimeDropDown(), Model.StartDate.HasValue ? Model.StartDate.Value.ToString("HH:mm") : "00:00", new { @class = "timepicker form-control", Style = "width:30%; float:left;" })
                                 @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -58,8 +58,8 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-9">
-                                @Html.TextBoxFor(model => model.EndDate, new { @class = "dpicker form-control", Style = "width:70%; float:left;" })
-                                @Html.DropDownListFor(model => model.EndDateTime, Utilities.SelectLists.TimeDropDown(), new { @class = "timepicker form-control", Style = "width:30%; float:left;" })
+                                @Html.TextBox("EndDate", Model.EndDate.HasValue ? Model.EndDate.Value.ToString("dd/MM/yyyy") : string.Empty, new { @class = "dpicker form-control", Style = "width:70%; float:left;" })
+                                @Html.DropDownListFor(model => model.EndDateTime, Utilities.SelectLists.TimeDropDown(), Model.EndDate.HasValue ? Model.EndDate.Value.ToString("HH:mm") : "00:00", new { @class = "timepicker form-control", Style = "width:30%; float:left;" })
                                 @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
                             </div>
                         </div>

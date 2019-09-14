@@ -23,6 +23,7 @@
 
 .pagedBox {
     cursor: pointer;
+    font-size: 20px;
 }
 
 .swiper-product {
@@ -43,12 +44,11 @@
 
 .page-boxes-wrapper {
     display: inherit;
-    padding-top: 15px;
-    padding-bottom: 1px;
     width: 100%;
 }
 
 .pagedBox {
+    background-color: white;
 }
 
 #page-boxes {
@@ -57,7 +57,7 @@
 }
 
 .answer-option-item {
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 
@@ -223,15 +223,30 @@ input[type="radio"], input[type="checkbox"] {
 #resultTabPanel .nav-item {
     width: 50%;
 }
-#resultTabPanel .nav-item a{
-    text-align:center;
-}
-.form-check-label .wrong-answer{
-    border-color:red;
-    background-color:red;
+
+    #resultTabPanel .nav-item a {
+        text-align: center;
+    }
+
+.form-check-label .wrong-answer {
+    border-color: red;
+    background-color: red;
 }
 
 .form-check-label .correct-confirmed {
     border-color: green;
     background-color: green;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.swiper-slide p {
+    font-size: 1.4em;
+    font-weight: 500;
+    line-height: initial;
+}
+#answerTabContent{
+    padding-top:20px;
 }
