@@ -32,6 +32,8 @@ namespace AqApplication.Entity.Challenge
 
         public virtual ICollection<ChallengeQuestions> ChallengeQuestions { get; set; }
 
+        public virtual ICollection<ChallengeQuestionsTemp> ChallengeQuestionsTemps { get; set; }
+
     }
     public class ChallengeSession : BaseEntity
     {
@@ -80,7 +82,25 @@ namespace AqApplication.Entity.Challenge
 
 
     }
+    public class ChallengeQuestionsTemp
+    {
+        [Key]
+        public int Id { get; set; }
 
+        public int Seo { get; set; }
+
+        public int ChallengeId { get; set; }
+
+        public int QuestionId { get; set; }
+
+        [ForeignKey("QuestionId")]
+        public QuestionMain QuestionMain { get; set; }
+
+        [ForeignKey("ChallengeId")]
+        public virtual Challenge Challenge { get; set; }
+
+
+    }
     public class ChallengeQuestionAnswers
     {
         [Key]

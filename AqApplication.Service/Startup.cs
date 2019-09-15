@@ -1,6 +1,7 @@
 ﻿using AnswerQuestionApp.Manage.HangFire;
 using AnswerQuestionApp.Repository.Configuration;
 using AnswerQuestionApp.Repository.Mail;
+using AnswerQuestionApp.Repository.Report;
 using AqApplication.Entity.Identity.Data;
 using AqApplication.Logging.Providers;
 using AqApplication.Repository.Challenge;
@@ -58,8 +59,9 @@ namespace AqApplication.Service
             services.AddScoped<IChallenge, ChallengeRepo>();
             services.AddScoped<IFile, FileRepo>();
             services.AddScoped<IUser, UserRepo>();
+            services.AddScoped<IReport, ReportRepo>();
             services.AddScoped<IConfigurationValues, ConfigurationValuesRepo>();
-            services.AddScoped<AnswerQuestionApp.Repository.Mail.IEmailSender, AnswerQuestionApp.Repository.Mail.EmailSender>();
+            services.AddScoped<IEmailSender, EmailSender>();
             services.AddMemoryCache();
 
 

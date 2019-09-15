@@ -1,15 +1,15 @@
-﻿const serviceUrl = 'http://85.105.160.53:81/webapi/api';
-const challangeSocketUrl = 'ws://85.105.160.53:81/webapi';
+﻿//const serviceUrl = 'http://85.105.160.53:81/webapi/api';
+//const challangeSocketUrl = 'ws://85.105.160.53:81/webapi';
 
-//const serviceUrl = 'http://localhost:50999/api';
-//const challangeSocketUrl = 'ws://localhost:50999';
+const serviceUrl = 'http://localhost:50999/api';
+const challangeSocketUrl = 'ws://localhost:50999';
 
 var examId = '3';
 var questionData = null;
 var currentQuestion = 0;
 var mySwiper = null;
-
 var aqfw = function () {
+    var currentPage = null;
     var navigation = function () {
         const routes = {
             SingIn: "signin2.html",
@@ -23,7 +23,7 @@ var aqfw = function () {
         var redirect = function (route) {
             $('.loader').show();
             $(".wrapper .container-wrapper").load(route, function (response, status, xhr) {
-                if (route === routes.SingIn || route === routes.SingUp || route === routes.Statistics || route === routes.History || route === routes.Index) {
+                if (route === routes.SingIn || route === routes.SingUp || route === routes.Statistics || route === routes.Index) {
                     $('.loader').hide();
                 }
                 if (xhr.status !== 200) {
@@ -33,6 +33,7 @@ var aqfw = function () {
                     SetStyleContainer(route);
                     RouteScript(route);
                 }
+                currentPage = route;
             });
         };
         function SetStyleContainer(route) {
@@ -95,7 +96,8 @@ var aqfw = function () {
         }
         return {
             Routes: routes,
-            Redirect: redirect
+            Redirect: redirect,
+            CurrentPage: currentPage
         };
     };
 
@@ -413,6 +415,9 @@ var RouteScript = function (route) {
     }
     else if (route === aqfw().Navigation().Routes.Antreman) {
         LoadAntremanModeLectures(examId);
+    }
+    else if (route === aqfw().Navigation().Routes.History) {
+        LoadStatisticChartData();
     }
 };
 
@@ -856,8 +861,8 @@ function ShowAnsweredQuestion(seo) {
     $("#questionPreviewModalContent").text(questionMainTitle);
 
     $("#option0TextModal").text('A) ' + $currectSliderEl.find('.optionAHidden').val());
-    $("#option1TextModal").text('B) ' +$currectSliderEl.find('.optionBHidden').val());
-    $("#option2TextModal").text('C) ' +$currectSliderEl.find('.optionCHidden').val());
+    $("#option1TextModal").text('B) ' + $currectSliderEl.find('.optionBHidden').val());
+    $("#option2TextModal").text('C) ' + $currectSliderEl.find('.optionCHidden').val());
 
     if (optionAnwerCount === '3') {
         $("#option3TextModal").hide();
@@ -866,15 +871,230 @@ function ShowAnsweredQuestion(seo) {
     else if (optionAnwerCount === '4') {
         $("#option4TextModal").hide();
         $("#option3TextModal").show();
-        $("#option3TextModal").text('D) ' +$currectSliderEl.find('.optionDHidden').val());
+        $("#option3TextModal").text('D) ' + $currectSliderEl.find('.optionDHidden').val());
     }
     else if (optionAnwerCount === '5') {
         $("#option3TextModal").show();
         $("#option4TextModal").show();
-        $("#option3TextModal").text('D) ' +$currectSliderEl.find('.optionDHidden').val());
-        $("#option4TextModal").text('E) ' +$currectSliderEl.find('.optionEHidden').val());
+        $("#option3TextModal").text('D) ' + $currectSliderEl.find('.optionDHidden').val());
+        $("#option4TextModal").text('E) ' + $currectSliderEl.find('.optionEHidden').val());
     }
     $("#questionPreviewModal").modal('show');
 
 
+}
+function LoadChallangeHistory() {
+    $.ajax({
+        type: 'GET',
+        url: aqfw().ServiceUrl + '/Question/GetHistoryChallenges?userId=' + aqfw().Auth().GetuserId(),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function (xhr) {   //Include the bearer token in header
+            xhr.setRequestHeader("Authorization", 'Bearer ' + aqfw().Auth().GetToken());
+        },
+        success: function (data) {
+            var $table = $("#historyTable tbody");
+            $table.html("");
+
+            if (typeof data !== 'undefined' && data) {
+                var sortedHistroyChallengeList = data.sort(function (a, b) {
+                    if (a.challengeId > b.challengeId) {
+                        if (a.challengeId > b.challengeId) {
+                            return 1;
+                        }
+                        if (a.challengeId < b.challengeId) {
+                            return -1;
+                        }
+                        return 0;
+                    }
+                });
+
+                $.each(sortedHistroyChallengeList, function (i, v) {
+                    $table.append("<tr><td>" + v.date + "</td><td>" + v.hour + "</td><td>" + v.challengeType + "</td><td>" + v.mark + "</td></tr>");
+                });
+            };
+
+            $('.loader').hide();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            aqfw().MessageBox().ShowWarningMessageBoxOk("Uyarı", 'Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz', "Kapat");
+            aqfw().Navigation().Redirect(aqfw().Navigation().Routes.Index);
+        }
+    });
+
+
+    $('#historyTable').dataTable({
+        "language": {
+            "url": "/_assets/packages/datatables/datatable.turkish.json"
+        },
+        "processing": true, // for show progress bar
+        "serverSide": true, // for process server side
+        "filter": true, // this is for disable filter (search box)
+        "orderMulti": false, // for disable multiple column at once
+        "pageLength": 10,
+        "ajax": {
+            "url": aqfw().ServiceUrl + '/Question/GetHistoryChallenges?userId=' + aqfw().Auth().GetuserId(),
+            "type": "GET",
+            "datatype": "json"
+        },
+        "columns": [
+            {
+                "name": "",
+                "data": "ImagePath",
+                "width": "50px",
+                "orderable": false,
+                "render": function (data, type, full, meta) {
+                    return '<a href="' + full.ImagePath + '" target="_blank">' +
+                        '<img src="' + full.ImagePath + '" width="50" height="50" class="rounded-circle">' +
+                        '</a>';
+                }
+            },
+            {
+                "data": "FirstName", "name": "Ad Soyad", "autoWidth": true,
+                "render": function (data, type, full, meta) {
+                    return full.FirstName + " " + full.LastName;
+                }
+            },
+            {
+                "data": "DepartmenName", "name": "Departman", "autoWidth": true, "orderable": false
+            },
+            {
+                "name": "Durum",
+                "autoWidth": true,
+                "data": "IsActive",
+                "render": function (data, type, full, meta) {
+                    return full.IsActive ? "Aktif" : "Pasif";
+                }
+            },
+            {
+                "orderable": false,
+                "width": "100px",
+                "render": function (data, type, full, meta) {
+                    var returnVal = '';
+                    returnVal += '<a class="btn btn-sm btn-edit" href="/employee/Edit/' + full.Id + '" style="margin-right:10px;">Güncelle</a>';
+                    returnVal += '<a class="btn btn-sm btn-danger" data-toggle="confirmation" href="/employee/Delete/' + full.Id + '">Sil</a>';
+
+                    return returnVal;
+                }
+            }
+        ],
+        "initComplete": function (settings, json) {
+            $('[data-toggle=confirmation]').confirmation({
+                rootSelector: '[data-toggle=confirmation]',
+                title: '@L.ARE_U_SURE'
+            });
+        }
+    });
+}
+
+function LoadStatisticChartData() {
+    $.ajax({
+        type: 'GET',
+        url: aqfw().ServiceUrl + '/Question/GetStatisticChartData?userId=' + aqfw().Auth().GetuserId() + '&Day=180',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function (xhr) {   //Include the bearer token in header
+            xhr.setRequestHeader("Authorization", 'Bearer ' + aqfw().Auth().GetToken());
+        },
+        success: function (data) {
+            var $table = $("#historyTable tbody");
+            $table.html("");
+
+            var sortedChartDataList = data.sort(function (a, b) {
+                if (a.challengeId > b.challengeId) {
+                    if (a.challengeId > b.challengeId) {
+                        return 1;
+                    }
+                    if (a.challengeId < b.challengeId) {
+                        return -1;
+                    }
+                    return 0;
+                }
+            });
+            var dateArr = [];
+            var challengeType = [];
+            var datasetArray = [];
+
+            for (var i = 0; i < sortedChartDataList.length; i++) {
+                if (dateArr.indexOf(sortedChartDataList[i].date) === -1) {
+                    dateArr.push(sortedChartDataList[i].date);
+                }
+                var challengeTypeIndex = challengeType.indexOf(sortedChartDataList[i].challengeTypeId);
+                if (challengeTypeIndex === -1) {
+                    challengeType.push(sortedChartDataList[i].challengeTypeId);
+                    datasetArray.push({
+                        label: sortedChartDataList[i].challengeType,
+                        backgroundColor: dynamicColors(),
+                        borderColor: dynamicColors(),
+                        data: [{
+                            x: (challengeTypeIndex * 10),
+                            y: sortedChartDataList[i].mark
+                        }]
+                    });
+                }
+                else {
+                    datasetArray[challengeTypeIndex].data.push({
+                        x: (challengeTypeIndex * 10),
+                        y: sortedChartDataList[i].mark
+                    });
+                }
+            }
+       
+            function dynamicColors() {
+                var r = Math.floor(Math.random() * 255);
+                var g = Math.floor(Math.random() * 255);
+                var b = Math.floor(Math.random() * 255);
+                return "rgba(" + r + "," + g + "," + b + ", 0.5)";
+            }
+            var ctx = document.getElementById('myChart').getContext('2d');
+
+            var config = {
+                type: 'line',
+                data: {
+                    labels: dateArr,
+                    datasets: datasetArray
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Başarı Grafiği'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Tarih'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Puan'
+                            }
+                        }]
+                    }
+                }
+            };
+
+            var myChart = new Chart(ctx, config);
+
+            $('.loader').hide();
+            LoadChallangeHistory();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            aqfw().MessageBox().ShowWarningMessageBoxOk("Uyarı", 'Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz', "Kapat");
+            aqfw().Navigation().Redirect(aqfw().Navigation().Routes.Index);
+        }
+    });
 }

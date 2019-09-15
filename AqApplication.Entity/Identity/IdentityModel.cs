@@ -69,6 +69,8 @@ namespace AqApplication.Entity.Identity.Data
 
         public DbSet<Difficulty> Difficulty { get; set; }
 
+        public DbSet<ChallengeQuestionsTemp> ChallengeQuestionsTemp { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -1,8 +1,4 @@
 ﻿using AqApplication.Core.Type;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace AqApplication.Repository.FilterModels
 {
@@ -15,5 +11,11 @@ namespace AqApplication.Repository.FilterModels
     }
     public class PdfFilterModel : BaseFilterModel
     {
+    }
+    public class HistoryFilterModel : BaseFilterModel
+    {
+        public string userId { get; set; }
+    
+        public int Day { get; set; }
     }
 }

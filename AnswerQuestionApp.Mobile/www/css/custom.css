@@ -250,3 +250,26 @@ input[type="radio"], input[type="checkbox"] {
 #answerTabContent{
     padding-top:20px;
 }
+tr:nth-child(even) {
+    background-color: #e8e9ec;
+}
+
+.table {
+    display: table;
+    width: 100%;
+}
+
+tr > th {
+    text-align: center;
+}
+
+tr > td {
+    text-align: center;
+}
+#historyTable tr td{
+    padding:2px;
+}
+.historyTable-wrapper{
+    max-height:500px;
+    overflow:scroll;
+}

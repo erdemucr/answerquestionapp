@@ -7,6 +7,16 @@
 
     document.addEventListener( 'deviceready', onDeviceReady.bind( this ), false );
 
+    document.addEventListener("backbutton", function (e) {
+        if (aqfw().Navigation().CurrentPage === aqfw().Navigation().Routes.Index) {
+            e.preventDefault();
+            navigator.app.exitApp();
+        }
+        else {
+            aqfw().Navigation().Redirect(aqfw().Navigation().Routes.Index);
+        }
+    }, false);
+
     function onDeviceReady() {
         // Handle the Cordova pause and resume events
         document.addEventListener( 'pause', onPause.bind( this ), false );

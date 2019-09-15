@@ -1,1 +1,43 @@
-﻿
+﻿<div class="card rounded-0 border-0 mb-3">
+    <div class="card-body">
+        <div class="card-body " >
+
+            <ul class="nav nav-tabs" id="resultTabPanel" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="answer-tab" data-toggle="tab" href="#statisticTab" role="tab" aria-controls="profile" aria-selected="false">İstatistikler</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " id="result-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Geçmiş</a>
+                </li>
+
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="statisticTab">
+                    <canvas id="myChart" width="400" height="400"></canvas>
+      
+                </div>
+                <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="result-tab">
+                    <div class="historyTable-wrapper">
+                        <table class="table" id="historyTable">
+                            <thead>
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Saat</th>
+                                    <th>Modu</th>
+                                    <th>Puan</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col py-12 text-center">
+        <input type="button" value="Ana Sayfa" class="btn btn-default" onclick="aqfw().Navigation().Redirect(aqfw().Navigation().Routes.Index);" />
+    </div>
+</div>

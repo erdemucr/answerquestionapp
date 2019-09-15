@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AnswerQuestionApp.Repository.Report;
+using AnswerQuestionApp.Repository.ViewModels;
 using AnswerQuestionApp.Service.Models;
 using AqApplication.Core.Type;
 using AqApplication.Entity.Constants;
 using AqApplication.Repository.Challenge;
+using AqApplication.Repository.FilterModels;
 using AqApplication.Repository.Question;
 using AqApplication.Repository.ViewModels;
 using AqApplication.Service.Utilities;
@@ -23,13 +26,15 @@ namespace AqApplication.Service.Controllers
     {
         private readonly IChallenge _iChallenge;
         private readonly IQuestion _iQuestion;
+        private readonly IReport _iReport;
         private readonly ILogger<QuestionController> _logger;
 
-        public QuestionController(IChallenge iChallenge, ILogger<QuestionController> logger, IQuestion iQuestion)
+        public QuestionController(IChallenge iChallenge, ILogger<QuestionController> logger, IQuestion iQuestion, IReport iReport)
         {
             _iChallenge = iChallenge;
             _logger = logger;
             _iQuestion = iQuestion;
+            _iReport = iReport;
         }
         [Route("GetRandomQuestion")]
         [HttpGet]
@@ -108,6 +113,26 @@ namespace AqApplication.Service.Controllers
 
             return Ok(result.Data);
         }
+        [Route("GetHistoryChallenges")]
+        [HttpGet]
+        public ActionResult<Result<List<HistoryChallengeViewModel>>> GetHistoryChallenges([FromQuery] HistoryFilterModel model)
+        {
+            var result = _iReport.GetHistoryChallengeByUserId(model);
+            if (!result.Success)
+                return BadRequest();
 
+            return Ok(result.Data);
+        }
+
+        [Route("GetStatisticChartData")]
+        [HttpGet]
+        public ActionResult<Result<List<HistoryChallengeViewModel>>> GetStatisticChartData([FromQuery] HistoryFilterModel model)
+        {
+            var result = _iReport.GetStatisticChartData(model);
+            if (!result.Success)
+                return BadRequest();
+
+            return Ok(result.Data);
+        }
     }
 }

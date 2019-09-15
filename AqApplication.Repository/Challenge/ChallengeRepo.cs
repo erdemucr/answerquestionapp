@@ -181,7 +181,7 @@ namespace AqApplication.Repository.Challenge
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddSeconds(challengeExpDay),
                     CreatedDate = DateTime.Now,
-                    ChallengeTypeId = (int)ChallengeTypeEnum.RandomMode,
+                    ChallengeTypeId = (int)challengeType,
                     ChallengeQuestions = list,
                 };
 
