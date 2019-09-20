@@ -96,6 +96,7 @@ namespace AqApplication.Repository.Challenge
                     QuestionId = x.QuestionMain.Id,
                     AnswerCount = x.QuestionMain.AnswerCount,
                     QuizDuration = challengeExpDay,
+                    CorrectAnswer = x.QuestionMain.CorrectAnswer,
                     ChallengeAnswerViewModel = x.QuestionMain.QuestionAnswers.Select(y => new ChallengeAnswerViewModel
                     {
                         Index = (y.Seo ?? 0) - 1,
@@ -508,7 +509,7 @@ namespace AqApplication.Repository.Challenge
                     Message = "Challenge listesini görüntülemektesiniz",
                     Paginition = new Paginition(list.Count(), PageSize, model.CurrentPage.HasValue ? model.CurrentPage.Value : 1, model.Name,
                     model.StartDate,
-                    model.EndDate)
+                    model.EndDate,null)
                 };
             }
             catch (Exception ex)
@@ -533,7 +534,8 @@ namespace AqApplication.Repository.Challenge
                 int rndTemplateIndex = rnd.Next(0, context.ChallengeTemplates.Where(x => x.IsActive && x.Type == type && (lectureId.HasValue && x.LectureId == lectureId || !lectureId.HasValue)).Count());
 
                 var templates = context.ChallengeTemplates.Include(x => x.ChallengeTemplateItems)
-                    .Where(x => x.IsActive && (lectureId.HasValue && x.LectureId == lectureId || !lectureId.HasValue) && x.ChallengeTemplateItems.Where(y => y.IsActive).Any()).Skip(rndTemplateIndex).Take(1).FirstOrDefault();
+                    .Where(x => x.IsActive && (lectureId.HasValue && x.LectureId == lectureId || !lectureId.HasValue) && x.ChallengeTemplateItems.Where(y => y.IsActive).Any())
+                    .Skip(rndTemplateIndex).Take(1).FirstOrDefault();
 
                 #region NullControl
                 if (templates == null)
@@ -556,10 +558,10 @@ namespace AqApplication.Repository.Challenge
                 var result = new List<Entity.Question.QuestionMain>();
                 bool completed = false;
                 int seo = 1;
-                foreach (var item in templates.ChallengeTemplateItems)
+                foreach (var item in templates.ChallengeTemplateItems.OrderBy(x=>x.Seo).AsEnumerable())
                 {
 
-                    var question = context.QuestionMain.Include(x => x.QuestionExams).Include(x=>x.QuestionAnswers).AsQueryable();
+                    var question = context.QuestionMain.Include(x => x.QuestionExams).Include(x => x.QuestionAnswers).AsQueryable();
 
                     if (item.Difficulty.HasValue)
                         question.Where(x => x.Difficulty == item.Difficulty.Value);

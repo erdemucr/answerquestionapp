@@ -193,7 +193,7 @@ namespace AnswerQuestionApp.Manage.Controllers
             ViewBag.templateName = challengeTemplate.Data.Name;
             ViewBag.templateId = challengeTemplate.Data.Id;
 
-            return View(new ChallengeTemplateModel { ChallengeList = result.Data, ChallengeItem = new ChallengeTemplateItems { ChallengeTemplateId = id } });
+            return View(new ChallengeTemplateModel { ChallengeList = result.Data.OrderBy(x=>x.Seo).AsEnumerable(), ChallengeItem = new ChallengeTemplateItems { ChallengeTemplateId = id } });
         }
         public IActionResult AddChallengeTemplatesItems(int challengeTemplateId)
         {
@@ -257,6 +257,14 @@ namespace AnswerQuestionApp.Manage.Controllers
             TempData["success"] = result.Success;
             TempData["message"] = result.Message;
             return RedirectToAction("ChallengeTemplatesItems", new { id = model.ChallengeTemplateId });
+        }
+
+
+        [HttpPost]
+        public JsonResult UpdateOrder(string idOrderMatch)
+        {
+            var dataResult = _iQuestion.UpdateOrdersChallengeTemplateItem(idOrderMatch);
+            return Json(new { success = dataResult.Success });
         }
     }
 }

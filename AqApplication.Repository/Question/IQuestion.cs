@@ -107,6 +107,8 @@ namespace AqApplication.Repository.Question
         Result EditChallengeTemplateItem(ChallengeTemplateItems model, string userId);
 
         Result<ChallengeTemplateItems> GetChallengeTemplateItemByKey(int id);
+
+        Result UpdateOrdersChallengeTemplateItem(string idOrderMatch);
         #endregion
 
 

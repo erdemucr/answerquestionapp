@@ -324,10 +324,11 @@ namespace AqApplication.Manage.Controllers
 
         }
 
-        public ActionResult QuestionPdfContent(int id)
+        public ActionResult QuestionPdfContent(PdfContentFilterModel model)
         {
-            var list = _ifile.GetQuestionPdfContents(id);
-            return View(list.Data);
+            var result = _ifile.GetQuestionPdfContents(model);
+            ViewBag.pagination = result.Paginition;
+            return View(result.Data);
         }
 
         public ActionResult AddQuestionPdf()

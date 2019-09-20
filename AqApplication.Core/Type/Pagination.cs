@@ -13,15 +13,16 @@ namespace AqApplication.Core.Type
         private int pageSize { get; set; }
         private int currentPage { get; set; }
         private int pageCount { get; set; }
-        public Paginition(int totalCount, int pageSize, int currentPage, string name, string dateStart, string dateEnd)
+        public Paginition(int totalCount, int pageSize, int currentPage, string name, string dateStart, string dateEnd, int? id)
         {
             this.totalCount = totalCount;
             this.pageSize = pageSize;
             this.currentPage = currentPage;
             this.pageCount = totalCount > 0 ? (int)Math.Round(totalCount / pageSize * (1.0)) : 1;
-            this.Name = name;
-            this.StartDate = dateStart;
-            this.EndDate = dateEnd;
+            this.Name = name ?? string.Empty;
+            this.StartDate = dateStart ?? string.Empty;
+            this.EndDate = dateEnd ?? string.Empty;
+            this.Id = id ?? 0;
         }
         public int TotalCount
         {
@@ -64,6 +65,7 @@ namespace AqApplication.Core.Type
     }
     public abstract class FilterModel
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string StartDate { get; set; }
 
@@ -74,7 +76,7 @@ namespace AqApplication.Core.Type
         public static DateTime? ToDate(this string date)
         {
             DateTime a;
-            if (DateTime.TryParse(date,out a))
+            if (DateTime.TryParse(date, out a))
             {
                 return Convert.ToDateTime(date);
             }

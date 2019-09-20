@@ -38,10 +38,15 @@
     <Content Include="wwwroot\assets\plugins\fancybox-master\src\css\share.css" />
     <Content Include="wwwroot\assets\plugins\fancybox-master\src\css\slideshow.css" />
     <Content Include="wwwroot\assets\plugins\fancybox-master\src\css\thumbs.css" />
+    <Content Include="wwwroot\assets\plugins\materializeicon\material-icons.css" />
+    <Content Include="wwwroot\assets\plugins\materializeicon\MaterialIcons-Regular.eot" />
+    <Content Include="wwwroot\assets\plugins\materializeicon\MaterialIcons-Regular.ttf" />
+    <Content Include="wwwroot\assets\plugins\materializeicon\MaterialIcons-Regular.woff" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="wwwroot\assets\app\js\jquery-ui.min.js" />
     <None Include="wwwroot\assets\app\js\jquery.cookie.min.js" />
     <None Include="wwwroot\assets\plugins\fancybox-master\.github\ISSUE_TEMPLATE\bug_report.md" />
     <None Include="wwwroot\assets\plugins\fancybox-master\.github\ISSUE_TEMPLATE\feature_request.md" />
@@ -60,6 +65,11 @@
     <None Include="wwwroot\assets\plugins\fancybox-master\src\js\slideshow.js" />
     <None Include="wwwroot\assets\plugins\fancybox-master\src\js\thumbs.js" />
     <None Include="wwwroot\assets\plugins\fancybox-master\src\js\wheel.js" />
+    <None Include="wwwroot\assets\plugins\materializeicon\codepoints" />
+    <None Include="wwwroot\assets\plugins\materializeicon\MaterialIcons-Regular.ijmap" />
+    <None Include="wwwroot\assets\plugins\materializeicon\MaterialIcons-Regular.svg" />
+    <None Include="wwwroot\assets\plugins\materializeicon\MaterialIcons-Regular.woff2" />
+    <None Include="wwwroot\assets\plugins\materializeicon\README.md" />
   </ItemGroup>
 
   <ItemGroup>

@@ -34,6 +34,7 @@ namespace AqApplication.Repository.ViewModels
         public string Title { get; set; }
 
         public int Index { get; set; }
+
     }
     public class ChallengeQuestionAnswerViewModel
     {

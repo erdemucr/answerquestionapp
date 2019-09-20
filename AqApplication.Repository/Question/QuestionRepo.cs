@@ -62,7 +62,7 @@ namespace AqApplication.Repository.Question
                     Message = "Soru listesini görüntülemektesiniz",
                     Paginition = new Paginition(list.Count(), PageSize, model.CurrentPage.HasValue ? model.CurrentPage.Value : 1, model.Name,
                     model.StartDate,
-                   model.EndDate)
+                   model.EndDate,null)
                 };
             }
             catch (Exception ex)
@@ -166,7 +166,7 @@ namespace AqApplication.Repository.Question
                 var questionAnswer = context.QuestionAnswers.Where(x => x.QuestionId == questionId).ToList();
 
                 int seo = 1;
-                foreach(var item in questionAnswer.OrderBy(x => x.Id).ToList())
+                foreach (var item in questionAnswer.OrderBy(x => x.Id).ToList())
                 {
                     item.Seo = seo;
                     item.IsTrue = (correctIndex + 1) == seo;
@@ -884,9 +884,8 @@ namespace AqApplication.Repository.Question
             }
             catch (Exception ex)
             {
-                new Result(ex);
+               return new Result(ex);
             }
-            return new Result { Success = false, Message = "Bir hata oluştu" };
         }
 
         #endregion
@@ -915,7 +914,7 @@ namespace AqApplication.Repository.Question
                     Message = "Soru listesini görüntülemektesiniz",
                     Paginition = new Paginition(list.Count(), PageSize, model.CurrentPage.HasValue ? model.CurrentPage.Value : 1, model.Name,
                     model.StartDate,
-                   model.EndDate)
+                   model.EndDate,null)
                 };
             }
             catch (Exception ex)
@@ -1030,6 +1029,7 @@ namespace AqApplication.Repository.Question
             try
             {
                 model.Creator = userId;
+                model.Seo = 0;
                 model.CreatedDate = DateTime.Now;
                 context.ChallengeTemplateItems.Add(model);
                 context.SaveChanges();
@@ -1068,6 +1068,42 @@ namespace AqApplication.Repository.Question
                 return new Result(ex);
             }
         }
+
+        public Result UpdateOrdersChallengeTemplateItem(string idOrderMatch)
+        {
+            try
+            {
+                var arrIdOrder = idOrderMatch.Split(',');
+                var ids = new List<int>();
+                var values = new List<int>();
+
+                foreach (var IdOrder in arrIdOrder)
+                {
+                    var arr = IdOrder.Split(':');
+                    ids.Add(int.Parse(arr[0]));
+                    values.Add(int.Parse(arr[1]));
+                }
+
+                for (int i = 0; i < ids.Count; i++)
+                {
+                    var model = context.ChallengeTemplateItems.FirstOrDefault(x => x.Id == ids[i]);
+                    if (model != null)
+                    {
+                        model.Seo = values[i];
+                        context.Entry(model).State = EntityState.Modified;
+                    }
+                }
+                context.SaveChanges();
+                return new Result { Success = false, Message = "Bir hata oluştu" };
+
+            }
+            catch (Exception ex)
+            {
+                return new Result(ex);
+            }
+        }
+
+
         //public Result SetQuizTemplateItem(int id, string userId)
         //{
         //    try
@@ -1131,7 +1167,7 @@ namespace AqApplication.Repository.Question
             {
                 return new Result(ex);
             }
-  
+
         }
 
 

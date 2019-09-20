@@ -12,6 +12,9 @@ namespace AqApplication.Repository.FilterModels
     public class PdfFilterModel : BaseFilterModel
     {
     }
+    public class PdfContentFilterModel : BaseFilterModel
+    {
+    }
     public class HistoryFilterModel : BaseFilterModel
     {
         public string userId { get; set; }

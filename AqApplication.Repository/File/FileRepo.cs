@@ -11,6 +11,7 @@ namespace AqApplication.Repository.File
 {
     public class FileRepo : IFile, IDisposable
     {
+        private readonly int PageSize = 20;
         private ApplicationDbContext context;
         private bool disposedValue = false;
         public FileRepo(ApplicationDbContext _context)
@@ -49,7 +50,7 @@ namespace AqApplication.Repository.File
         {
             try
             {
-                var item=context.QuestionPdfs.FirstOrDefault(x=>x.Id==id);
+                var item = context.QuestionPdfs.FirstOrDefault(x => x.Id == id);
                 if (item == null)
                 {
                     return new Result<QuestionPdf> { Success = false, Message = "Bir hata oluştu" };
@@ -97,18 +98,19 @@ namespace AqApplication.Repository.File
 
 
 
-        public Result<IEnumerable<QuestionPdfContent>> GetQuestionPdfContents(int id)
+        public Result<IEnumerable<QuestionPdfContent>> GetQuestionPdfContents(PdfContentFilterModel model)
         {
             try
             {
                 var list = context.QuestionPdfContent.AsQueryable()
-                    .Where(x => x.QuestionId == id)
+                    .Where(x => x.QuestionId == model.Id)
                     .AsEnumerable();
                 return new Result<IEnumerable<QuestionPdfContent>>
                 {
-                    Data = list,
+                    Data = list.OrderBy(x => x.Seo).Skip(model.CurrentPage.HasValue ? ((model.CurrentPage.Value - 1) * PageSize) : 0).Take(PageSize).AsEnumerable(),
                     Success = true,
-                    Message = "Soru pdf içerik listesini görüntülemektesiniz"
+                    Message = "Soru pdf içerik listesini görüntülemektesiniz",
+                    Paginition = new Paginition(list.Count(), PageSize, model.CurrentPage.HasValue ? model.CurrentPage.Value : 1, null, null, null, model.Id)
                 };
 
             }

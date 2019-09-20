@@ -273,3 +273,12 @@ tr > td {
     max-height:500px;
     overflow:scroll;
 }
+#temp_graph {
+    margin-top: 5%;
+    width: 90%;
+    background-color: #fff;
+    display: inline-block;
+    padding: 2%;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 58, 0.05);
+    height:700px;
+}

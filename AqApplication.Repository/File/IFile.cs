@@ -12,7 +12,7 @@ namespace AqApplication.Repository.File
     {
         Result<IEnumerable<QuestionPdf>> GetQuestionPdf(DocumentFilterModel model);
 
-        Result<IEnumerable<QuestionPdfContent>> GetQuestionPdfContents(int id);
+        Result<IEnumerable<QuestionPdfContent>> GetQuestionPdfContents(PdfContentFilterModel model);
 
         Result AddQuestionPdf(QuestionPdf model, string userId);
 

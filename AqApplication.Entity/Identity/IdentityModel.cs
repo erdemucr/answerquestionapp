@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using AqApplication.Entity.Logging;
 using AnswerQuestionApp.Entity.Configuration;
+using AnswerQuestionApp.Entity.Advisor;
 
 namespace AqApplication.Entity.Identity.Data
 {
@@ -25,6 +26,7 @@ namespace AqApplication.Entity.Identity.Data
         public string TelNo { get; set; }
         [Display(Name = "Kayıt Tarihi")]
         public DateTime RegisterDate { get; set; }
+
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -70,6 +72,8 @@ namespace AqApplication.Entity.Identity.Data
         public DbSet<Difficulty> Difficulty { get; set; }
 
         public DbSet<ChallengeQuestionsTemp> ChallengeQuestionsTemp { get; set; }
+
+        public DbSet<Advisor> Advisor { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
