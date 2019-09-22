@@ -27,13 +27,9 @@ namespace AnswerQuestionApp.Repository
                 if (cacheEntry == null)
                 {
                     var list = context.ConfigurationValues.ToList();
-
-                    // Set cache options.
                     var cacheEntryOptions = new MemoryCacheEntryOptions()
-                        // Keep in cache for this time, reset time if accessed.
-                        .SetSlidingExpiration(TimeSpan.FromSeconds(3));
+                        .SetSlidingExpiration(TimeSpan.FromDays(180));
 
-                    // Save data in cache.
                     _cache.Set(CacheKeys.ConfigurationValues, list, cacheEntryOptions);
 
                     return list;

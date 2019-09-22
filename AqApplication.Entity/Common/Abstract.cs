@@ -13,18 +13,19 @@ namespace AqApplication.Entity.Common
         [Key]
         public int Id { get; set; }
 
-
+        public bool? IsDeleted { get; set; }
+        [Display(Name = "CreatedDate")]
         public DateTime CreatedDate { get; set; }
-
+        [Display(Name = "ModifiedDate")]
         public DateTime? ModifiedDate { get; set; }
 
         public int? Seo { get; set; }
-
+        [Display(Name = "Creator")]
         public string Creator { get; set; }
-
+        [Display(Name = "Editor")]
         public string Editor { get; set; }
 
-        [Display(Name = "Durumu:")]
+        [Display(Name = "IsActive")]
         public bool IsActive { get; set; }
 
         [ForeignKey("Creator")]

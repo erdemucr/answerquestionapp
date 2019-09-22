@@ -10,10 +10,10 @@ namespace AqApplication.Entity.Challenge
     public class ChallengeType: BaseEntity
     {
         [MaxLength(30)]
-        [Display(Name = "Kod")]
+        [Display(Name = "Code")]
         public string Code { get; set; }
         [MaxLength(250)]
-        [Display(Name ="Açıklma")]
+        [Display(Name = "Description")]
         public string Description { get; set; }
     }
 }

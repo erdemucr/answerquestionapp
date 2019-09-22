@@ -16,7 +16,8 @@ namespace AqApplication.Manage.Utilities
         {
             string controllername = context.RouteData.Values["controller"].ToString();
             string actionname = context.RouteData.Values["action"].ToString();
-
+            if (pagination == null)
+                return string.Empty;
             var sb = new StringBuilder();
             var urlHelper = new UrlHelper(context);
             sb.Append("<ul class=\"pagination\">");

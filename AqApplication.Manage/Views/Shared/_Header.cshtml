@@ -1,4 +1,5 @@
 ﻿@model AqApplication.Entity.Identity.Data.ApplicationUser
+@inject AnswerQuestionApp.Manage.Utilities.SharedViewLocalizer _iLocalizer
 <header id="m_header" class="m-grid__item m-header " m-minimize="minimize" m-minimize-mobile="minimize" m-minimize-offset="10" m-minimize-mobile-offset="10">
     <div class="m-header__top">
         <div class="m-container m-container--fluid m-container--full-height m-page__container">
@@ -64,7 +65,43 @@
                     <div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general">
                         <div class="m-stack__item m-topbar__nav-wrapper">
                             <ul class="m-topbar__nav m-nav m-nav--inline">
-                             
+                                <li class="m-nav__item m-topbar__user-profile  m-dropdown m-dropdown--medium m-dropdown--arrow  m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" m-dropdown-toggle="click">
+                                    <a href="#" class="m-nav__link m-dropdown__toggle">
+                                        <span class="m-topbar__userpic">
+                                            @Utilities.UseChinaRegisterInfo(this)
+                                        </span>
+
+                                    </a>
+                                    <div class="m-dropdown__wrapper" style="width:184px;">
+                                        <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
+                                        <div class="m-dropdown__inner">
+                                            <div class="m-dropdown__body">
+                                                <div class="m-dropdown__content">
+                                                    <ul class="m-nav m-nav--skin-light">
+
+                                                        <li class="m-nav__item">
+                                                            <a href="@Url.Action("SetCulture","Home",new { culture="tr-TR", returnUrl=Context.Request.Path })" class="m-nav__link">
+                                                                <img src="/assets/images/turkbayrak.png" alt="" class="m-nav__link-icon" />
+                                                                <span class="m-nav__link-text" style="padding-left:47px;">
+                                                                    Türkçe
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="@Url.Action("SetCulture","Home",new { culture="en-US", returnUrl=Context.Request.Path })" class="m-nav__link">
+                                                                <img src="/assets/images/ABD_Bayrağı.png" alt="" class="m-nav__link-icon" />
+                                                                <span class="m-nav__link-text" style="padding-left:47px;">
+                                                                    English
+                                                                </span>
+                                                            </a>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
                                 <li class="m-nav__item m-topbar__user-profile  m-dropdown m-dropdown--medium m-dropdown--arrow  m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" m-dropdown-toggle="click">
                                     <a href="#" class="m-nav__link m-dropdown__toggle">
                                         <span class="m-topbar__userpic">
@@ -79,6 +116,7 @@
                                             Nick
                                         </span>
                                     </a>
+
                                     <div class="m-dropdown__wrapper">
                                         <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
                                         <div class="m-dropdown__inner">
@@ -89,7 +127,7 @@
                                                     </div>
                                                     <div class="m-card-user__details">
                                                         <span class="m-card-user__name m--font-weight-500">
-                                                           @Model.FirstName @Model.LastName
+                                                            @Model.FirstName @Model.LastName
                                                         </span>
                                                         <a href="" class="m-card-user__email m--font-weight-300 m-link">
                                                             @Model.Email
@@ -111,7 +149,7 @@
                                                                 <span class="m-nav__link-title">
                                                                     <span class="m-nav__link-wrap">
                                                                         <span class="m-nav__link-text">
-                                                                           Profilim
+                                                                            Profilim
                                                                         </span>
                                                                         <span class="m-nav__link-badge">
                                                                             <span class="m-badge m-badge--success">
@@ -139,7 +177,7 @@
                                                             </a>
                                                         </li>
                                                         <li class="m-nav__separator m-nav__separator--fit"></li>
-                                                     
+
                                                         <li class="m-nav__separator m-nav__separator--fit"></li>
                                                         <li class="m-nav__item">
                                                             <a href="@Url.Action("LogOff","Account")" class="btn m-btn--pill    btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
@@ -152,7 +190,7 @@
                                         </div>
                                     </div>
                                 </li>
-                                @*<li id="m_quick_sidebar_toggle" class="m-nav__item">
+                                <li id="m_quick_sidebar_toggle" class="m-nav__item">
                                     <a href="#" class="m-nav__link m-dropdown__toggle">
                                         <span class="m-nav__link-icon m-nav__link-icon-alt">
                                             <span class="m-nav__link-icon-wrapper">
@@ -160,7 +198,7 @@
                                             </span>
                                         </span>
                                     </a>
-                                </li>*@
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -182,7 +220,7 @@
                             <li class="m-menu__item m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true">
                                 <a href="@Url.Action("Index","Home")" class="m-menu__link m-menu__toggle">
                                     <span class="m-menu__link-text">
-                                        Dashboard
+                                        @_iLocalizer["NavigationMenu.Dashboard"]
                                     </span>
                                     <i class="m-menu__hor-arrow la la-angle-down"></i>
                                     <i class="m-menu__ver-arrow la la-angle-right"></i>
@@ -194,7 +232,7 @@
                                             <a href="@Url.Action("Index","Home")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-support"></i>
                                                 <span class="m-menu__link-text">
-                                                    Dashboard
+                                                    @_iLocalizer["NavigationMenu.Dashboard"]
                                                 </span>
                                             </a>
                                         </li>
@@ -217,7 +255,7 @@
                                             <a href="@Url.Action("Editor","Question")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-questions-circular-button"></i>
                                                 <span class="m-menu__link-text">
-                                                    Soru Girişi
+                                                    @_iLocalizer["NavigationMenu.InsertQuestion"]
                                                 </span>
                                             </a>
                                         </li>
@@ -225,7 +263,7 @@
                                             <a href="@Url.Action("Index","Question")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-edit"></i>
                                                 <span class="m-menu__link-text">
-                                                    Soru Raporlama
+                                                    @_iLocalizer["NavigationMenu.QuestionReport"]
                                                 </span>
                                             </a>
                                         </li>
@@ -233,7 +271,7 @@
                                             <a href="@Url.Action("Subjects","QuestionProps")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-questions-circular-button"></i>
                                                 <span class="m-menu__link-text">
-                                                    Konular
+                                                    @_iLocalizer["NavigationMenu.Subject"]
                                                 </span>
                                             </a>
                                         </li>
@@ -241,7 +279,7 @@
                                             <a href="@Url.Action("Lectures","QuestionProps")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-clipboard"></i>
                                                 <span class="m-menu__link-text">
-                                                    Branş
+                                                    @_iLocalizer["NavigationMenu.Lecture"]
                                                 </span>
                                             </a>
                                         </li>
@@ -249,7 +287,7 @@
                                             <a href="@Url.Action("Classes","QuestionProps")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-alarm-1"></i>
                                                 <span class="m-menu__link-text">
-                                                    Sınıf
+                                                    @_iLocalizer["NavigationMenu.Classes"]
                                                 </span>
                                             </a>
                                         </li>
@@ -257,7 +295,7 @@
                                             <a href="@Url.Action("Exams","QuestionProps")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-alarm-1"></i>
                                                 <span class="m-menu__link-text">
-                                                    Sınav
+                                                    @_iLocalizer["NavigationMenu.Exam"]
                                                 </span>
                                             </a>
                                         </li>
@@ -265,7 +303,7 @@
                                             <a href="@Url.Action("Difficulties","QuestionProps")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon fa-signal"></i>
                                                 <span class="m-menu__link-text">
-                                                    Seviye
+                                                    @_iLocalizer["NavigationMenu.Level"]
                                                 </span>
                                             </a>
                                         </li>
@@ -273,7 +311,7 @@
                                             <a href="@Url.Action("QuestionPdf","Question")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-notes"></i>
                                                 <span class="m-menu__link-text">
-                                                    Dökümanlar
+                                                    @_iLocalizer["NavigationMenu.Documents"]
                                                 </span>
                                             </a>
                                         </li>
@@ -283,7 +321,7 @@
                                                     <span>
                                                         <i class="la la-cloud-download"></i>
                                                         <span>
-                                                            Yeni Soru
+                                                            @_iLocalizer["NavigationMenu.NewQuestion"]
                                                         </span>
                                                     </span>
                                                 </a>
@@ -295,7 +333,7 @@
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true">
                                 <a href="javascript:;" class="m-menu__link m-menu__toggle">
                                     <span class="m-menu__link-text">
-                                        Session
+                                        @_iLocalizer["NavigationMenu.Session"]
                                     </span>
                                     <i class="m-menu__hor-arrow la la-angle-down"></i>
                                     <i class="m-menu__ver-arrow la la-angle-right"></i>
@@ -304,10 +342,10 @@
                                     <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                                     <ul class="m-menu__subnav">
                                         <li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true">
-                                            <a href="@Url.Action("Users","Session")" class="m-menu__link ">
+                                            <a href="@Url.Action("Index","Session")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-graphic-2"></i>
                                                 <span class="m-menu__link-text">
-                                                    Kullanıcı Listesi
+                                                    @_iLocalizer["Page.UserList"]
                                                 </span>
                                             </a>
                                         </li>
@@ -318,7 +356,7 @@
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true">
                                 <a href="javascript:;" class="m-menu__link m-menu__toggle">
                                     <span class="m-menu__link-text">
-                                        Challenge
+                                        @_iLocalizer["NavigationMenu.Challenge"]
                                     </span>
                                     <i class="m-menu__hor-arrow la la-angle-down"></i>
                                     <i class="m-menu__ver-arrow la la-angle-right"></i>
@@ -330,7 +368,7 @@
                                             <a href="@Url.Action("ChallengeList","Quiz")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-graphic-2"></i>
                                                 <span class="m-menu__link-text">
-                                                    Challenge Listesi
+                                                    @_iLocalizer["NavigationMenu.ChallengeList"]
                                                 </span>
                                             </a>
                                         </li>
@@ -338,7 +376,7 @@
                                             <a href="@Url.Action("ChallengeTemplates","Quiz")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-graphic-2"></i>
                                                 <span class="m-menu__link-text">
-                                                    Challenge Template
+                                                    @_iLocalizer["NavigationMenu.ChallengeTemplate"]
                                                 </span>
                                             </a>
                                         </li>
@@ -348,7 +386,30 @@
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true">
                                 <a href="javascript:;" class="m-menu__link m-menu__toggle">
                                     <span class="m-menu__link-text">
-                                        Ayarlar
+                                        @_iLocalizer["NavigationMenu.Advisor"]
+                                    </span>
+                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                </a>
+                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs">
+                                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                    <ul class="m-menu__subnav">
+                                        <li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true">
+                                            <a href="@Url.Action("Index","Advisor")" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-graphic-2"></i>
+                                                <span class="m-menu__link-text">
+                                                    @_iLocalizer["NavigationMenu.AdvisorList"]
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true">
+                                <a href="javascript:;" class="m-menu__link m-menu__toggle">
+                                    <span class="m-menu__link-text">
+                                        @_iLocalizer["NavigationMenu.Settings"]
                                     </span>
                                     <i class="m-menu__hor-arrow la la-angle-down"></i>
                                     <i class="m-menu__ver-arrow la la-angle-right"></i>
@@ -360,7 +421,7 @@
                                             <a href="@Url.Action("Values","Configuration")" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-graphic-2"></i>
                                                 <span class="m-menu__link-text">
-                                                    Genel Parametreler
+                                                    @_iLocalizer["NavigationMenu.GeneralParameter"]
                                                 </span>
                                             </a>
                                         </li>

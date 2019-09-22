@@ -1,4 +1,5 @@
-﻿using AqApplication.Entity.Question;
+﻿using AnswerQuestionApp.Manage.Utilities;
+using AqApplication.Entity.Question;
 using AqApplication.Manage.Models;
 using AqApplication.Manage.Utilities;
 using AqApplication.Repository.Question;
@@ -17,9 +18,11 @@ namespace AqApplication.Manage.Controllers
     {
 
         private readonly IQuestion _iquestion;
-        public QuestionPropsController(IQuestion iQuestion)
+        private readonly SharedViewLocalizer _iLocalizer;
+        public QuestionPropsController(SharedViewLocalizer iLocalizer, IQuestion iQuestion)
         {
             _iquestion = iQuestion;
+            _iLocalizer = iLocalizer;
 
         }
         // GET: QuestionProps
@@ -73,7 +76,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             model.CreatedDate = DateTime.Now;
@@ -114,7 +117,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             if (model.Exams != null)
@@ -177,7 +180,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             model.CreatedDate = DateTime.Now;
@@ -220,7 +223,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             var result = _iquestion.EditSubject(model, User.GetUserId());
@@ -315,7 +318,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             model.CreatedDate = DateTime.Now;
@@ -377,7 +380,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             var result = _iquestion.EditSubSubject(model, User.GetUserId());
@@ -420,7 +423,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             model.CreatedDate = DateTime.Now;
@@ -448,7 +451,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             var result = _iquestion.EditExam(model, User.GetUserId());
@@ -492,7 +495,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             model.CreatedDate = DateTime.Now;
@@ -519,7 +522,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             var result = _iquestion.EditClass(model, User.GetUserId());
@@ -565,7 +568,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             model.CreatedDate = DateTime.Now;
@@ -592,7 +595,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             var result = _iquestion.EditDifficulty(model, User.GetUserId());

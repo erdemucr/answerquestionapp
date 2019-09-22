@@ -5,6 +5,10 @@ using AqApplication.Entity.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using AqApplication.Manage.Utilities;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Http;
+using System;
+using AnswerQuestionApp.Manage.Utilities;
 
 namespace AqApplication.Manage.Controllers
 {
@@ -12,9 +16,11 @@ namespace AqApplication.Manage.Controllers
     public class HomeController : Controller
     {
         private readonly UserManager<ApplicationUser> UserManager;
-        public HomeController(UserManager<ApplicationUser> userManager)
+        private readonly SharedViewLocalizer _iLocalizer;
+        public HomeController(SharedViewLocalizer iLocalizer, UserManager<ApplicationUser> userManager)
         {
             UserManager = userManager;
+            _iLocalizer = iLocalizer;
         }
         public IActionResult Index()
         {
@@ -62,6 +68,24 @@ namespace AqApplication.Manage.Controllers
                 return PartialView("_Header", appuser.Result);
             }
             return PartialView("_Header", new ApplicationUser());
+        }
+
+        public IActionResult SetCulture(string culture, string returnUrl)
+        {
+            Response.Cookies.Append(
+              CookieRequestCultureProvider.DefaultCookieName,
+              CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+              new CookieOptions
+              {
+                  Expires = DateTimeOffset.UtcNow.AddYears(1),
+                  IsEssential = true,  //critical settings to apply new culture
+                    Path = "/",
+                  HttpOnly = false,
+              }
+          );
+
+
+            return Redirect(returnUrl);
         }
     }
 }

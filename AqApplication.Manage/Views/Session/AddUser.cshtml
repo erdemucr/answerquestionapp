@@ -1,0 +1,93 @@
+﻿@model AqApplication.Entity.Identity.Data.ApplicationUser
+@inject AnswerQuestionApp.Manage.Utilities.SharedViewLocalizer _iLocalizer
+
+@{
+    ViewBag.Title = _iLocalizer["Page.AddNewUser"];
+}
+@Html.Partial("_Breadcrumb", new AqApplication.Manage.Models.CommonBreadcrumbModel
+{
+    Pagename = _iLocalizer["Page.AddNewUser"],
+    Message = (string)TempData["message"],
+    isSuccess = (bool?)TempData["success"],
+    Backurl = Url.Action("Index"),
+    Backpagename = _iLocalizer["Page.UserList"]
+})
+
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="glyphicon glyphicon-edit"></i> @_iLocalizer["Page.AddNewUser"]
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("AddUser", "Session", FormMethod.Post, new { @class = "form-horizontal", @enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control telno" } })
+                        @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    Profil Resmi
+                    <div class="col-md-10">
+                        <input type="file" name="file" id="file" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="@_iLocalizer["Save"]" class="btn btn-info" />
+                        <a href="@Url.Action("Index")">
+                            <input type="button" value="@_iLocalizer["Cancel"]" class="btn btn-danger" />
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+
+<div>
+    <a href="@Url.Action("ChallengeTemplates")" class="btn btn-success">
+        <span class="glyphicon glyphicon-arrow-left"></span> @_iLocalizer["ReturnList"]
+    </a>
+</div>
+
+

@@ -12,24 +12,24 @@ namespace AqApplication.Entity.Question
     {
         [Display(Name="Başlık")]
        public string MainTitle { get; set; }
-        [Display(Name = "Image Url")]
+        [Display(Name = "Image")]
         public string MainImage { get; set; }
-        [Display(Name = "Alt Konu")]
+        [Display(Name = "SubSubject")]
         public int? SubSubjectId { get; set; }
 
-        [Display(Name = "Konu")]
+        [Display(Name = "Subject")]
         public int? SubjectId { get; set; }
 
 
-        [Display(Name = "Ders")]
+        [Display(Name = "Lecture")]
         public int? LectureId { get; set; }
 
-        [Display(Name = "Zorluk")]
+        [Display(Name = "Difficulty")]
         public int? Difficulty { get; set; }
 
-        [Display(Name = "Teklif")]
+        [Display(Name = "Offer")]
         public bool? Offer { get; set; }
-        [Required(ErrorMessage = "Bu alan boş geçilmez")]
+        [Required(ErrorMessage = "RequiredField")]
         public bool Licence { get; set; }
 
         public int? QuestionPdfId { get; set; }

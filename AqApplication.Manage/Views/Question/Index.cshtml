@@ -1,16 +1,16 @@
 ﻿@using AqApplication.Manage.Utilities;
 @model IEnumerable<AqApplication.Manage.Models.QuestionListModel>
 
+
 @Html.Partial("_Breadcrumb", new AqApplication.Manage.Models.CommonBreadcrumbModel
 {
     Pagename = "Soru Listesi",
     Message = (string)TempData["message"],
     isSuccess = (bool?)TempData["success"]
 })
-
 <div class="row">
     @Html.Partial("_SearchBar", (SearchModel)ViewBag.searchModel)
-    <div class="col-md-9 col-xs-12">
+    <div class="col-md-10 col-xs-12">
         <div class="card">
             <div class="card-header">
                 <i class="glyphicon glyphicon-edit"></i>  Sınav Listesi
@@ -152,7 +152,7 @@
 
 @section _scripts{
     <script type="text/javascript">
-        function AnswerModal(questionId,el) {
+        function AnswerModal(questionId, el) {
 
             $.ajax({
                 type: 'GET',

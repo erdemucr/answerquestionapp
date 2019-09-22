@@ -61,9 +61,23 @@ namespace AqApplication.Core.Type
         public int CurrentIp { get; set; }
         public Paginition Paginition { get; set; }
 
+        public MessageType? MessageType { get; set; }
 
 
+    }
 
+    public enum MessageType
+    {
+        OperationCompleted,
+        InsertSuccess,
+        UpdateSuccess,
+        DeleteSuccess,
+        InsertFailed,
+        UpdateFailed,
+        DeleteFailed,
+        RecordNotFound,
+        EmailAlreadyUsed,
+        AccountBlocked
     }
 
 

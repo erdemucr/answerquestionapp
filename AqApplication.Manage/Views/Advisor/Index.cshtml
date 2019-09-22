@@ -1,0 +1,131 @@
+﻿@using AqApplication.Manage.Utilities;
+@model IEnumerable<AnswerQuestionApp.Entity.Advisor.Advisor>
+@inject AnswerQuestionApp.Manage.Utilities.SharedViewLocalizer _iLocalizer
+
+@Html.Partial("_Breadcrumb", new AqApplication.Manage.Models.CommonBreadcrumbModel
+{
+    Pagename = _iLocalizer["Page.AdvisorList"],
+    Message = (string)TempData["message"],
+    isSuccess = (bool?)TempData["success"]
+})
+<p>
+    <a href="@Url.Action("AddAdvisor","Advisor")" class="btn btn-success">
+        <span class="glyphicon glyphicon-plus"></span> @_iLocalizer["AddNew"]
+    </a>
+</p>
+
+<div class="row">
+    @Html.Partial("_SearchBar", (SearchModel)ViewBag.searchModel)
+    <div class="col-md-10 col-xs-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="glyphicon glyphicon-edit"></i>  @_iLocalizer["Page.AdvisorList"]
+            </div>
+            <div class="card-body">
+                <table class="table table-responsive">
+                    <tr>
+                        <td colspan="11">
+                            @Html.Raw(PaginationHelper.Paginate(this.ViewContext, (AqApplication.Core.Type.Paginition)ViewBag.pagination))
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ApplicationUser.Email)
+                        </th>
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.ApplicationUser.PhoneNumber)
+                        </th>
+                        <th>@_iLocalizer["Image"]</th>
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.ApplicationUser.FirstName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ApplicationUser.LastName)
+                        </th>
+
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.ApplicationUser.RegisterDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Creator)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ModifiedDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Editor)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsActive)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ApplicationUser.PhoneNumber)
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.PhotoUrl))
+                                {
+                                    <a data-fancybox="gallery" href="@item.PhotoUrl">
+                                        <img src="@item.PhotoUrl" alt="" class="editImagePreview" />
+                                    </a>
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)
+                            </td>
+
+                            <td>
+                                @item.CreatedDate.RegularDatetime()
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AppUserCreator.UserName)
+                            </td>
+                            <td>
+                                @item.ModifiedDate.RegularDatetime()
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AppUserEditor.UserName)
+                            </td>
+                            <td>
+                                @item.IsActive.StatusText()
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <a href="@Url.Action("EditAdvisor","Advisor",new { id=item.Id})">
+                                        <button class="btn btn-success">
+                                            <span class="glyphicon glyphicon-edit"></span> @_iLocalizer["Edit"]
+                                        </button>
+                                    </a>
+                                    <a href="@Url.Action("DeleteAdvisor","Advisor",new { id=item.Id})">
+                                        <button data-toggle="confirmation" class="btn btn-danger">
+                                            <span class="glyphicon glyphicon-remove"></span> @_iLocalizer["Delete"]
+                                        </button>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="11">
+                            @Html.Raw(PaginationHelper.Paginate(this.ViewContext, (AqApplication.Core.Type.Paginition)ViewBag.pagination))
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

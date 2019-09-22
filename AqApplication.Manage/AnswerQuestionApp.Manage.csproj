@@ -28,6 +28,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\assets\images\5.SINIF-TRAFK-1D.2Y.SORULARI0001.jpg" />
+    <Content Include="wwwroot\assets\images\ABD_Bayrağı.png" />
+    <Content Include="wwwroot\assets\images\noimage.png" />
+    <Content Include="wwwroot\assets\images\turkbayrak.png" />
+    <Content Include="wwwroot\assets\images\user.png" />
+    <Content Include="wwwroot\assets\plugins\bootstrap-confirmation\.eslintrc.json" />
+    <Content Include="wwwroot\assets\plugins\bootstrap-confirmation\example\index.html" />
+    <Content Include="wwwroot\assets\plugins\bootstrap-confirmation\package.json" />
     <Content Include="wwwroot\assets\plugins\fancybox-master\bower.json" />
     <Content Include="wwwroot\assets\plugins\fancybox-master\dist\jquery.fancybox.css" />
     <Content Include="wwwroot\assets\plugins\fancybox-master\dist\jquery.fancybox.min.css" />
@@ -48,6 +56,19 @@
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="wwwroot\assets\app\js\jquery-ui.min.js" />
     <None Include="wwwroot\assets\app\js\jquery.cookie.min.js" />
+    <None Include="wwwroot\assets\app\js\jquery.mask.min.js" />
+    <None Include="wwwroot\assets\plugins\bootstrap-confirmation\.babelrc.js" />
+    <None Include="wwwroot\assets\plugins\bootstrap-confirmation\.editorconfig" />
+    <None Include="wwwroot\assets\plugins\bootstrap-confirmation\.gitignore" />
+    <None Include="wwwroot\assets\plugins\bootstrap-confirmation\.travis.yml" />
+    <None Include="wwwroot\assets\plugins\bootstrap-confirmation\dist\bootstrap-confirmation.js" />
+    <None Include="wwwroot\assets\plugins\bootstrap-confirmation\dist\bootstrap-confirmation.js.map" />
+    <None Include="wwwroot\assets\plugins\bootstrap-confirmation\dist\bootstrap-confirmation.min.js" />
+    <None Include="wwwroot\assets\plugins\bootstrap-confirmation\dist\bootstrap-confirmation.min.js.map" />
+    <None Include="wwwroot\assets\plugins\bootstrap-confirmation\README.md" />
+    <None Include="wwwroot\assets\plugins\bootstrap-confirmation\rollup.config.js" />
+    <None Include="wwwroot\assets\plugins\bootstrap-confirmation\src\confirmation.js" />
+    <None Include="wwwroot\assets\plugins\bootstrap-confirmation\src\popover.js" />
     <None Include="wwwroot\assets\plugins\fancybox-master\.github\ISSUE_TEMPLATE\bug_report.md" />
     <None Include="wwwroot\assets\plugins\fancybox-master\.github\ISSUE_TEMPLATE\feature_request.md" />
     <None Include="wwwroot\assets\plugins\fancybox-master\.github\ISSUE_TEMPLATE\question.md" />
@@ -74,6 +95,7 @@
 
   <ItemGroup>
     <PackageReference Include="Bootstrap.v3.Datetimepicker.CSS" Version="4.17.45" />
+    <PackageReference Include="Cloudinary" Version="0.0.5" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.6" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.6" />
     <PackageReference Include="IronOcr" Version="4.4.0" />
@@ -127,6 +149,12 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Quiz\EditChallengeTemplate.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Session\EditUser.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Session\AddUser.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

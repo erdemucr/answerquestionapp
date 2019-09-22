@@ -11,22 +11,40 @@ using System.IO;
 using AqApplication.Entity.Logging;
 using AnswerQuestionApp.Entity.Configuration;
 using AnswerQuestionApp.Entity.Advisor;
+using AnswerQuestionApp.Entity.Lang;
+using System.ComponentModel.DataAnnotations.Schema;
+using AnswerQuestionApp.Entity.Authorization;
 
 namespace AqApplication.Entity.Identity.Data
 {
     public class ApplicationUser : IdentityUser
     {
-        [Display(Name = "Adı")]
+        [Display(Name = "FirstName")]
+        [Required(ErrorMessage = "RequiredField")]
         public string FirstName { get; set; }
-        [Display(Name = "Soyadı")]
+        [Display(Name = "LastName")]
+        [Required(ErrorMessage = "RequiredField")]
         public string LastName { get; set; }
-        [Display(Name = "Üye Tipi")]
+        [Display(Name = "MemberType")]
         public MemberType MemberType { get; set; }
-        [Display(Name = "Cep Telefonu")]
-        public string TelNo { get; set; }
-        [Display(Name = "Kayıt Tarihi")]
-        public DateTime RegisterDate { get; set; }
 
+        [Display(Name = "RegisterDate")]
+        public DateTime RegisterDate { get; set; }
+        [MaxLength(400)]
+        public string ProfilPicture { get; set; }
+        [MaxLength(400)]
+        [Display(Name = "NickName")]
+        public string NickName { get; set; }
+        [Display(Name = "IsBlocked")]
+        public bool? IsBlocked { get; set; }
+
+        [NotMapped]
+        public string Password { get; set; }
+
+        public string Creator { get; set; }
+
+        [ForeignKey("Creator")]
+        public ApplicationUser AppUserCreator { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -75,6 +93,9 @@ namespace AqApplication.Entity.Identity.Data
 
         public DbSet<Advisor> Advisor { get; set; }
 
+        public DbSet<LangContent> LangContent { get; set; }
+
+        public DbSet<Pages> Pages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

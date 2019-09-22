@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AnswerQuestionApp.Manage.Models;
+using AnswerQuestionApp.Manage.Utilities;
 using AnswerQuestionApp.Repository.FilterModels;
 using AqApplication.Entity.Challenge;
 using AqApplication.Entity.Identity.Data;
@@ -22,10 +23,12 @@ namespace AnswerQuestionApp.Manage.Controllers
         private UserManager<ApplicationUser> _userManager;
         private readonly IQuestion _iQuestion;
         private readonly IChallenge _iChallenge;
-        public QuizController(IChallenge iChallenge, IQuestion iQuestion) : base(iQuestion)
+        private readonly SharedViewLocalizer _iLocalizer;
+        public QuizController(SharedViewLocalizer iLocalizer, IChallenge iChallenge, IQuestion iQuestion) : base(iQuestion)
         {
             _iChallenge = iChallenge;
             _iQuestion = iQuestion;
+            _iLocalizer = iLocalizer;
         }
 
         public IActionResult ChallengeList(ChallengeFilterModel model)
@@ -115,7 +118,7 @@ namespace AnswerQuestionApp.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             if (model.StartDate.HasValue && !string.IsNullOrEmpty(model.StartDateTime))
@@ -163,7 +166,7 @@ namespace AnswerQuestionApp.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View(model);
             }
             if (model.StartDate.HasValue && !string.IsNullOrEmpty(model.StartDateTime))

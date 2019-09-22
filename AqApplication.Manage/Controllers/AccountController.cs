@@ -5,6 +5,7 @@ using AqApplication.Entity.Identity.Data;
 using AqApplication.Manage.Models;
 using System;
 using AnswerQuestionApp.Repository.Mail;
+using AnswerQuestionApp.Manage.Utilities;
 
 namespace AqApplication.Manage.Controllers
 {
@@ -14,12 +15,14 @@ namespace AqApplication.Manage.Controllers
         private readonly SignInManager<ApplicationUser> SignInManager;
         private readonly UserManager<ApplicationUser> UserManager;
         private readonly IEmailSender _iEmailSender;
+        private readonly SharedViewLocalizer _iLocalizer;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender iEmailSender)
+        public AccountController(SharedViewLocalizer iLocalizer, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender iEmailSender)
         {
             UserManager = userManager;
             SignInManager = signInManager;
             _iEmailSender = iEmailSender;
+            _iLocalizer = iLocalizer;
         }
 
         //

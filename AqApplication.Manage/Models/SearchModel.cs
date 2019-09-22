@@ -33,14 +33,22 @@ namespace AqApplication.Manage.Models
 
         public string CssClass { get; set; }
 
-        public IEnumerable<SelectListItem> selectList { get; set; }
-
-        public SearchInput(InputType inputType, string name, string id, string displayName, IEnumerable<SelectListItem> selectList=null)
+        public List<SelectListItem> SelectList { get; set; }
+        public SearchInput(InputType inputType, string name, string id, string displayName)
         {
             InputType = inputType;
             Name = name;
             Id = id;
             DisplayName = displayName;
+            SetCssClass();
+        }
+        public SearchInput(InputType inputType, string name, string id, string displayName, List<SelectListItem> selectList)
+        {
+            InputType = inputType;
+            Name = name;
+            Id = id;
+            DisplayName = displayName;
+            SelectList = selectList;
             SetCssClass();
         }
 

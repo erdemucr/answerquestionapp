@@ -13,5 +13,13 @@ namespace AqApplication.Repository.Session
     {
         Result<IEnumerable<ApplicationUser>> GetUsers(UserFilterModel filterModel);
         Result<UserInfoModel> GetUserInfo(string userId);
+
+        Result BlockUser(string userId, string editor);
+
+        Result AddUser(ApplicationUser model, string userId);
+
+        Result<ApplicationUser> GetUserByKey(string id);
+
+        Result EditUser(ApplicationUser model, string userId);
     }
 }

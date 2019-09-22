@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 
 namespace AqApplication.Service.Hubs
 {
-    public class WebSockets
+    public class ChallengeOperations
     {
 
         private AqApplication.Repository.Session.IUser _iUser;

@@ -1,7 +1,10 @@
 ﻿using AnswerQuestionApp.Manage.HangFire;
+using AnswerQuestionApp.Repository.Advisor;
 using AnswerQuestionApp.Repository.Configuration;
+using AnswerQuestionApp.Repository.Lang;
 using AnswerQuestionApp.Repository.Mail;
 using AnswerQuestionApp.Repository.Report;
+using AnswerQuestionApp.Service.Infrastructure;
 using AqApplication.Entity.Identity.Data;
 using AqApplication.Logging.Providers;
 using AqApplication.Repository.Challenge;
@@ -60,21 +63,25 @@ namespace AqApplication.Service
             services.AddScoped<IFile, FileRepo>();
             services.AddScoped<IUser, UserRepo>();
             services.AddScoped<IReport, ReportRepo>();
+            services.AddScoped<IAdvisor, AdvisorRepo>();
+            services.AddScoped<ILang, LangRepo>();
             services.AddScoped<IConfigurationValues, ConfigurationValuesRepo>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddMemoryCache();
 
+            services.AddTransient<WebApiHandler>();
+
 
             services.Configure<IdentityOptions>(options =>
             {
-                // Default Password settings.
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 0;
-                options.SignIn.RequireConfirmedEmail = false;
+                options.User.RequireUniqueEmail = false;
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~.@";
             });
 
             services.AddSwaggerGen(c =>
@@ -172,7 +179,7 @@ namespace AqApplication.Service
                     if (ctx.WebSockets.IsWebSocketRequest)
                     {
                         var wSocket = await ctx.WebSockets.AcceptWebSocketAsync();
-                        await new WebSockets().ChallengeStart(ctx, wSocket);
+                        await new ChallengeOperations().ChallengeStart(ctx, wSocket);
                     }
                     else
                     {
@@ -184,7 +191,7 @@ namespace AqApplication.Service
                     if (ctx.WebSockets.IsWebSocketRequest)
                     {
                         var wSocket = await ctx.WebSockets.AcceptWebSocketAsync();
-                        await new WebSockets().ChallengeEnd(ctx, wSocket);
+                        await new ChallengeOperations().ChallengeEnd(ctx, wSocket);
                     }
                     else
                     {

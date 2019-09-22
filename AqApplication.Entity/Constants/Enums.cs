@@ -1,20 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace AqApplication.Entity.Constants
 {
      public enum MemberType
     {
-        Admin=0,
-        Agent=1,
-        WebUser=2
+        [Display(Name = "MemberType.Admin")]
+        Admin = 0,
+        [Display(Name = "MemberType.Agent")]
+        Agent =1,
+        [Display(Name = "MemberType.WebUser")]
+        WebUser =2,
+        [Display(Name = "MemberType.Advisor")]
+        Advisor =3
     }
 
     public enum ChallengeTypeEnum
     {
-        RandomMode=1,
-        PracticeMode=2
+        [Display(Name = "ChallengeTypeEnum.RandomMode")]
+        RandomMode =1,
+        [Display(Name = "ChallengeTypeEnum.PracticeMode")]
+        PracticeMode =2
     }
 }

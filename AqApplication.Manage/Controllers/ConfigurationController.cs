@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AnswerQuestionApp.Entity.Configuration;
+using AnswerQuestionApp.Manage.Utilities;
 using AnswerQuestionApp.Repository.Configuration;
 using AqApplication.Manage.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,11 @@ namespace AnswerQuestionApp.Manage.Controllers
     public class ConfigurationController : Controller
     {
         private readonly IConfigurationValues _iConfigurationValues;
-        public ConfigurationController(IConfigurationValues iConfigurationValues)
+        private readonly SharedViewLocalizer _iLocalizer;
+        public ConfigurationController(SharedViewLocalizer iLocalizer, IConfigurationValues iConfigurationValues)
         {
             _iConfigurationValues = iConfigurationValues;
+            _iLocalizer = iLocalizer;
         }
         public IActionResult Index()
         {

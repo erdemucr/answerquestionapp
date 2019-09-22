@@ -16,13 +16,13 @@ namespace AqApplication.Entity.Challenge
 
         public int ChallengeTypeId { get; set; }
 
-        [Display(Name = "Başlangıç Tarihi")]
+        [Display(Name = "StartDate")]
         public DateTime? StartDate { get; set; }
 
-        [Display(Name = "Bitiş Tarihi")]
+        [Display(Name = "EndDate")]
         public DateTime? EndDate { get; set; }
 
-        [Display(Name = "Süre Periodu")]
+        [Display(Name = "TimePeriod")]
         public int? TimePeriod { get; set; }
 
         [ForeignKey("ChallengeTypeId")]
@@ -40,18 +40,18 @@ namespace AqApplication.Entity.Challenge
 
         public int ChallengeId { get; set; }
 
-        [Display(Name = "Başlangıç Tarihi")]
+        [Display(Name = "StartDate")]
         public DateTime? StartDate { get; set; }
 
-        [Display(Name = "Bitiş Tarihi")]
+        [Display(Name = "EndDate")]
         public DateTime? EndDate { get; set; }
 
         public string UserId { get; set; }
 
         public bool IsCompleted { get; set; }
-        [Display(Name = "Alınan Puan")]
+        [Display(Name = "TotalScore")]
         public string TotalScore { get; set; }
-        [Display(Name = "Doğru Sayısı")]
+        [Display(Name = "CorrectCount")]
         public int? CorrectCount { get; set; }
 
         [ForeignKey("UserId")]
@@ -133,13 +133,13 @@ namespace AqApplication.Entity.Challenge
         [Required(ErrorMessage ="Bu alan boş geçilmez")]
         public string Name { get; set; }
 
-        [Display(Name = "Açıklama")]
+        [Display(Name = "Description")]
         public string Description { get; set; }
 
-        [Display(Name = "Başlangıç Tarihi")]
+        [Display(Name = "StartDate")]
         public DateTime? StartDate { get; set; }
 
-        [Display(Name = "Bitiş Tarihi")]
+        [Display(Name = "EndDate")]
         public DateTime? EndDate { get; set; }
 
         [NotMapped]
@@ -147,7 +147,7 @@ namespace AqApplication.Entity.Challenge
         [NotMapped]
         public string EndDateTime { get; set; }
         [Display(Name = "Challenge Tipi")]
-        [Required(ErrorMessage ="Bu alan boş geçilmez")]
+        [Required(ErrorMessage = "RequiredField")]
         public ChallengeTypeEnum Type { get; set; }
         [Display(Name = "Ders")]
         public int? LectureId { get; set; }
@@ -174,7 +174,7 @@ namespace AqApplication.Entity.Challenge
         [NotMapped]
         public bool DifficultyCheck { get; set; }
 
-        [Display(Name = "Alt Konu")]
+        [Display(Name = "AltKonu")]
         public int? SubSubjectId { get; set; }
 
         [NotMapped]
@@ -187,7 +187,7 @@ namespace AqApplication.Entity.Challenge
         public bool SubjectIdCheck { get; set; }
         public int? QuestionPdfId { get; set; }
         public int ChallengeTemplateId { get; set; }
-        [Display(Name = "Sayı")]
+        [Display(Name = "Count")]
         public int Count { get; set; }
         public int? LectureId { get; set; }
         [NotMapped]

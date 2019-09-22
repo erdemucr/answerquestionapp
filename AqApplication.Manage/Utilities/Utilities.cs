@@ -1,4 +1,7 @@
 ﻿using AqApplication.Entity.Constants;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -6,11 +9,44 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace AqApplication.Manage.Models
 {
     public static class Utilities
     {
+        public static List<SelectListItem> MemberTypeSelectList()
+        {
+            Array values = Enum.GetValues(typeof(MemberType));
+            List<SelectListItem> items = new List<SelectListItem>(values.Length);
+
+            foreach (var i in values)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = Enum.GetName(typeof(MemberType), i),
+                    Value = ((int)i).ToString()
+                });
+            }
+
+            return items;
+        }
+        public static IHtmlContent UseChinaRegisterInfo(this RazorPage page)
+        {
+            var requestCultureFeature = page.Context.Features.Get<IRequestCultureFeature>();
+            var requestCulture = requestCultureFeature.RequestCulture.UICulture.IetfLanguageTag;
+
+            var content = new HtmlContentBuilder();
+            if (requestCulture == "tr-TR")
+            {
+                content.SetHtmlContent("<img style=\"height: 47px; border-radius:74 %;\" src=\"/assets/images/turkbayrak.png\" alt=\"\" class=\"m--img-rounded m--marginless m--img-centered\" />");
+            }
+            else if (requestCulture == "en-US")
+            {
+                content.SetHtmlContent("<img style=\"height: 47px; border-radius:74 %;\" src=\"/assets/images/ABD_Bayrağı.png\" alt=\"\" class=\"m--img-rounded m--marginless m--img-centered\" />");
+            }
+            return content;
+        }
         public static string StatusText(this bool status)
         {
 
@@ -33,7 +69,7 @@ namespace AqApplication.Manage.Models
                 default: return string.Empty;
             }
         }
-        public static string ChallengeTypeEnumText(this  ChallengeTypeEnum type)
+        public static string ChallengeTypeEnumText(this ChallengeTypeEnum type)
         {
             switch (type)
             {
@@ -45,11 +81,21 @@ namespace AqApplication.Manage.Models
         public static string ArrayToText(this string[] arr)
         {
             var sb = new StringBuilder();
-           foreach(var item in arr)
+            foreach (var item in arr)
             {
                 sb.Append(item + ", ");
             }
             return sb.ToString();
+        }
+        public static string TrimTelnoMask(this string telno)
+        {
+            if (!string.IsNullOrEmpty(telno))
+            {
+                telno = telno.Contains(' ') ? telno.Replace(" ", "") : telno;
+                telno = telno.Contains('(') ? telno.Replace("(", "") : telno;
+                telno = telno.Contains(')') ? telno.Replace(")", "") : telno;
+            }
+            return telno;
         }
 
         public static class Messages
@@ -89,7 +135,7 @@ namespace AqApplication.Manage.Models
             {
                 var list = new List<SelectListItem>();
                 string vl = string.Empty;
-                for(int i = 0; i <= 23; i++)
+                for (int i = 0; i <= 23; i++)
                 {
                     vl = i.ToString().Length == 1 ? "0" + i : i.ToString();
                     list.Add(new SelectListItem { Text = vl + ":00", Value = vl + ":00" });

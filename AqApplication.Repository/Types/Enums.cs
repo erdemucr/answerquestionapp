@@ -16,6 +16,7 @@ namespace AqApplication.Repository.Enums
     }
     public enum CacheKeys
     {
-        ConfigurationValues
+        ConfigurationValues,
+        LangContent
     }
 }

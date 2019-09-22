@@ -13,7 +13,8 @@ namespace AqApplication.Core.Type
         private int pageSize { get; set; }
         private int currentPage { get; set; }
         private int pageCount { get; set; }
-        public Paginition(int totalCount, int pageSize, int currentPage, string name, string dateStart, string dateEnd, int? id)
+
+        public Paginition(int totalCount, int pageSize, int currentPage, string name, string dateStart, string dateEnd, int? type)
         {
             this.totalCount = totalCount;
             this.pageSize = pageSize;
@@ -22,7 +23,24 @@ namespace AqApplication.Core.Type
             this.Name = name ?? string.Empty;
             this.StartDate = dateStart ?? string.Empty;
             this.EndDate = dateEnd ?? string.Empty;
-            this.Id = id ?? 0;
+            this.Type =type;
+        }
+        public Paginition(int totalCount, int pageSize, int currentPage, string name, string dateStart, string dateEnd)
+        {
+            this.totalCount = totalCount;
+            this.pageSize = pageSize;
+            this.currentPage = currentPage;
+            this.pageCount = totalCount > 0 ? (int)Math.Round(totalCount / pageSize * (1.0)) : 1;
+            this.Name = name ?? string.Empty;
+            this.StartDate = dateStart ?? string.Empty;
+            this.EndDate = dateEnd ?? string.Empty;
+        }
+        public Paginition(int totalCount, int pageSize, int currentPage)
+        {
+            this.totalCount = totalCount;
+            this.pageSize = pageSize;
+            this.currentPage = currentPage;
+            this.pageCount = totalCount > 0 ? (int)Math.Round(totalCount / pageSize * (1.0)) : 1;
         }
         public int TotalCount
         {
@@ -70,6 +88,8 @@ namespace AqApplication.Core.Type
         public string StartDate { get; set; }
 
         public string EndDate { get; set; }
+
+        public int? Type { get; set; }
     }
     public static class FilterModelExt
     {

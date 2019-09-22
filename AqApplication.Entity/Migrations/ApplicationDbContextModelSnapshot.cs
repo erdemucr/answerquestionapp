@@ -35,7 +35,11 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<bool?>("IsDeleted");
+
                     b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("PhotoUrl");
 
                     b.Property<decimal>("Rating");
 
@@ -54,6 +58,22 @@ namespace AqApplication.Entity.Migrations
                     b.ToTable("Advisor");
                 });
 
+            modelBuilder.Entity("AnswerQuestionApp.Entity.Authorization.Pages", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("Url");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pages");
+                });
+
             modelBuilder.Entity("AnswerQuestionApp.Entity.Configuration.ConfigurationValues", b =>
                 {
                     b.Property<int>("Id")
@@ -70,6 +90,8 @@ namespace AqApplication.Entity.Migrations
                     b.Property<string>("Editor");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<int>("Key");
 
@@ -101,6 +123,23 @@ namespace AqApplication.Entity.Migrations
                     b.ToTable("RandomUsers");
                 });
 
+            modelBuilder.Entity("AnswerQuestionApp.Entity.Lang.LangContent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("EngValue");
+
+                    b.Property<int>("Key");
+
+                    b.Property<string>("TrValue");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LangContent");
+                });
+
             modelBuilder.Entity("AqApplication.Entity.Challenge.Challenge", b =>
                 {
                     b.Property<int>("Id")
@@ -118,6 +157,8 @@ namespace AqApplication.Entity.Migrations
                     b.Property<DateTime?>("EndDate");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<DateTime?>("ModifiedDate");
 
@@ -229,6 +270,8 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<bool>("IsCompleted");
 
+                    b.Property<bool?>("IsDeleted");
+
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<int?>("Seo");
@@ -269,6 +312,8 @@ namespace AqApplication.Entity.Migrations
                     b.Property<DateTime?>("EndDate");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<int?>("LectureId");
 
@@ -315,6 +360,8 @@ namespace AqApplication.Entity.Migrations
                     b.Property<int?>("ExamId");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<int?>("LectureId");
 
@@ -369,6 +416,8 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<bool?>("IsDeleted");
+
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<int?>("Seo");
@@ -392,20 +441,29 @@ namespace AqApplication.Entity.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<string>("Creator");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .IsRequired();
 
-                    b.Property<string>("LastName");
+                    b.Property<bool?>("IsBlocked");
+
+                    b.Property<string>("LastName")
+                        .IsRequired();
 
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
                     b.Property<int>("MemberType");
+
+                    b.Property<string>("NickName")
+                        .HasMaxLength(400);
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
@@ -419,11 +477,12 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<string>("ProfilPicture")
+                        .HasMaxLength(400);
+
                     b.Property<DateTime>("RegisterDate");
 
                     b.Property<string>("SecurityStamp");
-
-                    b.Property<string>("TelNo");
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -431,6 +490,8 @@ namespace AqApplication.Entity.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Creator");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -456,6 +517,8 @@ namespace AqApplication.Entity.Migrations
                     b.Property<string>("Editor");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<DateTime?>("ModifiedDate");
 
@@ -502,6 +565,8 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<bool?>("IsDeleted");
+
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<string>("Name")
@@ -531,6 +596,8 @@ namespace AqApplication.Entity.Migrations
                     b.Property<string>("Editor");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<DateTime?>("ModifiedDate");
 
@@ -566,6 +633,8 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<bool?>("IsDeleted");
+
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<string>("Name")
@@ -597,6 +666,8 @@ namespace AqApplication.Entity.Migrations
                     b.Property<int>("ExamId");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<int>("LectureId");
 
@@ -630,6 +701,8 @@ namespace AqApplication.Entity.Migrations
                     b.Property<string>("Editor");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<DateTime?>("ModifiedDate");
 
@@ -688,6 +761,8 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<bool?>("IsDeleted");
+
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<int>("QuestionId");
@@ -722,6 +797,8 @@ namespace AqApplication.Entity.Migrations
                     b.Property<int>("ExamId");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<DateTime?>("ModifiedDate");
 
@@ -763,6 +840,8 @@ namespace AqApplication.Entity.Migrations
                     b.Property<int?>("HeightImage");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<int?>("LectureId");
 
@@ -819,6 +898,8 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<bool?>("IsDeleted");
+
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<string>("Name")
@@ -874,6 +955,8 @@ namespace AqApplication.Entity.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<bool?>("IsDeleted");
+
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<string>("Name")
@@ -907,6 +990,8 @@ namespace AqApplication.Entity.Migrations
                     b.Property<string>("Editor");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<int>("LectureId");
 
@@ -1198,6 +1283,13 @@ namespace AqApplication.Entity.Migrations
                     b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "AppUserEditor")
                         .WithMany()
                         .HasForeignKey("Editor");
+                });
+
+            modelBuilder.Entity("AqApplication.Entity.Identity.Data.ApplicationUser", b =>
+                {
+                    b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "AppUserCreator")
+                        .WithMany()
+                        .HasForeignKey("Creator");
                 });
 
             modelBuilder.Entity("AqApplication.Entity.Logging.HostCallLoggingModel", b =>

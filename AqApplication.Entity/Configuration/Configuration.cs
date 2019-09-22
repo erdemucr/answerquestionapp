@@ -5,9 +5,9 @@ namespace AnswerQuestionApp.Entity.Configuration
 {
    public  class ConfigurationValues : BaseEntity
     {
-        [Display(Name = "Anahtar")]
+        [Display(Name = "Key")]
         public ConfigKey Key { get; set; }
-        [Display(Name = "Değer")]
+        [Display(Name = "Values")]
         public string Values { get; set; }
         [MaxLength(200,ErrorMessage ="En fazla 200 karakter olabilir")]
         public string Description { get; set; }

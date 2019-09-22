@@ -1,9 +1,10 @@
 ﻿@model AqApplication.Manage.Models.SearchModel
+@inject AnswerQuestionApp.Manage.Utilities.SharedViewLocalizer _iLocalizer
 @{
     Layout = null;
 }
 
-<div class="@{if (Model.Position == SearchModelPosition.Vertical) { <text>col-md-3</text> } else { <text>col-md-12</text> } }  col-xs-12">
+<div class="@{if (Model.Position == SearchModelPosition.Vertical) { <text>col-md-2</text> } else { <text>col-md-12</text> } }  col-xs-12">
     <div class="card" style="@{if (Model.Position == SearchModelPosition.Vertical) { <text>min-height:1000px;</text> } else { <text></text> } }">
         <div class="card-header">
             <i class="glyphicon glyphicon-search"></i> Filtrele
@@ -20,7 +21,7 @@
                         {
                             <div class="form-group @{if (Model.Position != SearchModelPosition.Vertical) { <text>col-md-3</text> } else { <text>col-md-12</text> }} ">
                                 <label>@item.DisplayName</label>
-                                @Html.DropDownList(item.Name, item.selectList, string.Empty, new { @class = item.CssClass, @id = item.Id })
+                                @Html.DropDownList(item.Name, item.SelectList, string.Empty, new { @class = "form-control " + item.CssClass, @id = item.Id })
                             </div>
                         }
                         else
@@ -33,7 +34,7 @@
                     }
 
                     <div class="fc-button-group @{if (Model.Position != SearchModelPosition.Vertical) { <text>col-md-3</text> } else { <text>col-md-12</text> } }">
-                        <input style=" margin-top:29px;" type="submit" value="Ara" class="btn btn-success" />
+                        <input style=" margin-top:29px;" type="submit" value="@_iLocalizer["Search"]" class="btn btn-success" />
                     </div>
                 </div>
 

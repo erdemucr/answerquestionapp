@@ -1,4 +1,5 @@
-﻿using AqApplication.Entity.Identity.Data;
+﻿using AnswerQuestionApp.Manage.Utilities;
+using AqApplication.Entity.Identity.Data;
 using AqApplication.Entity.Question;
 using AqApplication.Manage.Models;
 using AqApplication.Manage.Utilities;
@@ -33,12 +34,14 @@ namespace AqApplication.Manage.Controllers
         private readonly IFile _ifile;
         private readonly IHostingEnvironment _hostingEnvironment;
         private const string LastSessionQuestionAddModel = "QuestionAddModel";
-        public QuestionController(IQuestion iQuestion, IFile iFile, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(iQuestion)
+        private readonly SharedViewLocalizer _iLocalizer;
+        public QuestionController(SharedViewLocalizer iLocalizer, IQuestion iQuestion, IFile iFile, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(iQuestion)
         {
             _iquestion = iQuestion;
             _ifile = iFile;
             _hostingEnvironment = hostingEnvironment;
             _userManager = userManager;
+            _iLocalizer = iLocalizer;
         }
         // GET: Question
         public ActionResult Index(QuestionFilterModel model)
@@ -49,9 +52,9 @@ namespace AqApplication.Manage.Controllers
             searhmodel.Action = "Index";
             searhmodel.Position = SearchModelPosition.Vertical;
             searhmodel.SearchInput = new List<SearchInput>();
-            searhmodel.SearchInput.Add(new SearchInput(Repository.Enums.InputType.Text, "Name", "nameSearchTxt", "Arama Anahtarı"));
-            searhmodel.SearchInput.Add(new SearchInput(Repository.Enums.InputType.Date, "StartDate", "startdateSearchTxt", "Başlangıç Tarihi"));
-            searhmodel.SearchInput.Add(new SearchInput(Repository.Enums.InputType.Date, "EndDate", "enddateSearchTxt", "Bitiş Tarihi"));
+            searhmodel.SearchInput.Add(new SearchInput(AqApplication.Repository.Enums.InputType.Text, "Name", "nameSearchTxt", _iLocalizer["Name"]));
+            searhmodel.SearchInput.Add(new SearchInput(AqApplication.Repository.Enums.InputType.Date, "StartDate", "startdateSearchTxt", _iLocalizer["StartDate"]));
+            searhmodel.SearchInput.Add(new SearchInput(AqApplication.Repository.Enums.InputType.Date, "EndDate", "enddateSearchTxt", _iLocalizer["EndDate"]));
             ViewBag.searchModel = searhmodel;
             #endregion
 
@@ -150,7 +153,7 @@ namespace AqApplication.Manage.Controllers
             {
                 EditorLists();
                 TempData["success"] = false;
-                TempData["message"] = "Lütfen alanları kontrol ediniz";
+                TempData["message"] = _iLocalizer["Error.ControlFields"];
                 return View("Editor", model);
             }
 
@@ -380,7 +383,7 @@ namespace AqApplication.Manage.Controllers
                 if (!ModelState.IsValid)
                 {
                     TempData["success"] = false;
-                    TempData["message"] = "Lütfen alanları kontrol ediniz";
+                    TempData["message"] = _iLocalizer["Error.ControlFields"];
                     return View(model);
                 }
                 PdfDocument doc = new PdfDocument();
