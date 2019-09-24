@@ -192,6 +192,9 @@
   <data name="Key" xml:space="preserve">
     <value>Key</value>
   </data>
+  <data name="LastLoginDate" xml:space="preserve">
+    <value>Last Login Date</value>
+  </data>
   <data name="LastName" xml:space="preserve">
     <value>Last Name</value>
   </data>
@@ -261,6 +264,9 @@
   <data name="NavigationMenu.Level" xml:space="preserve">
     <value>Levels</value>
   </data>
+  <data name="NavigationMenu.Messages" xml:space="preserve">
+    <value>Messages</value>
+  </data>
   <data name="NavigationMenu.NewQuestion" xml:space="preserve">
     <value>New Question</value>
   </data>
@@ -299,6 +305,9 @@
   </data>
   <data name="Page.EditUser" xml:space="preserve">
     <value>User Edit</value>
+  </data>
+  <data name="Page.Inbox" xml:space="preserve">
+    <value>Inbox</value>
   </data>
   <data name="Page.UserList" xml:space="preserve">
     <value>User List</value>

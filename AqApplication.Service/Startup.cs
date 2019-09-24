@@ -14,7 +14,6 @@ using AqApplication.Repository.Session;
 using AqApplication.Service.Hubs;
 using AqApplication.Service.Models;
 using AqApplication.Service.Utilities;
-using DotNetify;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -67,6 +66,7 @@ namespace AqApplication.Service
             services.AddScoped<ILang, LangRepo>();
             services.AddScoped<IConfigurationValues, ConfigurationValuesRepo>();
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<AnswerQuestionApp.Repository.Messages.IMessage, AnswerQuestionApp.Repository.Messages.MessageRepo>();
             services.AddMemoryCache();
 
             services.AddTransient<WebApiHandler>();
@@ -145,7 +145,6 @@ namespace AqApplication.Service
             });
 
             services.AddSignalR(); 
-            services.AddDotNetify(); 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

@@ -140,6 +140,29 @@ namespace AqApplication.Entity.Migrations
                     b.ToTable("LangContent");
                 });
 
+            modelBuilder.Entity("AnswerQuestionApp.Entity.Message.ChatHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("Message");
+
+                    b.Property<string>("Receiver");
+
+                    b.Property<string>("Sender");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Receiver");
+
+                    b.HasIndex("Sender");
+
+                    b.ToTable("ChatHistory");
+                });
+
             modelBuilder.Entity("AqApplication.Entity.Challenge.Challenge", b =>
                 {
                     b.Property<int>("Id")
@@ -452,6 +475,8 @@ namespace AqApplication.Entity.Migrations
                         .IsRequired();
 
                     b.Property<bool?>("IsBlocked");
+
+                    b.Property<DateTime?>("LastLoginDate");
 
                     b.Property<string>("LastName")
                         .IsRequired();
@@ -1147,6 +1172,17 @@ namespace AqApplication.Entity.Migrations
                     b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "AppUserEditor")
                         .WithMany()
                         .HasForeignKey("Editor");
+                });
+
+            modelBuilder.Entity("AnswerQuestionApp.Entity.Message.ChatHistory", b =>
+                {
+                    b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "ReceiverUser")
+                        .WithMany()
+                        .HasForeignKey("Receiver");
+
+                    b.HasOne("AqApplication.Entity.Identity.Data.ApplicationUser", "SenderUser")
+                        .WithMany()
+                        .HasForeignKey("Sender");
                 });
 
             modelBuilder.Entity("AqApplication.Entity.Challenge.Challenge", b =>

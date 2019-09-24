@@ -71,6 +71,7 @@ namespace AqApplication.Manage
             services.AddScoped<ILang, LangRepo>();
             services.AddScoped<ChallengeCron>();
             services.AddScoped<IConfigurationValues, ConfigurationValuesRepo>();
+            services.AddScoped<AnswerQuestionApp.Repository.Messages.IMessage, AnswerQuestionApp.Repository.Messages.MessageRepo>();
             services.AddScoped<AnswerQuestionApp.Repository.Mail.IEmailSender, AnswerQuestionApp.Repository.Mail.EmailSender>();
 
             services.AddTransient<SharedViewLocalizer>();

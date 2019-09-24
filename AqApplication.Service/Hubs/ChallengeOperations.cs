@@ -406,41 +406,4 @@ public class SocketRequestModel
     public string userId { get; set; }
     public int? challengeId { get; set; } // when true it means result request
 }
-public static class WebSocketConnectionManager
-{
-    public static WebSocket GetSocketUserId(this List<SocketClientModel> _sockets, string id)
-    {
-        return _sockets.FirstOrDefault(p => p.UserId == id).Socket;
-    }
-
-    public static List<WebSocket> GetAll(this List<SocketClientModel> _sockets)
-    {
-        return _sockets.Select(x => x.Socket).ToList();
-    }
-
-    public static string GetId(this List<SocketClientModel> _sockets, WebSocket socket)
-    {
-        return _sockets.FirstOrDefault(p => p.Socket == socket).UserId;
-    }
-    //public static void AddSocket(this List<SocketClientModel> _sockets, WebSocket socket)
-    //{
-    //    _sockets.Add(CreateConnectionId(), socket);
-    //}
-
-    //public static async Task RemoveSocket(this List<SocketClientModel> _sockets, WebSocket socket)
-    //{
-    //    WebSocket socket;
-    //    _sockets.Remove(id, out socket);
-
-    //    await socket.CloseAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
-    //                            statusDescription: "Closed by the WebSocketManager",
-    //                            cancellationToken: CancellationToken.None);
-    //}
-
-    private static string CreateConnectionId()
-    {
-        return Guid.NewGuid().ToString();
-    }
-}
-
 

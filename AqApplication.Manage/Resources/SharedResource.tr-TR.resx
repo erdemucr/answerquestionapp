@@ -192,6 +192,9 @@
   <data name="Key" xml:space="preserve">
     <value>Anahtar</value>
   </data>
+  <data name="LastLoginDate" xml:space="preserve">
+    <value>Son Login Zamanı</value>
+  </data>
   <data name="LastName" xml:space="preserve">
     <value>Soyisim</value>
   </data>
@@ -261,6 +264,9 @@
   <data name="NavigationMenu.Level" xml:space="preserve">
     <value>Seviyeler</value>
   </data>
+  <data name="NavigationMenu.Messages" xml:space="preserve">
+    <value>Mesajlar</value>
+  </data>
   <data name="NavigationMenu.NewQuestion" xml:space="preserve">
     <value>Yeni Soru</value>
   </data>
@@ -299,6 +305,9 @@
   </data>
   <data name="Page.EditUser" xml:space="preserve">
     <value>Kullanıcı Düzenle</value>
+  </data>
+  <data name="Page.Inbox" xml:space="preserve">
+    <value>Gelen Kutusu</value>
   </data>
   <data name="Page.UserList" xml:space="preserve">
     <value>Kullanıcı Listesi</value>

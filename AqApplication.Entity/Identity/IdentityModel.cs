@@ -14,6 +14,7 @@ using AnswerQuestionApp.Entity.Advisor;
 using AnswerQuestionApp.Entity.Lang;
 using System.ComponentModel.DataAnnotations.Schema;
 using AnswerQuestionApp.Entity.Authorization;
+using AnswerQuestionApp.Entity.Message;
 
 namespace AqApplication.Entity.Identity.Data
 {
@@ -37,6 +38,8 @@ namespace AqApplication.Entity.Identity.Data
         public string NickName { get; set; }
         [Display(Name = "IsBlocked")]
         public bool? IsBlocked { get; set; }
+        [Display(Name = "LastLoginDate")]
+        public DateTime? LastLoginDate { get; set; }
 
         [NotMapped]
         public string Password { get; set; }
@@ -96,6 +99,8 @@ namespace AqApplication.Entity.Identity.Data
         public DbSet<LangContent> LangContent { get; set; }
 
         public DbSet<Pages> Pages { get; set; }
+
+        public DbSet<ChatHistory> ChatHistory { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

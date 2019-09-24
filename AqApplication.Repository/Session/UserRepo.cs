@@ -71,7 +71,7 @@ namespace AqApplication.Repository.Session
 
                 return new Result<UserInfoModel>
                 {
-                    Data = new UserInfoModel { Email = model.Email, FirstName = model.FirstName, LastName = model.LastName },
+                    Data = new UserInfoModel { Email = model.Email, FirstName = model.FirstName, LastName = model.LastName,ProfilImage=model.ProfilPicture },
                     Success = true,
                     Message = "User listesini görüntülemektesiniz",
                     MessageType= MessageType.OperationCompleted
