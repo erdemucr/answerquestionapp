@@ -56,7 +56,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             if (file != null && file.Length > 0)
@@ -122,7 +122,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             //once resmi upload etmeye calisalim

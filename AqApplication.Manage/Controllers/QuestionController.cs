@@ -153,7 +153,7 @@ namespace AqApplication.Manage.Controllers
             {
                 EditorLists();
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View("Editor", model);
             }
 
@@ -383,7 +383,7 @@ namespace AqApplication.Manage.Controllers
                 if (!ModelState.IsValid)
                 {
                     TempData["success"] = false;
-                    TempData["message"] = _iLocalizer["Error.ControlFields"];
+                    TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                     return View(model);
                 }
                 PdfDocument doc = new PdfDocument();

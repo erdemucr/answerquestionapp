@@ -1,6 +1,4 @@
-﻿@using AqApplication.Manage.Utilities;
-@model IEnumerable<AqApplication.Entity.Identity.Data.ApplicationUser>
-@inject AnswerQuestionApp.Manage.Utilities.SharedViewLocalizer _iLocalizer
+﻿@model IEnumerable<AqApplication.Entity.Identity.Data.ApplicationUser>
 
 @Html.Partial("_Breadcrumb", new AqApplication.Manage.Models.CommonBreadcrumbModel
 {
@@ -47,6 +45,9 @@
                             @_iLocalizer["NickName"]
                         </th>
                         <th>
+                            @_iLocalizer["Title"]
+                        </th>
+                        <th>
                             @Html.DisplayNameFor(model => model.FirstName)
                         </th>
                         <th>
@@ -74,6 +75,10 @@
                                     <img src="@item.ProfilPicture" alt="" class="editImagePreview" />
                                 </a>
                             }
+                            else
+                            {
+                                <img src="/assets/images/user.png" alt="" class="editImagePreview" />
+                            }
                         </td>
                         <td>
                             @(item.EmailConfirmed ? _iLocalizer["Exists"] : _iLocalizer["NotExtist"])
@@ -85,6 +90,9 @@
 
                         <td>
                             @Html.DisplayFor(modelItem => item.NickName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.FirstName)

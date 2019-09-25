@@ -76,7 +76,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             model.CreatedDate = DateTime.Now;
@@ -117,7 +117,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             if (model.Exams != null)
@@ -180,7 +180,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             model.CreatedDate = DateTime.Now;
@@ -223,7 +223,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             var result = _iquestion.EditSubject(model, User.GetUserId());
@@ -318,7 +318,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             model.CreatedDate = DateTime.Now;
@@ -380,7 +380,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             var result = _iquestion.EditSubSubject(model, User.GetUserId());
@@ -423,7 +423,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             model.CreatedDate = DateTime.Now;
@@ -451,7 +451,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             var result = _iquestion.EditExam(model, User.GetUserId());
@@ -495,7 +495,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             model.CreatedDate = DateTime.Now;
@@ -522,7 +522,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             var result = _iquestion.EditClass(model, User.GetUserId());
@@ -568,7 +568,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             model.CreatedDate = DateTime.Now;
@@ -595,7 +595,7 @@ namespace AqApplication.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             var result = _iquestion.EditDifficulty(model, User.GetUserId());

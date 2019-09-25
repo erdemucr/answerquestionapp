@@ -61,8 +61,8 @@
         }
 
         .editImagePreview {
-            height: 200px;
-            width: 200px;
+            height: 100px;
+            width: 100px;
             border: 1px solid #ccc;
             padding: 5px;
         }
@@ -350,29 +350,37 @@
                 minLength: 2,
                 delay: 100
             });
-            var url = window.location.pathname;
-            if (url.length > 1 && url !=='/Home/Index') {
-                $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active');
-                $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active-tab');
+            var urlPathName = window.location.pathname;
+            var found = false;
+            function ActiveCurrentUrl(url) {
                 $(".m-menu__subnav .m-menu__item").each(function (i) {
                     var $el = $(this);
                     var value = $el.find(".m-menu__link").attr('href');
-                    console.log(value);
-                    console.log(url);
                     if (typeof value !== "undefined" && value !== null) {
                         if (value.indexOf(url) > -1 && value.length > 1) {
-                            console.log("found");
+                            found = true;
                             $el.find(".m-menu__link").addClass('m-menu__link_selected');
                             $el.parent().parent().parent().addClass('m-menu__item--active  m-menu__item--active-tab');
+                            window.localStorage.setItem('currentUrl', url);
                         }
                     }
                 });
+            }
+            if (urlPathName.length > 1 && urlPathName !=='/Home/Index') {
+                $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active');
+                $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active-tab');
+                ActiveCurrentUrl(urlPathName);
+                if (!found) {
+                    ActiveCurrentUrl(window.localStorage.getItem('currentUrl'));
+                }
+
             }
             else {
                 $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active');
                 $(".m-menu__nav li:eq(0)").removeClass('m-menu__item--active-tab');
                 $(".m-menu__nav li:eq(0)").addClass('m-menu__item--active  m-menu__item--active-tab');
             }
+ 
             var container = document.getElementById('kt_inbox_compose_editor');
             var options = {
                 modules: {

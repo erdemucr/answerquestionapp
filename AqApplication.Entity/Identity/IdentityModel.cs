@@ -31,9 +31,9 @@ namespace AqApplication.Entity.Identity.Data
 
         [Display(Name = "RegisterDate")]
         public DateTime RegisterDate { get; set; }
-        [MaxLength(400)]
+        [MaxLength(400, ErrorMessage = "MaxLengthError")]
         public string ProfilPicture { get; set; }
-        [MaxLength(400)]
+        [MaxLength(400,ErrorMessage = "MaxLengthError")]
         [Display(Name = "NickName")]
         public string NickName { get; set; }
         [Display(Name = "IsBlocked")]
@@ -45,6 +45,10 @@ namespace AqApplication.Entity.Identity.Data
         public string Password { get; set; }
 
         public string Creator { get; set; }
+
+        [Display(Name = "Title")]
+        [MaxLength(200, ErrorMessage = "MaxLengthError")]
+        public string Title { get; set; }
 
         [ForeignKey("Creator")]
         public ApplicationUser AppUserCreator { get; set; }

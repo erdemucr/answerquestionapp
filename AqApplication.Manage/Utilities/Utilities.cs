@@ -31,6 +31,22 @@ namespace AqApplication.Manage.Models
 
             return items;
         }
+        public static List<SelectListItem> MemberTypeSelectListEnum()
+        {
+            Array values = Enum.GetValues(typeof(MemberType));
+            List<SelectListItem> items = new List<SelectListItem>(values.Length);
+
+            foreach (var i in values)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = Enum.GetName(typeof(MemberType), i),
+                    Value = i.ToString()
+                });
+            }
+
+            return items;
+        }
         public static IHtmlContent UseChinaRegisterInfo(this RazorPage page)
         {
             var requestCultureFeature = page.Context.Features.Get<IRequestCultureFeature>();

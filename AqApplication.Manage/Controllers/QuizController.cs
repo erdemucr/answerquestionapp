@@ -118,7 +118,7 @@ namespace AnswerQuestionApp.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             if (model.StartDate.HasValue && !string.IsNullOrEmpty(model.StartDateTime))
@@ -166,7 +166,7 @@ namespace AnswerQuestionApp.Manage.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["success"] = false;
-                TempData["message"] = _iLocalizer["Error.ControlFields"];
+                TempData["message"] = _iLocalizer["Error.ControlFields"].ToString();
                 return View(model);
             }
             if (model.StartDate.HasValue && !string.IsNullOrEmpty(model.StartDateTime))

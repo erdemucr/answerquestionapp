@@ -124,8 +124,9 @@ namespace AqApplication.Repository.Session
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     PhoneNumber = model.PhoneNumber,
-                    MemberType = AqApplication.Entity.Constants.MemberType.Advisor,
-                    Creator= userId
+                    MemberType = model.MemberType,
+                    Creator= userId,
+                    Title= model.Title
                 };
                 var result = UserManager.CreateAsync(user, model.Password);
                 if (result.Result.Succeeded)
@@ -166,6 +167,8 @@ namespace AqApplication.Repository.Session
                 user.LastName = model.LastName;
                 user.PhoneNumber = model.PhoneNumber;
                 user.SecurityStamp = Guid.NewGuid().ToString();
+                user.MemberType = model.MemberType;
+                user.Title = model.Title;
 
                 var result = UserManager.UpdateAsync(user);
                 if (result.Result.Succeeded)
