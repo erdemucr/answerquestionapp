@@ -134,6 +134,13 @@ namespace AnswerQuestionApp.Socket
 
             app.UseCors("AllowAll");
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cepyol.Desktop");
+                c.RoutePrefix = string.Empty;
+            });
+
             app.UseMvc();
         }
     }

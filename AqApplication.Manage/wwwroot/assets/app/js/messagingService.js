@@ -44,17 +44,19 @@ var socketConnection = function () {
         var socketResponse = JSON.parse(e.data);
         console.log(socketResponse);
 
-        if (socketResponse.SocketClientModelList !== null) {
-            $personTg.html("");
-            if (socketResponse.SocketClientModelList.length) {
-                for (var i = 0; i < socketResponse.SocketClientModelList.length; i++) {
-                    if (socketResponse.SocketClientModelList[i].Image !== null && socketResponse.SocketClientModelList[i].Image !== '') {
-                        image = socketResponse.SocketClientModelList[i].Image;
-                    }
-                    $personTg.append(PersonItem(image, socketResponse.SocketClientModelList[i].FullName, '', 'Online', socketResponse.SocketClientModelList[i].UserId));
-                }
-            }
-        }
+        //if (socketResponse.SocketClientModelList !== null) {
+        //    $personTg.html("");
+        //    if (socketResponse.SocketClientModelList.length) {
+        //        for (var i = 0; i < socketResponse.SocketClientModelList.length; i++) {
+        //            if (socketResponse.SocketClientModelList[i].UserId !== window.current) {
+        //                if (socketResponse.SocketClientModelList[i].Image !== null && socketResponse.SocketClientModelList[i].Image !== '') {
+        //                    image = socketResponse.SocketClientModelList[i].Image;
+        //                }
+        //                $personTg.append(PersonItem(image, socketResponse.SocketClientModelList[i].FullName, '', 'Online', socketResponse.SocketClientModelList[i].UserId));
+        //            }
+        //        }
+        //    }
+        //}
         if (socketResponse.Message !== null) {
             var isOwn = false;
             if (window.current === socketResponse.FromIdendity) {
@@ -64,7 +66,7 @@ var socketConnection = function () {
                 }
                 $("#send_message_btn").removeClass("m-loader m-loader--right m-loader--light");
             }
-            $chatBox.append(ChatDialogBox(socketResponse.FromFullName, socketResponse.Message, image, '', isOwn));
+            $chatBox.append(ChatDialogBox(socketResponse.FromFullName, socketResponse.Message, image, socketResponse.MessageDate, isOwn));
             const container = document.querySelector('#chat-messages');
             container.scrollTop = 99999999999;
         }
@@ -77,8 +79,36 @@ var socketConnection = function () {
         });
     };
 };
+var messenger = function () {
+    var $personTg = $("#messenger_persons");
+    var loadClients = function () {
+        $.ajax({
+            type: "GET",
+            url: "/Messages/GetPastMesagesClients",
+            success: function (data) {
+                if (data.success) {
+                    $personTg.html("");
+                    if (data.length) {
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].ProfilPicture !== null && data[i].ProfilPicture !== '' && typeof data[i].ProfilPicture !== 'undefined') {
+                                image = data.Image;
+                            }
+                            $personTg.append(PersonItem(image, data.FullName, '', 'Online', data.UserId));
+                        }
+                    }
+                }
+                else {
+                    alert('Error');
+                }
+            }
+        });
+    };
+    return {
+        LoadClients: loadClients
+    };
+};
 function PersonItem(img, name, title, status, ids) {
-    return '<div class="kt-widget__item">' +
+    return '<div class="kt-widget__item" data-id=' + ids + '>' +
         '<span class="kt-media kt-media--circle">' +
         '<img src="' + img + '" alt="image">' +
         '</span>' +
@@ -113,10 +143,10 @@ function ChatDialogBox(name, message, img, time, isOwn) {
         '<img src="' + img + '" alt="image">' +
         '</span>' +
         '<a href="#" class="kt-chat__username">' + name + '</a>' +
-        '<span class="kt-chat__datetime">2 Hours</span>' +
+        '<span class="kt-chat__datetime">' + time + '</span>' +
         '</div>' +
         '<div class="kt-chat__text ' + dialogCls + '">' +
-         message +
+        message +
         '</div>' +
         '</div>';
     return str;

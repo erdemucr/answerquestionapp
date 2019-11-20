@@ -134,8 +134,9 @@
             //});
 
         });
-        window.socketUrl = "ws://85.105.160.53:81/socket/messaging";
+        window.socketUrl = "ws://localhost:65231/messaging";
         window.current = "@User.GetUserId()";
+        messenger.LoadClients();
         socketConnection();
 
         $('#chat_message_txt').keypress(function (e) {

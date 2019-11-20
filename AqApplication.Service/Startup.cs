@@ -212,4 +212,5 @@ namespace AqApplication.Service
             app.UseMvc();
         }
     }
+
 }

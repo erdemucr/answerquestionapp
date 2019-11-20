@@ -13,6 +13,10 @@ namespace AnswerQuestionApp.Entity.Message
         [DisplayName("Message")]
         public string Message { get; set; }
 
+        [DisplayName("IsRead")]
+        public bool IsRead { get; set; }
+
+
         [DisplayName("Sender")]
         public string Sender { get; set; }
 

@@ -30,6 +30,8 @@ namespace AnswerQuestionApp.Socket.Methods
                 _iUser = hContext.RequestServices.GetRequiredService<IUser>();
                 _iMessage = hContext.RequestServices.GetRequiredService<IMessage>();
 
+                var dDate = DateTime.Now;
+
                 while (socket.State == WebSocketState.Open)
                 {
                     //   _clientsChallengeStart.AddSocket(socket);
@@ -42,7 +44,6 @@ namespace AnswerQuestionApp.Socket.Methods
                         {
                             var incomingMessage = System.Text.Encoding.UTF8.GetString(bag, 0, result.Count);
                             var socketRequestModel = Newtonsoft.Json.JsonConvert.DeserializeObject<SocketRequestModel>(incomingMessage);
-
 
                             string message = string.Empty;
                             bool success = true;
@@ -83,15 +84,18 @@ namespace AnswerQuestionApp.Socket.Methods
                                 }
                                 if (socketRequestModel.action == RequestAction.push)
                                 {
-                                    await SendMessageToDestination(socketRequestModel.userId, user.Data.FirstName + " " + user.Data.LastName, socketRequestModel.userId, socketRequestModel.message);
-                                    await SendMessageToDestination(socketRequestModel.userId, user.Data.FirstName + " " + user.Data.LastName, socketRequestModel.to, socketRequestModel.message);
+                                    var isSent = SendMessageToDestination(socketRequestModel.userId, user.Data.FirstName + " " + user.Data.LastName, socketRequestModel.to, socketRequestModel.message, dDate, null, false).Result;
+
+                                    await SendMessageToDestination(socketRequestModel.userId, user.Data.FirstName + " " + user.Data.LastName, socketRequestModel.to, socketRequestModel.message, dDate, isSent, true);
+
                                     await AddMessageHistory(new Entity.Message.ChatHistory
                                     {
 
-                                        CreatedDate = DateTime.Now,
+                                        CreatedDate = dDate,
                                         Sender = socketRequestModel.userId,
                                         Receiver = socketRequestModel.to,
-                                        Message = socketRequestModel.message
+                                        Message = socketRequestModel.message,
+                                        IsRead = isSent
                                     });
 
                                 }
@@ -129,21 +133,18 @@ namespace AnswerQuestionApp.Socket.Methods
         }
         private async Task<int> HandleClose(System.Net.WebSockets.WebSocket socket)
         {
+            var client = _clients.FirstOrDefault(x => x.Socket == socket);
+            if (client != null)
             {
-                var client = _clients.FirstOrDefault(x => x.Socket == socket);
-                if (client != null)
-                {
-                    _clients.Remove(client);
-                    if (_clients.Any())
-                        await SendClientListMessenger();
-                }
-
-                await socket.CloseAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
-                                        statusDescription: "Closed by the WebSocketManager",
-                                        cancellationToken: CancellationToken.None);
-
-                return 0;
+                _clients.Remove(client);
+                if (_clients.Any())
+                    await SendClientListMessenger();
             }
+
+            //await socket.CloseAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
+            //                        statusDescription: "Closed by the WebSocketManager",
+            //                        cancellationToken: CancellationToken.None);
+            return 0;
         }
         private async Task<int> SendClientListMessenger()
         {
@@ -168,33 +169,36 @@ namespace AnswerQuestionApp.Socket.Methods
 
             return 0;
         }
-        private async Task<int> SendMessageToDestination(string from, string fullName, string to, string msg)
+        private async Task<bool> SendMessageToDestination(string from, string fullName, string to, string msg, DateTime dDate, bool? read, bool isOwn)
         {
+            bool status = false;
             await Task.Run(() =>
             {
-                var clients = _clients.ToList();
-
                 string message = JsonConvert.SerializeObject(new MessagingClientResult
                 {
                     SocketClientModelList = null,
                     Message = msg,
                     MessageCode = Result.MessageCode.Success,
                     FromIdendity = from,
-                    FromFullName = fullName
+                    FromFullName = fullName,
+                    ToIdentity = to,
+                    MessageDate = dDate.ToString("HH:mm"),
+                    Read = read
                 });
 
                 byte[] outgoingMessage = System.Text.Encoding.UTF8.GetBytes(message);
 
-                var client = _clients.FirstOrDefault(x => x.UserId == to);
+                var client = _clients.FirstOrDefault(x => x.UserId == (isOwn ? from : to));
                 if (client != null)
                 {
                     client.Socket.SendAsync(
                         new ArraySegment<byte>(outgoingMessage, 0, outgoingMessage.Length),
                             WebSocketMessageType.Text, true, CancellationToken.None);
+                    status = true;
                 }
             });
 
-            return 0;
+            return status;
         }
 
         private async Task<int> AddMessageHistory(AnswerQuestionApp.Entity.Message.ChatHistory model)
